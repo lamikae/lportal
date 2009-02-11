@@ -1,0 +1,99 @@
+== Liferay & ActiveRecord
+
+This is a collection of (some) Liferay models for developers that use the database with ActiveRecord. You may want to check out the Rails-portlet package if you're going to deploy Rails applications on Liferay.
+
+
+== Follow these steps
+
+1. Configure ActiveRecord as usual.
+2. require 'lportal'
+3. You're good to go.
+
+This gem quite effectively pollutes your namespace, and that is intentional. If you are working in the context of the portal, having your users modeled by User is more convenient rather than having to reference them as "Lportal::Users".
+
+
+== General notions and examples
+=== Caterpillar
+To create new instances you need Caterpillar. Liferay's ORM, Hibernate, does not seem to use database sequences, but ActiveRecord assumes they exist. Caterpillar's purpose is to lower the barriers to deploy Rails portlets and it contains various tasks that do not belong to this library. See the Caterpillar docs on installation; this document assumes your environment is set up. Do not forget to run the migrations!
+
+
+=== Layouts
+Each Group can have public and private pages. In both cases, there has to first exist a Web::LayoutSet, which is automatically created for a new Group. The individual pages (class Web::Layout) belong to this set, but they are not directly linked (in 5.1.1 at least). Instead, they belong to the Group and are either public or private. The models have methods to query the relations.
+
+Say you create a new Group "group".
+
+  company = Company.first
+  group = Group.create(
+    :company => company,
+    :creatoruserid => company.administrators.first.id,
+    :name => 'Example'
+  )
+
+  => #<Group groupid: 8400004, companyid: 10109, creatoruserid: 10129, classnameid: 0, classpk: 0, parentgroupid: 0, livegroupid: 0, name: "Example", description: "", type_: 1, typesettings: "", friendlyurl: "/example", active_: true>
+
+The LayoutSets can then be queried:
+
+  group.public_layoutset
+
+  => #<Web::LayoutSet layoutsetid: 8400011, groupid: 8400004, companyid: 10109, privatelayout: false, logo: false, logoid: 0, themeid: "", colorschemeid: "01", wapthemeid: "mobile", wapcolorschemeid: "01", css: "", pagecount: 0, virtualhost: "">
+
+  group.private_layoutset
+
+  => #<Web::LayoutSet layoutsetid: 8400010, groupid: 8400004, companyid: 10109, privatelayout: true, logo: false, logoid: 0, themeid: "", colorschemeid: "01", wapthemeid: "mobile", wapcolorschemeid: "01", css: "", pagecount: 0, virtualhost: "">
+
+  group.layoutsets.size
+
+  => 2
+
+And a new empty Layout can be created:
+
+  layout = Web::Layout.create(
+    :group => group,
+    :privatelayout => true,
+    :name => 'Private page'
+  )
+
+  => #<Web::Layout plid: 8400000, groupid: 8400004, companyid: 10109, privatelayout: true, layoutid: 1, parentlayoutid: 0, name: "<?xml version='1.0' encoding='UTF-8'?><root availab...", title: "<root />", description: "", type_: "portlet", typesettings: "layout-template-id=2_columns_ii\n", hidden_: false, friendlyurl: "/1", iconimage: false, iconimageid: 0, themeid: nil, colorschemeid: nil, wapthemeid: nil, wapcolorschemeid: nil, css: nil, priority: 0, dlfolderid: 0>
+
+You can view this page in the Liferay "Communities" portlet via "Available Communities" => "Actions" => "Manage Pages" => "Private Pages" => "View Pages".
+
+
+=== Portlets and Caterpillar
+To add new portlets the Caterpillar mixins and migrations are required. This data does not live in the lportal database, and this library does not understand about the environment in which Liferay is. Caterpillar, however, does. It parses some Liferay XML configuration files and makes the data available by defining a couple of new methods to classes in the Web module.
+
+The Layout contents are defined in its typesettings. The Web::Typesettings class makes their definitions more Ruby-like. To add a message_boards portlet into column 2:
+
+  layout.typesettings = Web::Typesettings.new.message_boards(:column => 2).to_s
+
+  => "layout-template-id=2_columns_ii\ncolumn-2=19,"
+
+
+The other way around, find the private layouts of "group" that have the Message Board portlet:
+
+  layouts = group.private_layouts.select{|l| l.contents.include?('message_boards')}
+
+Or, using a method designed for this:
+
+  layouts = group.select_layouts_with('message_boards',:private)
+  => [#<Web::Layout plid: 8400000, groupid: 8400004, companyid: 10109, privatelayout: true, layoutid: 1, parentlayoutid: 0, name: "<?xml version='1.0' encoding='UTF-8'?><root availab...", title: "<root />", description: "", type_: "portlet", typesettings: "layout-template-id=2_columns_ii\ncolumn-2=19,", hidden_: false, friendlyurl: "/1", iconimage: false, iconimageid: 0, themeid: nil, colorschemeid: nil, wapthemeid: nil, wapcolorschemeid: nil, css: nil, priority: 0, dlfolderid: 0>]
+
+Or query what portlets are in the Layout:
+
+  layouts.first.portlets.each{|p| puts p.title}
+
+  Message Boards
+  => [#<Web::PortletPreferences portletpreferencesid: 10210, ownerid: 0, ownertype: 3, plid: 10146, portletid: "19", preferences: "<portlet-preferences xmlns=\"http://java.sun.com/xml...">]
+
+Or whether the layouts include a specific portlet:
+
+  group.layouts_include?('message_boards')
+  => true
+  group.layouts_include?('message_boards',:private)
+  => true
+  group.layouts_include?('message_boards',:public)
+  => false
+
+
+
+
+Copyright (c) 2008,2009 Mikael Lammentausta, released under the MIT license
