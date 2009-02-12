@@ -222,6 +222,41 @@ class Group < ActiveRecord::Base
     :foreign_key => 'groupid',
     :conditions  => 'privatelayout = true'
 
+
+  # --
+  # Class methods
+  # ++
+
+  class << self
+
+    # 0 = personal user groups
+    def find_personal(companyid)
+      self.find(:all, :conditions => "companyid=#{companyid} AND type_=0")
+    end
+
+    # 1 = public, guest can see
+    def find_public(companyid)
+      self.find(:all, :conditions => "companyid=#{companyid} AND type_=1")
+    end
+
+    # 2 = user-created open communities
+    def find_open(companyid)
+      self.find(:all, :conditions => "companyid=#{companyid} AND type_=2")
+    end
+
+    # 3 = private, also contains admins
+    def find_private(companyid)
+      self.find(:all, :conditions => "companyid=#{companyid} AND type_=3")
+    end
+  end
+
+
+  # --
+  # Instance methods
+  # ++
+
+  # Group's name. If classnameid==0 (Group is a basic group), use the name in the group_ column.
+  # Otherwise use the owner's name.
   def name
     self.classnameid != 0 ?
       self.owner.name : super
@@ -325,6 +360,11 @@ class Group < ActiveRecord::Base
   # Does any of the layouts include this portlet? See #select_layouts_with
   def layouts_include?(portlet,pl=nil)
     self.select_layouts_with(portlet,pl).any?
+  end
+
+  # Helper to collect all tags that are related to this Group through Tag::Asset.
+  def assets_tags
+    self.assets.collect(&:tags).flatten.uniq
   end
 
 end
