@@ -3,7 +3,7 @@ module MB
     set_table_name       :mbmessage
     set_primary_key      :messageid
 
-    validates_presence_of :user, :category, :subject, :body
+#     validates_presence_of :user, :category, :subject, :body
 
 
     # com.liferay.portlet.messageboards.model.MBMessage
@@ -22,15 +22,14 @@ module MB
       }
     end
 
-    #  - category
-    #  - subject
+    #  - user
+    #  - category or parent message
     #  - body
     def initialize(params)
       raise 'No user' unless params[:user] or params[:userid]
       unless ((params[:category] or params[:categoryid]) || (params[:parent] or params[:parentmessageid]))
         raise 'No category or parentmessage'
       end
-      raise 'No subject' unless params[:subject]
       raise 'No body' unless params[:body]
       super(params)
 
@@ -56,12 +55,14 @@ module MB
         self.anonymous = false
       #end
 
+      self.subject         ||= ''
       self.username        ||= ''
       self.createdate      = Time.now
       self.modifieddate    = Time.now
       self.parentmessageid ||= 0
       self.attachments     ||= false
       self.save
+
 
       # COPY mbcategory (uuid_, categoryid, groupid, companyid, userid, username, createdate, modifieddate, parentcategoryid, name, description, lastpostdate) FROM stdin;
       # -fda18eef-3992-419e-a373-6e2f01a8b6a9	10307	10166	10109	10129	Test Test	2009-01-17 08:06:00.359	2009-01-17 08:06:00.359	0	Teppo Testaaja	message board for user Teppo	\N
@@ -94,11 +95,13 @@ module MB
       # COPY mbmessageflag (messageflagid, userid, messageid, flag) FROM stdin;
       # +10313	10129	10308	1
 
-      MB::MessageFlag.create(
-        :user    => self.user,
-        :message => self,
-        :flag    => 1
-      )
+      unless self.flag # wtf?
+        MB::MessageFlag.create(
+          :user    => self.user,
+          :message => self,
+          :flag    => 1
+        )
+      end
 
 
       # COPY mbstatsuser (statsuserid, groupid, userid, messagecount, lastpostdate) FROM stdin;
@@ -219,10 +222,13 @@ module MB
           :scope => 4
         )
       end
-      resource = Resource.create(
-        :codeid  => rc.id,
-        :primkey => self.id
-      )
+      resource = Resource.find(:first, :conditions => "codeid=#{rc.id} AND primkey='#{self.id}'")
+      unless resource
+        resource = Resource.create(
+          :codeid  => rc.id,
+          :primkey => self.id
+        )
+      end
 
 
       # COPY permission_ (permissionid, companyid, actionid, resourceid) FROM stdin;
@@ -240,11 +246,16 @@ module MB
       # +10129	327
 
       self.class.actions.each do |actionid|
-        self.user.user_permissions << Permission.create(
-          :companyid  => self.companyid,
-          :actionid   => actionid,
-          :resourceid => resource.id
-        )
+        permission = Permission.find(:first,
+          :conditions => "companyid=#{self.companyid} AND actionid='#{actionid}' AND resourceid=#{resource.id}")
+        unless permission
+          permission = Permission.create(
+            :companyid  => self.companyid,
+            :actionid   => actionid,
+            :resourceid => resource.id
+          )
+        end
+        self.user.user_permissions << permission
       end
 
       self.save

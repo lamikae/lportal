@@ -2,6 +2,7 @@
 - creation of MB::Messages
 - new models: SocialActivity, SocialRelation, RatingsStats, MB::MessageFlag, MB::StatsUser
 - URL path to download Document Library File
+- helper methods to find various types of groups and groups assets tags
 
 
 = 1.0.8
