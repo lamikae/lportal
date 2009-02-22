@@ -216,7 +216,10 @@ module Web
         :conditions => "companyid=#{self.companyid} AND name='#{self.liferay_class}' AND scope=#{scope}")
     end
 
-    def contents
+    # settings;
+    # Object model of the string "typesettings". Settings for this Layout.
+    #
+    def settings
       Typesettings.new(self.typesettings)
     end
 

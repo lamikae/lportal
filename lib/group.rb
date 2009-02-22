@@ -354,7 +354,7 @@ class Group < ActiveRecord::Base
       end
     )
 
-    layouts.select{|l| l.contents.include?(portlet)}
+    layouts.select{|l| l.settings.include?(portlet)}
   end
 
   # Does any of the layouts include this portlet? See #select_layouts_with

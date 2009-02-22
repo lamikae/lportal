@@ -45,8 +45,8 @@ puts
       ts = layout.typesettings
       # compare string lengths
 puts ts.inspect
-puts layout.contents.to_s.inspect
-      assert_equal ts.size, layout.contents.to_s.size
+puts layout.settings.to_s.inspect
+      assert_equal ts.size, layout.settings.to_s.size
 puts '...'
     end
   end
