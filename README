@@ -61,20 +61,21 @@ You can view this page in the Liferay "Communities" portlet via "Available Commu
 === Portlets and Caterpillar
 To add new portlets the Caterpillar mixins and migrations are required. This data does not live in the lportal database, and this library does not understand about the environment in which Liferay is. Caterpillar, however, does. It parses some Liferay XML configuration files and makes the data available by defining a couple of new methods to classes in the Web module.
 
-The Layout contents are defined in its typesettings. The Web::Typesettings class makes their definitions more Ruby-like. To add a message_boards portlet into column 2:
+The Layout settings are configured via Web::Typesettings. The ”settings” method handles the conversion between the ”typesettings” string and the object model. To add a message_boards portlet into column 2:
 
-  layout.typesettings = Web::Typesettings.new.message_boards(:column => 2).to_s
+  layout.settings = Web::Typesettings.new.message_boards(:column => 2)
 
   => "layout-template-id=2_columns_ii\ncolumn-2=19,"
 
 
 The other way around, find the private layouts of "group" that have the Message Board portlet:
 
-  layouts = group.private_layouts.select{|l| l.contents.include?('message_boards')}
-
-Or, using a method designed for this:
-
   layouts = group.select_layouts_with('message_boards',:private)
+
+Which is a short form for:
+
+  layouts = group.private_layouts.select{|l| l.settings.include?('message_boards')}
+
   => [#<Web::Layout plid: 8400000, groupid: 8400004, companyid: 10109, privatelayout: true, layoutid: 1, parentlayoutid: 0, name: "<?xml version='1.0' encoding='UTF-8'?><root availab...", title: "<root />", description: "", type_: "portlet", typesettings: "layout-template-id=2_columns_ii\ncolumn-2=19,", hidden_: false, friendlyurl: "/1", iconimage: false, iconimageid: 0, themeid: nil, colorschemeid: nil, wapthemeid: nil, wapcolorschemeid: nil, css: nil, priority: 0, dlfolderid: 0>]
 
 Or query what portlets are in the Layout:

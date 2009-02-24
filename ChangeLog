@@ -1,3 +1,11 @@
+- api change; layout.contents -> layout.settings
+- api change; user.user_permissions -> user.permissions
+- self.get methods to ResourceCode, Resource and Permission
+- Web::PortletPreferences: add layout management portlet on creation, setters for name and settings
+- Typesettings: accept Strings and Portlet* models
+- Web::Portlet: initialize PortletPreferences upon creation; preferences to an instance variable; use Resource*.get methods
+
+
 = 1.0.9
 - creation of MB::Messages
 - new models: SocialActivity, SocialRelation, RatingsStats, MB::MessageFlag, MB::StatsUser
