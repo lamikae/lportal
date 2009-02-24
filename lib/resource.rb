@@ -19,6 +19,26 @@ class Resource < ActiveRecord::Base
   belongs_to :layout,
     :class_name => 'Web::Layout',
     :foreign_key => 'primkey'
+    
+  # Finds existing or creates a new Resource
+  # Args Hash:
+  #  - :codeid
+  #  - :primkey
+  def self.get(args)
+    conditions = []
+    args.each_pair{ |k,v|
+      conditions << (k==:primkey ?
+        ("%s='%s'" % [k,v]) : ("%s=%s" % [k,v]))
+    }
+    #puts conditions.inspect
+    r = Resource.find(:first, :conditions => conditions.join(' AND '))
+    unless r
+      logger.debug 'creating new Resource'
+      r = self.create(args)
+    end
+    return r
+  end
+  
 
   def plid
     self.primkey[/([0-9]*)_LAYOUT_(.*)/,1]

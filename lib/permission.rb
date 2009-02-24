@@ -24,6 +24,22 @@ class Permission < ActiveRecord::Base
     :foreign_key             => 'permissionid',
     :association_foreign_key => 'groupid'
 
+  # finds or creates
+  def self.get(args)
+    conditions = []
+    args.each_pair{ |k,v|
+      conditions << (k==:actionid ?
+        ("%s='%s'" % [k,v]) : ("%s=%s" % [k,v]))
+    }
+    #puts conditions.inspect
+    p = Permission.find(:first, :conditions => conditions.join(' AND '))
+    unless p
+      logger.debug 'creating new Permission'
+      p = self.create(args)
+    end
+    return p
+  end
+
   def holders
     self.users + self.roles + self.groups
   end
