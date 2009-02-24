@@ -137,7 +137,7 @@ class Group < ActiveRecord::Base
           :resourceid => r.id
         )
         self.company.administrators.each do |user|
-          user.user_permissions << p
+          user.permissions << p
         end
       end
     end

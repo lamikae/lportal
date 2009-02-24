@@ -115,7 +115,7 @@ class Role < ActiveRecord::Base
         :resourceid => r.id
       )
       self.company.administrators.each do |user|
-        user.user_permissions << p
+        user.permissions << p
       end
     end
   end
@@ -131,7 +131,7 @@ class Role < ActiveRecord::Base
               :conditions => "companyid=#{self.companyid} AND actionid='#{actionid}' AND resourceid=#{r.id}")
             next unless p
             p.users.each do |user|
-              user.user_permissions.delete(p)
+              user.permissions.delete(p)
             end
             p.groups.each do |group|
               group.permissions.delete(p)

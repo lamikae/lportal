@@ -255,7 +255,7 @@ module MB
             :resourceid => resource.id
           )
         end
-        self.user.user_permissions << permission
+        self.user.permissions << permission
       end
 
       self.save

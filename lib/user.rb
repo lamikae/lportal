@@ -165,7 +165,7 @@ class User < ActiveRecord::Base
 
     Counter.increment(:permission, 100)
     self.class.actions.each do |action|
-      self.user_permissions << Permission.create(
+      self.permissions << Permission.create(
         :companyid  => self.companyid,
         :actionid   => action,
         :resourceid => resource.id
@@ -239,7 +239,7 @@ class User < ActiveRecord::Base
                            :association_foreign_key => 'roleid'
 
   # association to direct user permissions.
-  has_and_belongs_to_many  :user_permissions,
+  has_and_belongs_to_many  :permissions,
                            :class_name              => 'Permission',
                            :join_table              => 'users_permissions',
                            :foreign_key             => 'userid',
@@ -289,8 +289,8 @@ class User < ActiveRecord::Base
 
   # All permissions that the user has.
   # Permissions are summed up from user, group and role permissions.
-  def permissions
-    user_permissions + group_permissions + role_permissions
+  def all_permissions
+    (self.permissions + group_permissions + role_permissions).flatten
   end
 
 

@@ -154,7 +154,7 @@ module MB
       # +10129	322
 
       self.class.actions.each do |actionid|
-        self.user.user_permissions << Permission.create(
+        self.user.permissions << Permission.create(
           :companyid  => self.companyid,
           :actionid   => actionid,
           :resourceid => resource.id
