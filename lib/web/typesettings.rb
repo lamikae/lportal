@@ -3,6 +3,9 @@ module Web
   class Typesettings
 
     attr_accessor :template_id
+    
+    # accepts a Hash, where the key tells the column
+    # { 1 => [Web::PortletPreferences, ...], 2 => [...], ... }
     attr_accessor :portlets
 
     # Takes either existing raw typesettings string (to be parsed) or a Hash, when clean Typesettings is created.
@@ -15,7 +18,7 @@ module Web
       end
     end
 
-    # Parses raw typesettings String into internal format.
+    # Parses raw typesettings String into an object (self).
     def read(raw)
       _x = raw.split(/\n/)
       #puts _x.inspect
@@ -81,7 +84,18 @@ module Web
     def parse
       columns = []
       @portlets.each_pair do |column,portlets|
-        columns << "column-%i=%s," % [column, portlets.join(",")]
+        # handle several portlet types
+        portletids = []
+        portlets.each do |p|
+          if p.is_a?(String)
+            portletids << p
+          elsif (p.is_a?(Web::Portlet) or p.is_a?(Web::PortletPreferences))
+            portletids << p.portletid
+          else
+            raise 'Unknown portlet type %s' % p.class
+          end
+        end
+        columns << "column-%i=%s," % [column, portletids.join(",")]
       end
       columns.join("\n")
     end
