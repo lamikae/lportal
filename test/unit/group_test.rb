@@ -47,7 +47,7 @@ class GroupTest < ActiveSupport::TestCase
 
       # Permissions to administrators
       group.company.administrators.each do |user|
-        assert user.user_permissions.include?(p)
+        assert user.permissions.include?(p)
       end
     end
   end

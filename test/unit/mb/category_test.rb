@@ -62,7 +62,7 @@ class MB::CategoryTest < ActiveSupport::TestCase
       p = Permission.find(:first,
         :conditions => "companyid=#{category.companyid} AND actionid='#{actionid}' AND resourceid=#{resource.id}")
       assert_not_nil p
-      assert user.user_permissions.include?(p)
+      assert user.permissions.include?(p)
     end
   end
 

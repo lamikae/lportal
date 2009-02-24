@@ -98,7 +98,7 @@ class UserTest < ActiveSupport::TestCase
       p = resource.permissions.select{|_p| _p.actionid==action}.first
       assert_not_nil p
       assert_equal user.companyid, p.companyid
-      assert user.user_permissions.include?(p)
+      assert user.permissions.include?(p)
     end
     # counter
     assert_equal (counter_permission.currentid+100), counter_permission.reload.currentid

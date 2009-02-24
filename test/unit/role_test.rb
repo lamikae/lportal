@@ -54,7 +54,7 @@ class RoleTest < ActiveSupport::TestCase
 
       # Permissions to administrators
       role.company.administrators.each do |user|
-        assert user.user_permissions.include?(p)
+        assert user.permissions.include?(p)
       end
     end
   end
@@ -98,7 +98,7 @@ class RoleTest < ActiveSupport::TestCase
 
         # User + group permissions
         users.each do |user|
-          assert !user.user_permissions.include?(p)
+          assert !user.permissions.include?(p)
         end
         groups.each do |group|
           assert !group.permissions.include?(p)
