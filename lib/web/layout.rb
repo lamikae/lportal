@@ -136,7 +136,7 @@ module Web
         # +10111	303
 
         self.company.administrators.each do |user|
-          user.user_permissions << p
+          user.permissions << p
         end
 
         # COPY groups_permissions (groupid, permissionid) FROM stdin;
@@ -145,6 +145,14 @@ module Web
         group = self.group
         self.group.permissions << p
       end
+
+      # the layout management portlet (new in 5.2.x?)
+
+      # COPY portletpreferences (portletpreferencesid, ownerid, ownertype, plid, portletid, preferences) FROM stdin;
+      # +10259	0	3	10301	88	<portlet-preferences />
+
+      Web::PortletPreferences.create(:plid => self.plid, :portletid => 88)
+
       return self
     end
 
@@ -221,6 +229,17 @@ module Web
     #
     def settings
       Typesettings.new(self.typesettings)
+    end
+
+    #  - ts = Typesettings instance
+    def settings=(ts)
+      raise 'parameter must be a Typesettings instance' unless ts.is_a?(Typesettings)
+      self.typesettings = ts.to_s
+    end
+
+    def name_=(name)
+      self.name = "<?xml version='1.0' encoding='UTF-8'?>"+\
+      '<root available-locales="en_US" default-locale="en_US"><name language-id="en_US">%s</name></root>' % name
     end
 
   end
