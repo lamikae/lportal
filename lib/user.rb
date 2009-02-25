@@ -523,7 +523,14 @@ class User < ActiveRecord::Base
   # URL to user's portrait (needs to be prefixed with Liferay server URL).
   # Unless the user has a portrait, a default image should be displayed.
   def portrait_path
-    path = '/image/user_%s_portrait' % (self.contact.male ? 'male' : 'female')
+    gender = (
+      if self.contact
+        self.contact.male ? 'male' : 'female'
+      else
+        'male'
+      end
+    )
+    path = '/image/user_%s_portrait' % gender
     path << "?img_id=#{self.portraitid}" if self.portraitid != 0
     return path
   end
