@@ -224,7 +224,7 @@ class Group < ActiveRecord::Base
 
 
   # --
-  # Class methods
+  # Class methods, in functional paradigm
   # ++
 
   class << self

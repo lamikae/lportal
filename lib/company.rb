@@ -44,6 +44,31 @@ class Company < ActiveRecord::Base
     User.find(:first, :conditions => "companyid=#{self.id} AND defaultuser = true" )
   end
 
+  # Oddly enough, guest user's does not have a personal group relation in 5.1.1 nor 5.2.1
+  def guest_group
+    Group.find(:first, :conditions => "companyid=#{self.id} AND name='Guest'")
+  end
+
+  # 0 = personal user groups
+  def personal_groups
+    Group.find_personal self.id
+  end
+
+  # 1 = public, guest can see
+  def public_groups
+    Group.find_public self.id
+  end
+
+  # 2 = user-created open communities
+  def open_groups
+    Group.find_open self.id
+  end
+
+  # 3 = private, also contains admins
+  def private_groups
+    Group.find_private self.id
+  end
+
 #   has_one :frontpage,
 #     :class_name  => "Web::LayoutSet",
 #     :foreign_key => "companyid",
