@@ -87,6 +87,7 @@ module Web
         # handle several portlet types
         portletids = []
         portlets.each do |p|
+          next if p.nil?
           if p.is_a?(String)
             portletids << p
           elsif (p.is_a?(Web::Portlet) or p.is_a?(Web::PortletPreferences))

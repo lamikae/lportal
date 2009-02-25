@@ -20,12 +20,8 @@ module Web
     #  - portletid (String) (or portlet)
     #  - portlet       Web::Portlet
     #  - preferences   String
-    #  - instantiate   Boolean
     def initialize(params={})
-      @instantiate = params.delete(:instantiate)
-      if params[:portletid]
-        portlet = params.delete(:portlet)
-      end
+      portlet = params.delete(:portlet) if params[:portlet]
 
       super(params)
 
@@ -33,17 +29,38 @@ module Web
       self.ownerid     ||= 0 # ??
       self.ownertype   ||= 3 # ??
 
-      self.portlet = portlet if portlet # this has to be after calling super
+      # since the instance in not yet saved, the portletid might be integer
+      portlet ||= Web::Portlet.find_by_portletid("#{self.portletid}")
+      if portlet
+        self.portlet = portlet # instantiates if applicaple
+      else
+        # nil is most likely an error. the portlet database is not populated?
+        # in this case default to fallback action and instantiate the portlet.
+        self.portletid = self.class.instance_id(self.portletid)
+      end
       self
     end
 
-    # defines the portlet that the preferences describe.
+    # generates a random instance id
+    def self.instance_id(portletid)
+      '%s_INSTANCE_%s' % [portletid, random_string(4)]
+    end
+
+    # Defines the portlet that the preferences describe.
+    # Instantiates if the portlet can instantiate.
     def portlet=(portlet)
-      portletid = '%s' % portlet.portletid
-      portletid << ('_INSTANCE_%s' % self.class.random_string(4)) if @instantiate==true
-      self.portletid = portletid
+      if portlet.instanceable?
+        self.portletid = self.class.instance_id(portlet.portletid)
+      else
+        self.portletid = portlet.portletid
+      end
+    end
+
+    def portlet
+      Web::Portlet.find_by_portletid(self.name)
     end
     
+    # the portletid (name) of the portlet
     def name
       self.portletid.split(/_INSTANCE_/)[0]
     end
@@ -53,7 +70,7 @@ module Web
       "#{self.plid}_LAYOUT_#{self.portletid}"
     end
 
-    # argument plid is to comply API with Web::Portlet.resource
+    # Argument plid is to comply API with Web::Portlet.resource
     def resource(plid=nil)
       Resource.find_by_primkey(self.primkey)
   #     Resource.find(:all, :conditions => "primkey='#{self.primkey}'")

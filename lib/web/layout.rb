@@ -133,8 +133,8 @@ module Web
         # +10129	301
         # +10129	302
         # +10129	303
-        # +10111	303
 
+        # admins can do everything
         self.company.administrators.each do |user|
           user.permissions << p
         end
@@ -142,16 +142,33 @@ module Web
         # COPY groups_permissions (groupid, permissionid) FROM stdin;
         # +10166	301
         # +10166	303
-        group = self.group
-        self.group.permissions << p
+        
+        # group members can ADD_DISCUSSION and VIEW
+        if (actionid=='ADD_DISCUSSION' or actionid=='VIEW')
+          self.group.permissions << p
+        end
+      
+        # COPY users_permissions (userid, permissionid) FROM stdin;
+        # +10111	303
+
+        # guest is permitted to VIEW if the layout is public.
+        if self.is_public? and actionid=='VIEW'
+          self.company.guest.permissions << p
+        end
+
       end
 
       # the layout management portlet (new in 5.2.x?)
 
       # COPY portletpreferences (portletpreferencesid, ownerid, ownertype, plid, portletid, preferences) FROM stdin;
       # +10259	0	3	10301	88	<portlet-preferences />
+      
+      # perhaps this will create itself?
 
-      Web::PortletPreferences.create(:plid => self.plid, :portletid => 88)
+      # only Caterpillar can find the correct portlet
+#       if defined? Caterpillar
+#         Web::PortletPreferences.create(:plid => self.plid, :portletid => 88)
+#       end
 
       return self
     end
@@ -224,22 +241,99 @@ module Web
         :conditions => "companyid=#{self.companyid} AND name='#{self.liferay_class}' AND scope=#{scope}")
     end
 
-    # settings;
-    # Object model of the string "typesettings". Settings for this Layout.
+    # Settings for this Layout.
     #
+    # Returns the object model of the string "typesettings".
     def settings
       Typesettings.new(self.typesettings)
     end
 
+    # Save settings. Parses them to typesettings string.
+    #
+    # Parameters:
     #  - ts = Typesettings instance
     def settings=(ts)
       raise 'parameter must be a Typesettings instance' unless ts.is_a?(Typesettings)
       self.typesettings = ts.to_s
     end
 
-    def name_=(name)
+    # As the method 'name' returns the name in XML, name_string is the string representation.
+    def name_string
+      self.name[/([^>]*)<\/name/,1]
+    end
+
+    # Insert the name string to XML.
+    def name_string=(name)
       self.name = "<?xml version='1.0' encoding='UTF-8'?>"+\
       '<root available-locales="en_US" default-locale="en_US"><name language-id="en_US">%s</name></root>' % name
+    end
+
+    # sets the number of columns in this layout
+    def columns=(nr)
+      s = self.settings
+      s.columns = nr
+      self.settings = s
+    end
+
+    # Add a portlet to this layout.
+    def <<(portlet, params={})
+      # set the portlet properties & preferences
+      portlet.companyid = self.companyid
+      portlet.group = self.group
+      portlet.save
+
+      # by default the portlet is instantiated.
+      # this means creating new PortletPreferences.
+      if portlet.instanceable?
+        ### instance preferences
+        preferences = portlet.preferences()
+        if preferences
+          # define the layout
+          preferences.plid = self.plid
+          preferences.save
+        end
+      end
+
+      # not very OO..
+      settings = self.settings
+      location = (params[:location] ||= {:column => 1})
+#       puts location.inspect
+
+      # accept either a string or a symbol or Portlet
+#       puts portlet.inspect
+#       puts settings.portlets.inspect
+      settings.portlets.update(
+        location[:column] => [preferences || portlet]
+      )
+#       puts settings.portlets.inspect
+      self.settings=settings
+
+      [1,2,4].each do |scope|
+        portlet.find_resource(:scope => scope)
+      end
+
+      # guest permissions are given if the layout is public.
+      # (TODO: AND IF THE GROUP IS GUEST)
+
+      if portlet.instanceable?
+        resource = portlet.find_resource(:scope => 4)
+        portlet.class.actions.each do |actionid|
+          p = Permission.get(
+            :companyid  => self.companyid,
+            :actionid   => actionid,
+            :resourceid => resource.id
+          )
+          if actionid=='VIEW'
+            self.group.permissions << p
+            if self.is_public?
+              guest = self.company.guest
+              guest.permissions << p
+            end
+          end
+        end
+      end
+
+      self
     end
 
   end

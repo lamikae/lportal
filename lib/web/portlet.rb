@@ -9,11 +9,6 @@ module Web
     belongs_to :company,
       :foreign_key => "companyid"
 
-    # PortletPreferences model (@preferences)
-    # This Web::Portlet instance may have several "instances of itself", each of which are stored
-    # in PortletPreferences.
-    attr_accessor :preferences
-
     # Portlet should belong to a group!
     attr_accessor :group
 
@@ -27,16 +22,27 @@ module Web
 
     # Creates a portlet instance with preferences.
     def initialize(params={})
-      prefs = {:portlet => self}
-      prefs.update(:instantiate => (params[:instantiate].nil? ? true : params.delete(:instantiate)))
-
       super(params)
+      self.roles ||= ''
       self.active_ = true if self.active_.nil?
-
-      @preferences = Web::PortletPreferences.new(prefs)
 
       self
     end
+
+    # PortletPreferences model (@preferences)
+    # This Web::Portlet instance may have several "instances of itself", each of which are stored
+    # in PortletPreferences.
+    def preferences
+      return nil unless self.instanceable?
+      unless @preferences
+        @preferences = Web::PortletPreferences.create(
+          {:portlet => self}
+        )
+      end
+      return @preferences
+    end
+    
+    attr_writer :preferences
     
     # name = portletid
     def name
@@ -73,6 +79,7 @@ module Web
         raise 'instance does not belong to a group' unless @group
         primkey = @group.id
       when 4
+        return nil unless self.instanceable?
         primkey = self.preferences.primkey
       else
         raise 'unknown scope'
@@ -94,6 +101,15 @@ module Web
     def is_active?
       self.active_
     end
+
+    # This portlet setting is not in the database.
+    # This method exists to make it possible to call this method from Layout.
+    # Caterpillar re-defines this method and returns the value in the XML configuration.
+    #
+    # Defaults to true.
+#     def instanceable?
+#       true
+#     end
     
     # ResourceCode associated to this instance (and scope)
     def resource_code(scope=4)
