@@ -6,6 +6,11 @@ this_dir = File.dirname(File.expand_path(file))
 
 require this_dir+'/version'
 
+# set the migrations directory
+LPORTAL_MIGRATIONS=File.expand_path(
+  File.join(this_dir,'migrations','*.rb')
+              )
+
 # include all ruby files
 Find.find(this_dir+'/lib') do |file|
   if FileTest.directory?(file)
