@@ -81,49 +81,9 @@ module MB
       # +212	105	10166
       # +213	106	10307
 
-      rc = self.resource_code(1)
-      unless rc
-        rc = ResourceCode.create(
-          :companyid => self.companyid,
-          :name => self.liferay_class,
-          :scope => 1
-        )
-      end
-      unless Resource.find(:first, :conditions => "codeid=#{rc.id} AND primkey='#{self.companyid}'")
-        Resource.create(
-          :codeid  => rc.id,
-          :primkey => self.companyid
-        )
-      end
-
-      rc = self.resource_code(2)
-      unless rc
-        rc = ResourceCode.create(
-          :companyid => self.companyid,
-          :name => self.liferay_class,
-          :scope => 2
-        )
-      end
-      unless Resource.find(:first, :conditions => "codeid=#{rc.id} AND primkey='#{self.group.id}'")
-        Resource.create(
-          :codeid  => rc.id,
-          :primkey => self.group.id
-        )
-      end
-
-      # Create a resource with scope=4 for this Layout.
-      rc = self.resource_code(4)
-      unless rc
-        rc = ResourceCode.create(
-          :companyid => self.companyid,
-          :name => self.liferay_class,
-          :scope => 4
-        )
-      end
-      resource = Resource.create(
-        :codeid  => rc.id,
-        :primkey => self.id
-      )
+      find_resource(:scope => 1)
+      find_resource(:scope => 2)
+      resource = find_resource(:scope => 4)
 
       # Permissions to scope 4
 
@@ -154,7 +114,7 @@ module MB
       # +10129	322
 
       self.class.actions.each do |actionid|
-        self.user.permissions << Permission.create(
+        self.user.permissions << Permission.get(
           :companyid  => self.companyid,
           :actionid   => actionid,
           :resourceid => resource.id
@@ -210,6 +170,42 @@ module MB
       layouts = self.group.select_layouts_with('message_boards',pl)
       return nil unless layouts.any?
       '%s/-/message_boards/category/%i' % [layouts.first.path, self.id]
+    end
+
+    # ResourceCode associated to this instance (and scope)
+    def resource_code(scope=4)
+      ResourceCode.get({
+        :companyid => self.companyid,
+        :name => self.liferay_class,
+        :scope => scope
+      })
+    end
+
+    # resource by codeid
+    def resource(rc)
+      case rc.scope
+      when 1
+        primkey = self.companyid
+      when 2
+        raise 'instance does not belong to a group' unless self.group
+        primkey = self.group.id
+      when 4
+        primkey = self.id
+      else
+        raise 'unknown scope'
+      end
+      Resource.get({
+        :codeid  => rc.codeid,
+        :primkey => primkey
+      })
+    end
+
+    # When creating new instances, it is common to find a resource code, and a resource that matches the code.
+    # If they cannot be found from the database, they are created.
+    # This method takes care of all that.
+    def find_resource(args)
+      rc = self.resource_code(args[:scope])
+      self.resource(rc)
     end
 
   end

@@ -182,53 +182,12 @@ module MB
 
       # only create resources with scope 1,2 for rootmessages
       if self.is_root?
-        rc = self.resource_code(1)
-        unless rc
-          rc = ResourceCode.create(
-            :companyid => self.companyid,
-            :name => self.liferay_class,
-            :scope => 1
-          )
-        end
-        unless Resource.find(:first, :conditions => "codeid=#{rc.id} AND primkey='#{self.companyid}'")
-          Resource.create(
-            :codeid  => rc.id,
-            :primkey => self.companyid
-          )
-        end
-
-        rc = self.resource_code(2)
-        unless rc
-          rc = ResourceCode.create(
-            :companyid => self.companyid,
-            :name => self.liferay_class,
-            :scope => 2
-          )
-        end
-        unless Resource.find(:first, :conditions => "codeid=#{rc.id} AND primkey='#{category.groupid}'")
-          Resource.create(
-            :codeid  => rc.id,
-            :primkey => category.groupid
-          )
-        end
+        find_resource(:scope => 1)
+        find_resource(:scope => 2)
       end
 
       # Create a resource with scope=4
-      rc = self.resource_code(4)
-      unless rc
-        rc = ResourceCode.create(
-          :companyid => self.companyid,
-          :name => self.liferay_class,
-          :scope => 4
-        )
-      end
-      resource = Resource.find(:first, :conditions => "codeid=#{rc.id} AND primkey='#{self.id}'")
-      unless resource
-        resource = Resource.create(
-          :codeid  => rc.id,
-          :primkey => self.id
-        )
-      end
+      resource = find_resource(:scope => 4)
 
 
       # COPY permission_ (permissionid, companyid, actionid, resourceid) FROM stdin;
@@ -246,15 +205,11 @@ module MB
       # +10129	327
 
       self.class.actions.each do |actionid|
-        permission = Permission.find(:first,
-          :conditions => "companyid=#{self.companyid} AND actionid='#{actionid}' AND resourceid=#{resource.id}")
-        unless permission
-          permission = Permission.create(
-            :companyid  => self.companyid,
-            :actionid   => actionid,
-            :resourceid => resource.id
-          )
-        end
+        permission = Permission.get({
+          :companyid  => self.companyid,
+          :actionid   => actionid,
+          :resourceid => resource.id
+        })
         self.user.permissions << permission
       end
 
@@ -325,8 +280,37 @@ module MB
 
     # ResourceCode associated to this instance (and scope)
     def resource_code(scope=4)
-      ResourceCode.find(:first,
-        :conditions => "companyid=#{self.companyid} AND name='#{self.liferay_class}' AND scope=#{scope}")
+      ResourceCode.get({
+        :companyid => self.companyid,
+        :name => self.liferay_class,
+        :scope => scope
+      })
+    end
+
+    # resource by codeid
+    def resource(rc)
+      case rc.scope
+      when 1
+        primkey = self.companyid
+      when 2
+        primkey = self.category.groupid
+      when 4
+        primkey = self.id
+      else
+        raise 'unknown scope'
+      end
+      Resource.get({
+        :codeid  => rc.codeid,
+        :primkey => primkey
+      })
+    end
+
+    # When creating new instances, it is common to find a resource code, and a resource that matches the code.
+    # If they cannot be found from the database, they are created.
+    # This method takes care of all that.
+    def find_resource(args)
+      rc = self.resource_code(args[:scope])
+      self.resource(rc)
     end
 
   end
