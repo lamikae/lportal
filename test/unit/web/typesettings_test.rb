@@ -40,14 +40,14 @@ class TypesettingsTest < ActiveSupport::TestCase
   end
 
   def test_layouts
-puts
+STDERR.puts
     Web::Layout.all.each do |layout|
       ts = layout.typesettings
       # compare string lengths
-puts ts.inspect
-puts layout.settings.to_s.inspect
+STDERR.puts ts.inspect
+STDERR.puts layout.settings.to_s.inspect
       assert_equal ts.size, layout.settings.to_s.size
-puts '...'
+STDERR.puts '...'
     end
   end
 

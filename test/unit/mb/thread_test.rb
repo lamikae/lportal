@@ -20,7 +20,7 @@ class MB::ThreadTest < ActiveSupport::TestCase
 
   def test_root
     @threads.each do |x|
-      assert_not_nil x.root, "#{x.id} has no root message"
+      assert_not_nil x.rootmessage, "#{x.id} has no root message"
     end
   end
 

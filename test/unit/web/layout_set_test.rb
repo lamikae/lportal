@@ -1,7 +1,13 @@
 require 'test_helper'
 
 class Web::LayoutSetTest < ActiveSupport::TestCase
-  fixtures :layout, :layoutset, :portlet
+  fixtures [
+    :company,
+    :group_,
+    :layout, :layoutset,
+    :portlet,
+    :classname_
+  ]
 
   def setup
     @sets = Web::LayoutSet.all
@@ -63,6 +69,13 @@ class Web::LayoutSetTest < ActiveSupport::TestCase
       end
     end
   end
+
+  def test_url_prefix
+    @sets.each do |x|
+      assert_not_nil x.url_prefix
+    end
+  end
+
 
 #   # test /web/guest/home equivalent
 #   # Guest doesn't always have home

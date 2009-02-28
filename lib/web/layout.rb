@@ -232,7 +232,8 @@ module Web
 
     # the URL path to this Layout
     def path
-      self.layoutset.url_prefix + self.group.friendlyurl + self.friendlyurl
+      self.layoutset ? 
+        self.layoutset.url_prefix + self.group.friendlyurl + self.friendlyurl : ''
     end
 
     # ResourceCode associated to this instance (and scope)

@@ -1,9 +1,10 @@
 require 'test_helper'
 
 class DlFileTest < ActiveSupport::TestCase
+  fixtures [:dlfileentry, :company, :user_, :tagsasset]
 
   def setup
-    @files = DLFile.all
+    @files = DlFile.all
   end
 
   def test_company

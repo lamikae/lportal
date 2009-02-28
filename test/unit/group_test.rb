@@ -3,6 +3,7 @@ require 'test_helper'
 class GroupTest < ActiveSupport::TestCase
   fixtures [
     :organization_,
+    :groups_orgs,
     :users_orgs,
     :usergroup,
     :role_,
@@ -92,14 +93,14 @@ class GroupTest < ActiveSupport::TestCase
   # each group must belong to a company
   def test_company
     @groups.each do |x|
-      assert !x.company.nil?, "#{x.id} belongs to no company"
+      assert_not_nil x.company
     end
   end
 
   def test_organizations
     @groups.each do |x|
       x.organizations.each do |org|
-        assert organization.nil?, "#{x.id} has_and_belongs_to to unknown organization #{org.inspect}"
+        assert_not_nil org
       end
     end
   end
@@ -107,7 +108,7 @@ class GroupTest < ActiveSupport::TestCase
   def test_roles
     @groups.each do |x|
       x.roles.each do |role|
-        assert role.nil?, "#{x.id} has_and_belongs_to an unknown role #{role.inspect}"
+        assert_not_nil role
       end
     end
   end
@@ -115,7 +116,7 @@ class GroupTest < ActiveSupport::TestCase
   def test_permissions
     @groups.each do |x|
       x.permissions.each do |permission|
-        assert permission.nil?, "#{x.id} has_and_belongs_to an unknown permission #{permission.inspect}"
+        assert_not_nil permission
       end
     end
   end
@@ -123,7 +124,7 @@ class GroupTest < ActiveSupport::TestCase
   def test_usergroups
     @groups.each do |x|
       x.usergroups.each do |usergroup|
-        assert usergroup.nil?, "#{x.id} has_and_belongs_to an unknown usergroup #{usergroup.inspect}"
+        assert_not_nil usergroup
       end
     end
   end
@@ -138,7 +139,7 @@ class GroupTest < ActiveSupport::TestCase
   # each group must have a friendlyurl
   def test_friendlyurl
     @groups.each do |x|
-      assert !x.friendlyurl.nil?, "#{x.id} has no friendlyurl"
+      assert_not_nil x.friendlyurl
     end
   end
 

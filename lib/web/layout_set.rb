@@ -51,8 +51,10 @@ module Web
     # lookup the path prefix for this LayoutSet
     def url_prefix
       return '/web' if self.is_public?
-
-      _class = Classname.model(Classname.find(self.group.classnameid).value)
+      _class = (
+        self.group.classnameid==0 ?
+        Group : Classname.model(Classname.find(self.group.classnameid).value)
+      )
       if _class == User
         return '/user' #if self.is_private?
         #return '/web'

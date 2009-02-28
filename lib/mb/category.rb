@@ -189,8 +189,9 @@ module MB
       :foreign_key => :parentcategoryid
 
     has_many :threads,
-      :class_name => 'MB::Thread',
-      :foreign_key => 'categoryid'
+      :class_name  => 'MB::Thread',
+      :foreign_key => 'categoryid',
+      :order       => 'lastpostdate DESC'
 
     has_many :messages,
       :class_name => 'MB::Message',

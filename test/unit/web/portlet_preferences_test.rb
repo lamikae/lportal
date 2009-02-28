@@ -2,10 +2,23 @@ require 'test_helper'
 
 class Web::PortletPreferencesTest < ActiveSupport::TestCase
   fixtures :portletpreferences, :resource_, :portlet, :portletitem
+  if defined? Caterpillar
+    fixtures << :portlet_names
+  end
 
   def setup
     @prefs = Web::PortletPreferences.all
   end
+
+  def test_create
+    portlet = Web::Portlet.find_by_name('login')
+    prefs = Web::PortletPreferences.create(
+      :portlet => portlet
+    )
+    assert_not_nil prefs
+    assert_equal portlet.portletid, prefs.portletid
+  end
+  
 
 #   # each preference must belong to an owner
 #   def test_owner
@@ -39,13 +52,13 @@ class Web::PortletPreferencesTest < ActiveSupport::TestCase
     end
   end
 
-  # there has to be a resource for each portletpreference
-  def test_resource
-    @prefs.each do |x|
-      unless x.plid == 0
-        assert_not_nil x.resource(x.plid), "No resource with primkey #{x.primkey}"
-      end
-    end
-  end
+#   # there has to be a resource for each portletpreference
+#   def test_resource
+#     @prefs.each do |x|
+#       unless x.plid == 0
+#         assert_not_nil x.resource(x.plid), "No resource with primkey #{x.primkey}"
+#       end
+#     end
+#   end
 
 end

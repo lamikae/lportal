@@ -96,7 +96,7 @@ module MB
       # +10313	10129	10308	1
 
       unless self.flag # wtf?
-        MB::MessageFlag.create(
+        self.flag = MB::MessageFlag.create(
           :user    => self.user,
           :message => self,
           :flag    => 1

@@ -38,7 +38,6 @@ class Resource < ActiveRecord::Base
     end
     return r
   end
-  
 
   def plid
     self.primkey[/([0-9]*)_LAYOUT_(.*)/,1]

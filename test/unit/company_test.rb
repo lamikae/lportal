@@ -2,6 +2,8 @@ require 'test_helper'
 
 class CompanyTest < ActiveSupport::TestCase
   fixtures [
+    :company,
+    :user_, :group_,
     :account_, :organization_, :contact_,
     :layout, :layoutset,
     :resource_, :resourcecode
@@ -50,12 +52,11 @@ class CompanyTest < ActiveSupport::TestCase
     end
   end
 
-  # each company must have organization(s)
-  def test_organizations
-    @companies.each do |c|
-      assert !c.organizations.empty?, "#{c.id} has no organizations"
-    end
-  end
+#   def test_organizations
+#     @companies.each do |c|
+#       assert !c.organizations.empty?, "#{c.id} has no organizations"
+#     end
+#   end
 
   def test_administrators
     @companies.each do |c|
@@ -63,11 +64,16 @@ class CompanyTest < ActiveSupport::TestCase
     end
   end
 
-# ?
-#   def test_resource
-#     @companies.each do |x|
-#       assert !x.resource.nil?, "#{x.id} has no resource"
-#     end
-#   end
+  def test_guest
+    @companies.each do |c|
+      assert_not_nil c.guest
+    end
+  end
+
+  def test_guest_group
+    @companies.each do |c|
+      assert_not_nil c.guest_group
+    end
+  end
 
 end

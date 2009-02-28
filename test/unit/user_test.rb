@@ -293,8 +293,10 @@ class UserTest < ActiveSupport::TestCase
 
   def test_path
     @users.each do |u|
-      assert_not_nil u.path(:public) if u.hive.public_layoutset
-      assert_not_nil u.path(:private) if u.hive.private_layoutset
+      unless u.hive.nil?
+        assert_not_nil u.path(:public), u.id if u.hive.public_layoutset
+        assert_not_nil u.path(:private), u.id if u.hive.private_layoutset
+      end
     end
   end
 

@@ -517,7 +517,7 @@ class User < ActiveRecord::Base
 
   # URL path to this User's public or private page
   def path(pl=:public)
-    self.hive.nil? ? nil : self.hive.path(pl)
+    self.hive.nil? ? '' : self.hive.path(pl)
   end
 
   # URL to user's portrait (needs to be prefixed with Liferay server URL).

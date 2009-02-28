@@ -320,14 +320,14 @@ class Group < ActiveRecord::Base
     case pl
     when :public
       self.public_layouts.any? ?
-        self.public_layoutset.url_prefix + self.friendlyurl : nil
+        self.public_layoutset.url_prefix + self.friendlyurl : ''
 
     when :private
       self.private_layouts.any? ?
-        self.private_layoutset.url_prefix + self.friendlyurl : nil
+        self.private_layoutset.url_prefix + self.friendlyurl : ''
 
     else
-      nil
+      ''
     end
   end
 
