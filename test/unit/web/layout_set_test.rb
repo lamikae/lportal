@@ -31,6 +31,7 @@ class Web::LayoutSetTest < ActiveSupport::TestCase
   def test_group
     @sets.each do |x|
       group = x.group
+      next unless group
       assert_not_nil group, "#{x.id} belongs to no group"
     end
   end
@@ -38,6 +39,7 @@ class Web::LayoutSetTest < ActiveSupport::TestCase
   def test_public_layoutsets
     @sets.each do |x|
       group = x.group
+      next unless group
       assert_not_nil group.public_layoutset, "Group #{group.id} does not have a public layoutset"
     end
   end
@@ -45,6 +47,7 @@ class Web::LayoutSetTest < ActiveSupport::TestCase
   def test_private_layoutsets
     @sets.each do |x|
       group = x.group
+      next unless group
       assert_not_nil group.private_layoutset, "Group #{group.id} does not have a private layoutset"
     end
   end
@@ -56,6 +59,7 @@ class Web::LayoutSetTest < ActiveSupport::TestCase
 
     # each group must exist
     groups = @sets.map{|x| x.group}.uniq
+    groups.compact!
     groups.each do |group|
       assert_not_nil group, "Reference to non-existing group  #{group.inspect}"
     end

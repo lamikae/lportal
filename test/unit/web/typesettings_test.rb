@@ -40,14 +40,15 @@ class TypesettingsTest < ActiveSupport::TestCase
   end
 
   def test_layouts
-STDERR.puts
+    flunk 'this test is incomplete'
+    #STDERR.puts
     Web::Layout.all.each do |layout|
       ts = layout.typesettings
       # compare string lengths
-STDERR.puts ts.inspect
-STDERR.puts layout.settings.to_s.inspect
+#STDERR.puts ts.inspect
+#STDERR.puts layout.settings.to_s.inspect
       assert_equal ts.size, layout.settings.to_s.size
-STDERR.puts '...'
+#STDERR.puts '...'
     end
   end
 

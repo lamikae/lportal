@@ -56,6 +56,8 @@ class Tag::AssetTest < ActiveSupport::TestCase
     Tag::Asset.resource_types.each do |type|
       type.find(:all).each do |obj|
         if defined? obj.asset
+          # not all messages are tagged
+          next if obj.is_a?(MB::Message)
           assert_not_nil obj.asset, '%s (%i) has no Tag::Asset' % [obj.class, obj.id]
 
           # problems with versioned wiki and journal pages..

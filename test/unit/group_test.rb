@@ -129,10 +129,16 @@ class GroupTest < ActiveSupport::TestCase
     end
   end
 
-  # each group must belong to a creator
-  def test_creator
+#   # each group must belong to a creator
+#   def test_creator
+#     @groups.each do |x|
+# #       assert !x.creator.nil?, "#{x.id} has no creator"
+#     end
+#   end
+
+  def test_mbcategories
     @groups.each do |x|
-#       assert !x.creator.nil?, "#{x.id} has no creator"
+      assert_not_nil x.mbcategories
     end
   end
 
@@ -166,12 +172,12 @@ class GroupTest < ActiveSupport::TestCase
       if x.private_layouts.any?
         assert_not_nil x.path(:private)
       else
-        assert_nil x.path(:private)
+        assert_equal '', x.path(:private)
       end
       if x.public_layouts.any?
         assert_not_nil x.path(:public)
       else
-        assert_nil x.path(:public)
+        assert_equal '', x.path(:public)
       end
     end
   end

@@ -6,12 +6,13 @@ class Web::LayoutTest < ActiveSupport::TestCase
   ]
 
   def setup
-    @layouts = Web::Layout.find :all
+    @layouts = Web::Layout.all
     assert !@layouts.empty?
-      
+
     group = Company.first.guest_group
-    @clean_layout = group.public_layouts.select{|l| l.friendlyurl=='/home'}.first
-    assert_not_nil @clean_layout
+    @clean_layout = group.public_layouts.first #select{|l| l.friendlyurl=='/home'}.first
+
+    flunk ('Ei guestin layoutia yhteisössä %i!' % group.id) unless @clean_layout
     @clean_layout.settings = Web::Typesettings.new
   end
 
@@ -64,7 +65,17 @@ class Web::LayoutTest < ActiveSupport::TestCase
         :conditions => "companyid=#{layout.companyid} AND actionid='#{actionid}' AND resourceid=#{resource.id}")
       assert_not_nil p
 
-      assert group.permissions.include?(p)
+
+      # group members can ADD_DISCUSSION and VIEW
+      if (actionid=='ADD_DISCUSSION' or actionid=='VIEW')
+        assert group.permissions.include?(p)
+      end
+
+      # guest is permitted to VIEW if the layout is public.
+      if layout.is_public? and actionid=='VIEW'
+        assert group.company.guest.permissions.include?(p)
+      end
+
     end
 
 #     # the layout management portlet (new in 5.2.x?)
