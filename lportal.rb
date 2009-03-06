@@ -11,8 +11,12 @@ LPORTAL_MIGRATIONS=File.expand_path(
   File.join(this_dir,'migrations','*.rb')
               )
 
+require File.join(this_dir,'lib','acts','resourceful')
+# make models able to act resourceful
+ActiveRecord::Base.class_eval { include Acts::Resourceful }
+
 # include all ruby files
-Find.find(this_dir+'/lib') do |file|
+Find.find(File.join(this_dir,'lib')) do |file|
   if FileTest.directory?(file)
     if File.basename(file) == "deprecated"
       Find.prune # Don't look any further into this directory.
@@ -23,3 +27,4 @@ Find.find(this_dir+'/lib') do |file|
     require file if file[/.rb$/]
   end
 end
+

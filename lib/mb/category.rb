@@ -4,6 +4,8 @@ module MB
     set_table_name       :mbcategory
     set_primary_key      :categoryid
 
+    acts_as_resourceful
+
     # this causes trouble when modifying instance attributes (!)
     #validates_uniqueness_of :uuid_
 
@@ -81,12 +83,6 @@ module MB
       # +212	105	10166
       # +213	106	10307
 
-      find_resource(:scope => 1)
-      find_resource(:scope => 2)
-      resource = find_resource(:scope => 4)
-
-      # Permissions to scope 4
-
       # COPY permission_ (permissionid, companyid, actionid, resourceid) FROM stdin;
       # +312	10109	ADD_FILE	213
       # +313	10109	ADD_MESSAGE	213
@@ -113,13 +109,33 @@ module MB
       # +10129	321
       # +10129	322
 
+      get_resource(:scope => 1)
+      get_resource(:scope => 2)
+
+      # Permissions to scope 4
+
       self.class.actions.each do |actionid|
-        self.user.permissions << Permission.get(
-          :companyid  => self.companyid,
-          :actionid   => actionid,
-          :resourceid => resource.id
-        )
+        self.user.permissions << permission(actionid,4)
       end
+    end
+
+    # Finds existing or creates a new Resource (TODO: DRY up!!)
+    # Args Hash:
+    #  - :codeid
+    #  - :primkey
+    def self.get(args)
+      conditions = []
+      args.each_pair{ |k,v|
+        conditions << (k==:name ?
+          ("%s='%s'" % [k,v]) : ("%s=%s" % [k,v]))
+      }
+      #puts conditions.inspect
+      r = self.find(:first, :conditions => conditions.join(' AND '))
+      unless r
+        logger.debug 'creating new %s' % self.class
+        r = self.create(args)
+      end
+      return r
     end
 
     belongs_to :group,
@@ -157,12 +173,6 @@ module MB
       :class_name => 'MB::Message',
       :foreign_key => 'categoryid'
 
-    # ResourceCode associated to this instance (and scope)
-    def resource_code(scope=4)
-      ResourceCode.find(:first,
-        :conditions => "companyid=#{self.companyid} AND name='#{self.liferay_class}' AND scope=#{scope}")
-    end
-
     # URL path to this Category. Works on Liferay 5.1.1.
     # Parameters:
     #  - pl          only check public or private layouts? defaults to both. ( nil | :public | :private )
@@ -172,40 +182,9 @@ module MB
       '%s/-/message_boards/category/%i' % [layouts.first.path, self.id]
     end
 
-    # ResourceCode associated to this instance (and scope)
-    def resource_code(scope=4)
-      ResourceCode.get({
-        :companyid => self.companyid,
-        :name => self.liferay_class,
-        :scope => scope
-      })
-    end
-
-    # resource by codeid
-    def resource(rc)
-      case rc.scope
-      when 1
-        primkey = self.companyid
-      when 2
-        raise 'instance does not belong to a group' unless self.group
-        primkey = self.group.id
-      when 4
-        primkey = self.id
-      else
-        raise 'unknown scope'
-      end
-      Resource.get({
-        :codeid  => rc.codeid,
-        :primkey => primkey
-      })
-    end
-
-    # When creating new instances, it is common to find a resource code, and a resource that matches the code.
-    # If they cannot be found from the database, they are created.
-    # This method takes care of all that.
-    def find_resource(args)
-      rc = self.resource_code(args[:scope])
-      self.resource(rc)
+    def scope2_primkey
+      raise 'instance does not belong to a group' unless self.group
+      self.groupid
     end
 
   end

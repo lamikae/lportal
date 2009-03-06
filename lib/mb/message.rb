@@ -3,6 +3,8 @@ module MB
     set_table_name       :mbmessage
     set_primary_key      :messageid
 
+    acts_as_resourceful
+
 #     validates_presence_of :user, :category, :subject, :body
 
 
@@ -22,9 +24,11 @@ module MB
       }
     end
 
+    # Parameters:
     #  - user
     #  - category or parent message
     #  - body
+    #  - flag (Fixnum)
     def initialize(params)
       raise 'No user' unless params[:user] or params[:userid]
       unless ((params[:category] or params[:categoryid]) || (params[:parent] or params[:parentmessageid]))
@@ -95,13 +99,12 @@ module MB
       # COPY mbmessageflag (messageflagid, userid, messageid, flag) FROM stdin;
       # +10313	10129	10308	1
 
-      unless self.flag # wtf?
-        self.flag = MB::MessageFlag.create(
-          :user    => self.user,
-          :message => self,
-          :flag    => 1
-        )
-      end
+      flag = (params[:flag] || 1)
+      self.flag = MB::MessageFlag.create(
+        :user    => self.user,
+        :message => self,
+        :flag    => flag
+      )
 
 
       # COPY mbstatsuser (statsuserid, groupid, userid, messagecount, lastpostdate) FROM stdin;
@@ -182,12 +185,12 @@ module MB
 
       # only create resources with scope 1,2 for rootmessages
       if self.is_root?
-        find_resource(:scope => 1)
-        find_resource(:scope => 2)
+        get_resource(:scope => 1)
+        get_resource(:scope => 2)
       end
 
       # Create a resource with scope=4
-      resource = find_resource(:scope => 4)
+      resource = get_resource(:scope => 4)
 
 
       # COPY permission_ (permissionid, companyid, actionid, resourceid) FROM stdin;
@@ -242,6 +245,11 @@ module MB
       :foreign_key => 'classpk'
 
 
+    def scope2_primkey
+      raise 'instance does not belong to a category' unless self.category
+      self.category.groupid
+    end
+
     # Parent message
     def parent
       self.is_root? ? nil : MB::Message.find(self.parentmessageid)
@@ -276,41 +284,6 @@ module MB
 
     def is_anonymous?
       self.anonymous
-    end
-
-    # ResourceCode associated to this instance (and scope)
-    def resource_code(scope=4)
-      ResourceCode.get({
-        :companyid => self.companyid,
-        :name => self.liferay_class,
-        :scope => scope
-      })
-    end
-
-    # resource by codeid
-    def resource(rc)
-      case rc.scope
-      when 1
-        primkey = self.companyid
-      when 2
-        primkey = self.category.groupid
-      when 4
-        primkey = self.id
-      else
-        raise 'unknown scope'
-      end
-      Resource.get({
-        :codeid  => rc.codeid,
-        :primkey => primkey
-      })
-    end
-
-    # When creating new instances, it is common to find a resource code, and a resource that matches the code.
-    # If they cannot be found from the database, they are created.
-    # This method takes care of all that.
-    def find_resource(args)
-      rc = self.resource_code(args[:scope])
-      self.resource(rc)
     end
 
   end
