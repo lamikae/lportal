@@ -3,6 +3,8 @@ class Group < ActiveRecord::Base
   set_table_name       :group_
   set_primary_key      :groupid
 
+  acts_as_resourceful
+
   public
 
   # com.liferay.portal.model.Group
@@ -100,18 +102,7 @@ class Group < ActiveRecord::Base
       # +41	6	10155
       # 
       # Create a resource with scope=4 for this Layout.
-      rc = self.resource_code(4)
-      unless rc
-        rc = ResourceCode.create(
-          :companyid => self.companyid,
-          :name => self.liferay_class,
-          :scope => 4
-        )
-      end
-      r = Resource.create(
-        :codeid  => rc.id,
-        :primkey => self.id
-      )
+      r = get_resource(:scope => 4)
 
       # Permissions (given to administrators)
 
@@ -131,7 +122,7 @@ class Group < ActiveRecord::Base
       # 
 
       self.class.actions.each do |actionid|
-        p = Permission.create(
+        p = Permission.get(
           :companyid  => self.companyid,
           :actionid   => actionid,
           :resourceid => r.id
@@ -190,6 +181,10 @@ class Group < ActiveRecord::Base
   # association to assets
   has_many :assets,
     :class_name  => 'Tag::Asset',
+    :foreign_key => 'groupid'
+
+  has_many :mbcategories,
+    :class_name => 'MB::Category',
     :foreign_key => 'groupid'
 
   # a group may have two layoutsets (public and private)
@@ -292,15 +287,16 @@ class Group < ActiveRecord::Base
   end
 
 
-  has_one :resource,
-    :foreign_key => 'primkey'
-
   has_many :mbcategories,
     :class_name  => 'MB::Category',
     :foreign_key => 'groupid'
 
   def is_active?
     self.active_
+  end
+
+  def is_personal?
+    self.type_ == 0
   end
 
   def is_public?
@@ -329,12 +325,6 @@ class Group < ActiveRecord::Base
     else
       ''
     end
-  end
-
-  # ResourceCode associated to this instance (and scope)
-  def resource_code(scope=4)
-    ResourceCode.find(:first,
-      :conditions => "companyid=#{self.companyid} AND name='#{self.liferay_class}' AND scope=#{scope}")
   end
 
   # Selects the layout (from both public and private) that has the portlet.
