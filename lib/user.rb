@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   set_table_name       :user_
   set_primary_key      :userid
 
+  acts_as_resourceful
+
   validates_uniqueness_of :uuid_
   validates_uniqueness_of :emailaddress, :scope => :companyid
   validates_uniqueness_of :screenname, :scope => :companyid
@@ -131,23 +133,16 @@ class User < ActiveRecord::Base
     # +10168	10166	10109	f	f	0		01	mobile	01		0	
 
 
-    # scope=4 means that the resource is "owned" by User
-    rc = self.resource_code(4)
-    raise 'Required ResourceCode not found' unless rc
 
     # insert data into counter_ so that Hibernate won't die
-    Counter.increment(:resource, 100)
+#     Counter.increment(:resource, 100)
 
     # COPY resource_ (resourceid, codeid, primkey) FROM stdin;
     # +44	5	10164
 
-    resource = Resource.create(
-      :codeid  => rc.id,
-      :primkey => self.id
-    )
+    # scope=4 means that the resource is "owned" by User
+    resource = get_resource(:scope => 4)
 
-    permissions = []
-    # insert data into counter_ so that Hibernate won't die
 
     # COPY permission_ (permissionid, companyid, actionid, resourceid) FROM stdin;
     # +114	10109	DELETE	44
@@ -163,9 +158,10 @@ class User < ActiveRecord::Base
     # +10129	117
     # +10129	118
 
-    Counter.increment(:permission, 100)
+    # insert data into counter_ so that Hibernate won't die
+#     Counter.increment(:permission, 100)
     self.class.actions.each do |action|
-      self.permissions << Permission.create(
+      self.permissions << Permission.get(
         :companyid  => self.companyid,
         :actionid   => action,
         :resourceid => resource.id
@@ -477,12 +473,6 @@ class User < ActiveRecord::Base
   def city=(val)
     self.address.city = val
     self.address.save
-  end
-
-  # ResourceCode associated to this instance (and scope)
-  def resource_code(scope=4)
-    ResourceCode.find(:first,
-      :conditions => "companyid=#{self.companyid} AND name='#{self.liferay_class}' AND scope=#{scope}")
   end
 
   # Resources associated to this instance
