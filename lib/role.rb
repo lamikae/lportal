@@ -2,6 +2,8 @@ class Role < ActiveRecord::Base
   set_table_name       :role_
   set_primary_key      :roleid
 
+  acts_as_resourceful
+
   validates_uniqueness_of :name, :scope => 'companyid'
 
   # com.liferay.portal.model.Role
@@ -71,22 +73,8 @@ class Role < ActiveRecord::Base
     # +33	29	10109
     # +34	30	10151
 
-    rc = self.resource_code(1)
-    raise 'Required ResourceCode not found' unless rc
-    r = Resource.find(:first, :conditions => "codeid=#{rc.id} AND primkey='#{self.companyid}'")
-    unless r
-      Resource.create(
-        :codeid  => rc.id,
-        :primkey => self.companyid
-      )
-    end
-
-    rc = self.resource_code(4)
-    raise 'Required ResourceCode not found' unless rc
-    r = Resource.create(
-      :codeid  => rc.id,
-      :primkey => self.id
-    )
+    self.get_resource(:scope => 1)
+    r = self.get_resource(:scope => 4)
 
     # Permissions (given to administrators)
 
@@ -109,7 +97,7 @@ class Role < ActiveRecord::Base
     # +10129	76
 
     self.class.actions.each do |actionid|
-      p = Permission.create(
+      p = Permission.get(
         :companyid  => self.companyid,
         :actionid   => actionid,
         :resourceid => r.id
@@ -157,8 +145,6 @@ class Role < ActiveRecord::Base
     freeze
   end
 
-
-
   belongs_to :company,
     :foreign_key => "companyid"
 
@@ -178,11 +164,5 @@ class Role < ActiveRecord::Base
                            :join_table              => "groups_roles",
                            :foreign_key             => "roleid",
                            :association_foreign_key => "groupid"
-
-  # ResourceCode associated to this instance (and scope)
-  def resource_code(scope=4)
-    ResourceCode.find(:first,
-      :conditions => "companyid=#{self.companyid} AND name='#{self.liferay_class}' AND scope=#{scope}")
-  end
 
 end
