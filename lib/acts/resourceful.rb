@@ -51,9 +51,20 @@ module Acts #:nodoc:
       def resource_code(scope=4)
         ResourceCode.get({
           :companyid => self.companyid,
-          :name => self.liferay_class,
-          :scope => scope
+          :name      => self.liferay_class,
+          :scope     => scope
         })
+      end
+
+      # Default primkey in scope 2. Override in the model if necessary.
+      def scope2_primkey
+        raise 'instance does not belong to a group' unless self.group
+        self.groupid
+      end
+
+      # Default primkey in scope 4. Override in the model if necessary.
+      def scope4_primkey
+        self.id
       end
 
       # resource by codeid
@@ -64,7 +75,7 @@ module Acts #:nodoc:
         when 2
           primkey = self.scope2_primkey
         when 4
-          primkey = self.id
+          primkey = self.scope4_primkey
         else
           raise 'unknown scope'
         end

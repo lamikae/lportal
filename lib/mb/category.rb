@@ -182,10 +182,5 @@ module MB
       '%s/-/message_boards/category/%i' % [layouts.first.path, self.id]
     end
 
-    def scope2_primkey
-      raise 'instance does not belong to a group' unless self.group
-      self.groupid
-    end
-
   end
 end
