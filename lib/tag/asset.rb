@@ -108,7 +108,11 @@ module Tag
     end
 
     # Presents the Asset resource in ”tagged_content” portlet. See Group#tagged_content_portlet
-    def path(portletpreferences=self.group.tagged_content_portlet)
+    #
+    # Params:
+    #  - content_id     the id of the resource (not always self.resource.id)
+    #  - portletpreferences
+    def path(content_id=self.resource.id,portletpreferences=self.group.tagged_content_portlet)
       unless portletpreferences
         logger.error 'No portletpreferences for tagged_content portlet'
         return ''
@@ -118,16 +122,26 @@ module Tag
       portletid = portletpreferences.portletid
       redirect = 'javascript: history.go(-1)'
 
-      params = "?p_p_id=#{portletid}"+\
-        "&p_p_lifecycle=0"+\
-        "&p_p_state=normal"+\
-        "&p_p_mode=view"+\
-        "&_#{portletid}_struts_action=%2Ftagged_content%2Fview_content"+\
-        "&_#{portletid}_assetId=#{self.id}"+\
-        "&_#{portletid}_redirect=#{u(redirect)}"
-        # &p_p_col_id=column-1&p_p_col_count=1
+      # 5.1.x
+#       params = "?p_p_id=#{portletid}"+\
+#         "&p_p_lifecycle=0"+\
+#         "&p_p_state=normal"+\
+#         "&p_p_mode=view"+\
+#         "&_#{portletid}_struts_action=%2Ftagged_content%2Fview_content"+\
+#         "&_#{portletid}_assetId=#{self.id}"+\
+#         "&_#{portletid}_redirect=#{u(redirect)}"
+#         # &p_p_col_id=column-1&p_p_col_count=1
 
-      path = portletpreferences.layout.path + params
+      # 5.2.x
+      _path = [
+        '-',
+        'asset_publisher',
+        portletpreferences.instance_id,
+        'content',
+        content_id
+      ].join('/')
+
+      path = '%s/%s?redirect=%s' % [portletpreferences.layout.path, _path, u(redirect)]
       logger.debug path
       return path
     end
