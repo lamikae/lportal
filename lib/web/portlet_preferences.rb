@@ -79,6 +79,11 @@ module Web
       self.portletid.split(/_INSTANCE_/)[0]
     end
 
+    # the 4-char random string
+    def instance_id
+      self.portletid.split(/_INSTANCE_/)[1]
+    end
+
     # primkey is the foreign key in the resource_ table.
     def primkey
       "#{self.plid}_LAYOUT_#{self.portletid}"

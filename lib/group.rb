@@ -366,8 +366,12 @@ class Group < ActiveRecord::Base
   #
   # See #select_layouts_with
   def tagged_content_portlet(params={})
-    portlet = Web::Portlet.find_by_name('tagged_content')
-    raise 'tagged_content portlet not found! Check that Caterpillar migrations are up-to-date' unless portlet
+    # tagged_content on 5.1.x,
+    # asset_publisher on 5.2.x
+    params[:name] ||= 'asset_publisher' #'tagged_content'
+
+    portlet = Web::Portlet.find_by_name(params[:name])
+    raise ('Portlet ”%s” not found! Check that Caterpillar migrations are up-to-date' % params[:name]) unless portlet
 
     # this says: if <tt>pl</tt> is undefined, use public layout, else use what <tt>pl</tt> specified.
     params.update(:privatelayout => ( params[:privatelayout].nil? ? false : params[:privatelayout] ))
@@ -385,10 +389,9 @@ class Group < ActiveRecord::Base
     end
 
     ### Create Layout + PortletPreferences
-    params[:name] ||= 'tagged_content'
     logger.info 'Creating new Layout ”%s” in Group %s (%i)' % [params[:name],self.name,self.id]
 
-    params[:friendlyurl] ||= '/tagged_content'
+    params[:friendlyurl] ||= ('/%s' % params[:name])
     params.update(:group => self)
 
     layout = Web::Layout.create(params)
@@ -397,8 +400,7 @@ class Group < ActiveRecord::Base
     layout.settings = Web::Typesettings.new
     layout.columns=1
 
-    # the portlet
-    portlet = Web::Portlet.find_by_name 'tagged_content'
+    # add the portlet to the layout
     layout.<<( portlet )
     layout.save
 
