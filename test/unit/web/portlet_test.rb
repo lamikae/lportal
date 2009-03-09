@@ -1,15 +1,34 @@
 require 'test_helper'
 
 class Web::PortletTest < ActiveSupport::TestCase
-  fixtures [
-    :portlet, :portletpreferences, :portletitem,
-    :portlet_names, # caterpillar!
-#     :resource_,
-#     :role_
-    :layout
-  ]
+  fixtures :portletpreferences, :portlet, :layout
+  if defined? Caterpillar
+    fixtures << :portlet_names
+  end
 
   def setup
+    @portlets = Web::Portlet.all
+    @portlet = Web::Portlet.first
+    flunk 'no portlet to test on' unless @portlet
+    @layout = Web::Layout.first
+    flunk 'no layout to test on' unless @layout
+  end
+
+  def test_noninstanceable
+    @portlet.instanceable=false
+
+    preferences = @portlet.preferences
+    assert_not_nil preferences
+    assert_equal @portlet.portletid, preferences.portletid # not instantiated!
+  end
+
+  # only instanceable portlets have resources
+  def test_instanceable
+    @portlet.instanceable=true
+
+    preferences = @portlet.preferences
+    assert_not_nil preferences
+    assert_not_nil preferences.portletid[/#{@portlet.portletid}_INSTANCE/] # instantiated!
   end
 
 #   def test_debug
@@ -197,10 +216,6 @@ class Web::PortletTest < ActiveSupport::TestCase
 #   end
 
 
-  def setup
-    @portlets = Web::Portlet.all
-  end
-
   # each portlet must belong to a company
   def test_company
     @portlets.each do |x|
@@ -218,12 +233,5 @@ class Web::PortletTest < ActiveSupport::TestCase
       end
     end
   end
-
-#   # each portlet must have a resource
-#   def test_resource
-#     @portlets.each do |x|
-#       assert_not_nil x.resource(???), "No resource with primkey #{x.primkey}"
-#     end
-#   end
 
 end

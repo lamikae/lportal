@@ -1,7 +1,11 @@
 module Web
+  # While PortletPreferences acts_as_resourceful, it is a resource as the portlet it represents.
+  # The ResourceCode has a 'name' value that is the Portlet's portletid.
   class PortletPreferences < ActiveRecord::Base
     set_table_name       :portletpreferences
     set_primary_key      :portletpreferencesid
+
+    acts_as_resourceful
 
     public
 
@@ -13,6 +17,13 @@ module Web
       :class_name => 'User',
       :foreign_key => 'ownerid'
 
+
+    # Actions for Permissions. This list is not complete.
+    def self.actions
+      %w{
+      VIEW
+      }
+    end
 
     # PortletPreferences instance keeps record of unique Portlet preferences.
     #
@@ -47,37 +58,33 @@ module Web
     end
 
     # Defines the portlet that the preferences describe.
-    # Instantiates if the portlet can instantiate.
+    # Instantiates if the portlet can instantiated.
     def portlet=(portlet)
-      if portlet.instanceable?
-        self.portletid = self.class.instance_id(portlet.portletid)
-      else
-        self.portletid = portlet.portletid
-      end
+      self.portletid = (
+        portlet.instanceable? ?
+          self.class.instance_id(portlet.portletid) : portlet.portletid
+      )
     end
 
+    # The Web::Portlet of this "preferences".
     def portlet
-      Web::Portlet.find_by_portletid(self.name)
+      return nil unless self.layout
+      Web::Portlet.find(:first,
+        :conditions => "companyid=#{self.layout.companyid} AND portletid='#{self.name}'")
     end
-    
+
     # the portletid (name) of the portlet
     def name
       self.portletid.split(/_INSTANCE_/)[0]
     end
 
-    # primkey in resource_ table
+    # primkey is the foreign key in the resource_ table.
     def primkey
       "#{self.plid}_LAYOUT_#{self.portletid}"
     end
 
-    # Argument plid is to comply API with Web::Portlet.resource
-    def resource(plid=nil)
-      Resource.find_by_primkey(self.primkey)
-  #     Resource.find(:all, :conditions => "primkey='#{self.primkey}'")
-    end
-
-    # loads the preferences XML structure to Ruby Hash
-    def preferences_
+    # Translates the preferences XML structure to Array of Hashes.
+    def to_a
       xml = REXML::Document.new(self.preferences)
       preferences = []
       xml.elements.each("portlet-preferences/preference") do |pref|
@@ -90,6 +97,27 @@ module Web
       return preferences
     end
 
+    def companyid
+      self.layout.companyid
+    end
+
+    # Override acts_as_resourceful. Use portlet name as the ResourceCode name.
+    def resource_code(scope=4)
+      ResourceCode.get({
+        :companyid => self.companyid,
+        :name      => self.name,
+        :scope     => scope
+      })
+    end
+
+    def scope2_primkey
+      self.layout ?
+        self.layout.groupid : nil
+    end
+
+    def scope4_primkey
+      self.primkey
+    end
 
     private
 
