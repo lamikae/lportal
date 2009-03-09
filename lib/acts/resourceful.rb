@@ -79,6 +79,7 @@ module Acts #:nodoc:
         else
           raise 'unknown scope'
         end
+        return nil if primkey.nil?
         Resource.get({
           :codeid  => rc.codeid,
           :primkey => primkey

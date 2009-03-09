@@ -19,8 +19,8 @@ class Resource < ActiveRecord::Base
   belongs_to :layout,
     :class_name => 'Web::Layout',
     :foreign_key => 'primkey'
-    
-  # Finds existing or creates a new Resource
+
+  # Finds existing or creates a new Resource. TODO: DRY to resourceful
   # Args Hash:
   #  - :codeid
   #  - :primkey
@@ -31,12 +31,12 @@ class Resource < ActiveRecord::Base
         ("%s='%s'" % [k,v]) : ("%s=%s" % [k,v]))
     }
     #puts conditions.inspect
-    r = Resource.find(:first, :conditions => conditions.join(' AND '))
+    r = self.find(:first, :conditions => conditions.join(' AND '))
     unless r
-      logger.debug 'creating new Resource'
+      logger.debug 'creating new %s' % self.class
       r = self.create(args)
     end
-    return r
+    r.reload
   end
 
   def plid

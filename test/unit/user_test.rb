@@ -236,27 +236,31 @@ class UserTest < ActiveSupport::TestCase
 
   # each user can have a personal group (hive)
   def test_hive
-    @users.each do |x|
-      group = x.hive
-      if group
-        # the group must have a proper classnameid
-        _class = Classname.find_by_value x.liferay_class
-        assert_not_nil _class
-        assert_equal _class.id, group.classnameid, "#{x.id}'s personal group is not assigned to #{x.liferay_class}"
+    @users.each do |user|
+      group = user.hive
+      if user.is_guest?
+        assert_nil group
+      else
+        assert_not_nil group
+      end
+      next unless group
+      # the group must have a proper classnameid
+      _class = Classname.find_by_value user.liferay_class
+      assert_not_nil _class
+      assert_equal _class.id, group.classnameid, "#{user.id}'s personal group is not assigned to #{user.liferay_class}"
 
-        assert_not_nil group.friendlyurl
+      assert_not_nil group.friendlyurl
 
-        # if user is active, hive is active, and vice versa
-        if x.is_active?
-          assert group.is_active?, "#{x.id}'s personal group is not active"
-          # there has to be layoutsets
-          assert !group.layoutsets.empty?, "#{x.id}'s personal group does not have layoutsets"
+      # if user is active, hive is active, and vice versa
+      if user.is_active?
+        assert group.is_active?, "#{user.id}'s personal group is not active"
+        # there has to be layoutsets
+        assert !group.layoutsets.empty?, "#{user.id}'s personal group does not have layoutsets"
 
-        # ..except that Liferay-5.1.x doesn't seem to unactive the group
-        else
-          #assert !group.is_active?, "#{x.id}'s personal group is active, while the user is not"
+      # ..eusercept that Liferay-5.1.user doesn't seem to unactive the group
+      else
+        #assert !group.is_active?, "#{user.id}'s personal group is active, while the user is not"
 
-        end
       end
     end
   end

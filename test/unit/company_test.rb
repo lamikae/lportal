@@ -60,7 +60,7 @@ class CompanyTest < ActiveSupport::TestCase
 
   def test_administrators
     @companies.each do |c|
-      assert !c.administrators.empty?, "#{c.id} has no administrators"
+      assert c.administrators.size > 0, 'Company %s (%i) does not have administrators' % [c.webid, c.id]
     end
   end
 

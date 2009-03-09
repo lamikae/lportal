@@ -5,11 +5,11 @@ class RoleTest < ActiveSupport::TestCase
     :role_,
     :users_roles,
     :groups_roles,
-    :permission_,
-    :users_permissions,
-    :groups_permissions,
-    :resource_,
-    :resourcecode
+#     :permission_,
+#     :users_permissions,
+#     :groups_permissions,
+#     :resource_,
+#     :resourcecode
   ]
 
   def setup

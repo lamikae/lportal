@@ -7,9 +7,12 @@ class MB::CategoryTest < ActiveSupport::TestCase
     :mbmessage,
     :mbthread,
     :group_,
-    :layout,
-    :portlet_names
+    :layout
   ]
+  if defined? Caterpillar
+    fixtures << :portletproperties
+  end
+
 
   def setup
     @categories = MB::Category.all
