@@ -2,8 +2,12 @@ require 'test_helper'
 
 class Web::LayoutTest < ActiveSupport::TestCase
   fixtures [
-    :layout, :layoutset, :portlet, :portletpreferences, :portlet_names, :resourcecode
+    :layout, :layoutset, :portlet, :portletpreferences, :resourcecode
   ]
+  if defined? Caterpillar
+    fixtures << :portletproperties
+  end
+
 
   def setup
     @layouts = Web::Layout.all
@@ -12,8 +16,8 @@ class Web::LayoutTest < ActiveSupport::TestCase
     group = Company.first.guest_group
     @clean_layout = group.public_layouts.first #select{|l| l.friendlyurl=='/home'}.first
 
-    flunk ('Ei guestin layoutia yhteisössä %i!' % group.id) unless @clean_layout
-    @clean_layout.settings = Web::Typesettings.new
+    flunk ('No guest layouts in group %i' % group.id) unless @clean_layout
+    @clean_layout.settings = Web::Typesettings.new # clean it up
   end
 
   def test_create
@@ -86,7 +90,7 @@ class Web::LayoutTest < ActiveSupport::TestCase
   # tests .<<()
   def test_append_to_self
     layout = @clean_layout
-    portlet_name = :guidance
+    portlet_name = 'tagged_content'
 
     layout.settings = Web::Typesettings.new
 
@@ -97,28 +101,30 @@ class Web::LayoutTest < ActiveSupport::TestCase
       Web::Portlet.find_by_name('hello_world')
     ].each do |portlet|
       assert_not_nil portlet
-  #     puts portlet.inspect
+      assert_not_nil portlet.preferences
+      #puts portlet.inspect
+#             puts portlet.resource.inspect
       
       # TODO: test instantiate & no instantiated portlets, already instantiated, test that preferences.id matches
 
       layout.<<( portlet, {:location => { :column => 1 }})
-  #     puts layout.inspect
+      #puts layout.inspect
       
       ### OK. Let the testing begin
       
       portlet.reload
       group = layout.group
-      assert_equal group, portlet.group
-      assert_equal group.companyid, portlet.companyid
+      assert_equal group, portlet.preferences.layout.group
+      #assert_equal portlet.companyid, group.companyid
 
       # COPY portletpreferences (portletpreferencesid, ownerid, ownertype, plid, portletid, preferences) FROM stdin;
       # +10267	0	3	10264	guidance_communities_INSTANCE_Hs9t	<portlet-preferences />
 
       preferences = portlet.preferences
       unless portlet.instanceable?
-        assert_nil preferences
+        assert_not_nil preferences
         assert_equal ({1=>[portlet.portletid]}), layout.settings.portlets
-        
+
       else
         assert_not_nil preferences
 #         puts preferences.inspect
@@ -139,12 +145,15 @@ class Web::LayoutTest < ActiveSupport::TestCase
       # +139	111	10264_LAYOUT_guidance_communities_INSTANCE_Hs9t
 
       [1,2,4].each do |scope|
-        rc = portlet.resource_code(scope)
+        rc = preferences.resource_code(scope)
         assert_not_nil rc
         assert_equal layout.companyid, rc.companyid
-        assert_equal portlet.name, rc.name
+        # rc.name does not depend on instanceability
+        assert_equal portlet.portletid, rc.name
 
-        r = portlet.find_resource(:scope => scope)
+        rc = preferences.resource_code(scope)
+        assert_not_nil rc
+        r = preferences.get_resource(:scope => scope)
         assert_not_nil r
         assert_equal r.codeid, rc.id
         case scope
@@ -167,9 +176,9 @@ class Web::LayoutTest < ActiveSupport::TestCase
       # COPY users_permissions (userid, permissionid) FROM stdin;
       # +10180	135
 
-      resource = portlet.find_resource(:scope => 4)
+      resource = preferences.get_resource(:scope => 4)
       guest = group.company.guest
-      portlet.class.actions.each do |actionid|
+      preferences.class.actions.each do |actionid|
         p = Permission.find(:first,
           :conditions => "companyid=#{group.companyid} AND actionid='#{actionid}' AND resourceid=#{resource.id}")
         assert_not_nil p
@@ -184,9 +193,29 @@ class Web::LayoutTest < ActiveSupport::TestCase
     end
   end
 
+  def test_append_portlets
+    layout = @clean_layout
+
+    login_portlet = Web::Portlet.find_by_name 'login'
+    assert_not_nil login_portlet
+    login_portlet.instanceable=false
+
+    hw_portlet = Web::Portlet.find_by_name 'hello_world'
+    assert_not_nil hw_portlet
+    hw_portlet.instanceable=true
+
+    layout.<<( login_portlet, {:location => { :column => 1 }})
+    layout.<<( hw_portlet, {:location => { :column => 2 }})
+
+    layout.save
+
+    assert layout.portlets.include?(login_portlet)
+    assert layout.portlets.include?(hw_portlet.preferences) # instantiated
+  end
+
   def test_columns
     layout = @clean_layout
-    
+
     layout.columns=1
     assert_equal '1_column', layout.settings.template_id
 
@@ -196,7 +225,7 @@ class Web::LayoutTest < ActiveSupport::TestCase
 
   def test_name_string
     layout = @clean_layout
-  
+
     # set the name.
     #
     # as the method 'name' returns the name in XML, name_string is a string representation.
@@ -204,27 +233,6 @@ class Web::LayoutTest < ActiveSupport::TestCase
     layout.name_string = name
     assert_equal name, layout.name_string
   end
-
-  def test_append_portlets
-    layout = @clean_layout
-
-    # login + rails-portlet test
-    login_portlet = Web::Portlet.find_by_name 'login'
-    assert_not_nil login_portlet
-
-    rails_portlet = Web::Portlet.find_by_name :test
-    assert_not_nil portlet
-    
-    layout.<<( login_portlet, {:location => { :column => 1 }})
-    layout.<<( rails_portlet, {:location => { :column => 2 }})
-
-    layout.save
-
-    assert layout.portlets.include?(login_portlet)
-    assert layout.portlets.include?(rails_portlet.preferences) # instantiated
-
-  end
-
 
   # each layout must belong to a company
   def test_company
@@ -285,24 +293,28 @@ class Web::LayoutTest < ActiveSupport::TestCase
     end
   end
 
-#   # each layout must have a typesettings, and the defined portlets exist
-#   def test_portlets
-#     @layouts.each do |x|
-#       assert !x.typesettings.nil?, "#{x} has no typesettings"
-# 
-#       # check portlets
-#       x.portletids.each do |id|
-#         next if id[/INSTANCE/]
-#         assert Web::Portlet.find_by_portletid(id), "Layout #{x.id} defines portlet #{id} but it is not found in the portlet table"
-#       end
-# 
-#       # check instances
-#       x.instances.each do |portlet|
-#         portletid = portlet.portletid
-#         next unless portletid[/INSTANCE/]
-#         assert Web::PortletPreferences.find_by_portletid(), "#{x.id} defines portlet instance #{portletid} but it is not found in portletpreferences"
-#       end
-#     end
-#   end
+  # each layout must have a typesettings, and the defined portlets exist
+  def test_portlets
+    @layouts.each do |x|
+      assert !x.typesettings.nil?, "#{x} has no typesettings"
+
+      x.portlets.each do |p|
+        assert_equal x, p.preferences.layout
+      end
+
+      # check portlets
+      x.portletids.each do |id|
+        next if id[/INSTANCE/]
+        assert Web::Portlet.find_by_portletid(id), "Layout #{x.id} defines portlet #{id} but it is not found in the portlet table"
+      end
+
+      # check instances
+      x.instances.each do |portlet|
+        portletid = portlet.portletid
+        next unless portletid[/INSTANCE/]
+        assert Web::PortletPreferences.find_by_portletid(), "#{x.id} defines portlet instance #{portletid} but it is not found in portletpreferences"
+      end
+    end
+  end
 
 end

@@ -5,6 +5,8 @@ module Web
     set_table_name       :layout
     set_primary_key      :plid
 
+    acts_as_resourceful
+
     validates_uniqueness_of :layoutid, :scope => [:groupid, :privatelayout]
 
 
@@ -34,6 +36,7 @@ module Web
     # Optional extra parameters:
     #  - locale
     def initialize(params)
+      logger.debug params.inspect
       raise 'No groupid given' unless (params[:groupid] or params[:group])
       raise 'No privatelayout given' if params[:privatelayout].nil?
       _name = params.delete(:name) || 'New layout'
@@ -88,34 +91,10 @@ module Web
       # +201	2	10166
       # +202	3	10301
 
-      rc = self.resource_code(2)
-      unless rc
-        rc = ResourceCode.create(
-          :companyid => self.companyid,
-          :name => self.liferay_class,
-          :scope => 2
-        )
-      end
-      unless Resource.find(:first, :conditions => "codeid=#{rc.id} AND primkey='#{self.group.id}'")
-        Resource.create(
-          :codeid  => rc.id,
-          :primkey => self.group.id
-        )
-      end
+      self.get_resource(:scope => 2)
 
       # Create a resource with scope=4 for this Layout.
-      rc = self.resource_code(4)
-      unless rc
-        rc = ResourceCode.create(
-          :companyid => self.companyid,
-          :name => self.liferay_class,
-          :scope => 4
-        )
-      end
-      resource = Resource.create(
-        :codeid  => rc.id,
-        :primkey => self.id
-      )
+      resource = self.get_resource(:scope => 4)
 
       # COPY permission_ (permissionid, companyid, actionid, resourceid) FROM stdin;
       # +301	10109	ADD_DISCUSSION	202
@@ -123,7 +102,7 @@ module Web
       # +303	10109	VIEW	202
 
       self.class.actions.each do |actionid|
-        p = Permission.create(
+        p = Permission.get(
           :companyid  => self.companyid,
           :actionid   => actionid,
           :resourceid => resource.id
@@ -142,12 +121,12 @@ module Web
         # COPY groups_permissions (groupid, permissionid) FROM stdin;
         # +10166	301
         # +10166	303
-        
+
         # group members can ADD_DISCUSSION and VIEW
         if (actionid=='ADD_DISCUSSION' or actionid=='VIEW')
           self.group.permissions << p
         end
-      
+
         # COPY users_permissions (userid, permissionid) FROM stdin;
         # +10111	303
 
@@ -236,12 +215,6 @@ module Web
         self.layoutset.url_prefix + self.group.friendlyurl + self.friendlyurl : ''
     end
 
-    # ResourceCode associated to this instance (and scope)
-    def resource_code(scope=4)
-      ResourceCode.find(:first,
-        :conditions => "companyid=#{self.companyid} AND name='#{self.liferay_class}' AND scope=#{scope}")
-    end
-
     # Settings for this Layout.
     #
     # Returns the object model of the string "typesettings".
@@ -278,27 +251,26 @@ module Web
 
     # Add a portlet to this layout.
     def <<(portlet, params={})
-      # set the portlet properties & preferences
-      portlet.companyid = self.companyid
-      portlet.group = self.group
-      portlet.save
-
-      # by default the portlet is instantiated.
-      # this means creating new PortletPreferences.
-      if portlet.instanceable?
-        ### instance preferences
-        preferences = portlet.preferences()
-        if preferences
-          # define the layout
-          preferences.plid = self.plid
-          preferences.save
-        end
+      unless portlet
+        logger.debug 'No portlet given'
+        return false
       end
+
+      if portlet.is_a?(Web::PortletPreferences)
+        preferences = portlet
+        portlet = preferences.portlet
+      else
+        preferences = portlet.preferences
+      end
+
+      # define the layout
+      preferences.layout = self
+      preferences.save
 
       # not very OO..
       settings = self.settings
       location = (params[:location] ||= {:column => 1})
-#       puts location.inspect
+      #puts location.inspect
 
       # accept either a string or a symbol or Portlet
 #       puts portlet.inspect
@@ -309,27 +281,25 @@ module Web
 #       puts settings.portlets.inspect
       self.settings=settings
 
-      [1,2,4].each do |scope|
-        portlet.find_resource(:scope => scope)
+      [1,2].each do |scope|
+        preferences.get_resource(:scope => scope)
       end
 
       # guest permissions are given if the layout is public.
       # (TODO: AND IF THE GROUP IS GUEST)
 
-      if portlet.instanceable?
-        resource = portlet.find_resource(:scope => 4)
-        portlet.class.actions.each do |actionid|
-          p = Permission.get(
-            :companyid  => self.companyid,
-            :actionid   => actionid,
-            :resourceid => resource.id
-          )
-          if actionid=='VIEW'
-            self.group.permissions << p
-            if self.is_public?
-              guest = self.company.guest
-              guest.permissions << p
-            end
+      resource = preferences.get_resource(:scope => 4)
+      preferences.class.actions.each do |actionid|
+        p = Permission.get(
+          :companyid  => self.companyid,
+          :actionid   => actionid,
+          :resourceid => resource.id
+        )
+        if actionid=='VIEW'
+          self.group.permissions << p
+          if self.is_public?
+            guest = self.company.guest
+            guest.permissions << p
           end
         end
       end
