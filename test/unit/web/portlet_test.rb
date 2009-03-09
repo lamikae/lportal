@@ -1,9 +1,11 @@
 require 'test_helper'
 
 class Web::PortletTest < ActiveSupport::TestCase
-  fixtures :portletpreferences, :portlet, :layout
+  fixtures [
+    :portletpreferences, :portlet, :layout
+  ]
   if defined? Caterpillar
-    fixtures << :portlet_names
+    fixtures << :portletproperties
   end
 
   def setup
@@ -31,206 +33,45 @@ class Web::PortletTest < ActiveSupport::TestCase
     assert_not_nil preferences.portletid[/#{@portlet.portletid}_INSTANCE/] # instantiated!
   end
 
-#   def test_debug
-#   ### autom. luonti
-# # user = User.find 13904
-# # user = User.find 10201
-# group = Group.find 10196
-# 
-# 
-# # Teemat
-# # ls = group.public_layoutset
-# # puts ls.themeid
-# # # ls.themeid = 'classicneuvonta_WAR_classicneuvontatheme'
-# # # ls.save
-# # 
-# # ly = group.public_layouts
-# # puts ly.inspect
-# # # puts ly.collect(&:portlets).inspect
-# # exit 0
-# # create a new public layout for this group
-# # layout = Web::Layout.create(
-# #   :group => group,
-# #   :privatelayout => false,
-# #   :name => 'Keskustelut'
-# # )
-# 
-# 
-# # COPY layout (plid, groupid, companyid, privatelayout, layoutid, parentlayoutid, name, title, description, type_, typesettings, hidden_, friendlyurl, iconimage, iconimageid, themeid, colorschemeid, wapthemeid, wapcolorschemeid, css, priority, dlfolderid) FROM stdin;
-# # +10264	10198	10178	f	3	0	<?xml version='1.0' encoding='UTF-8'?><root available-locales="en_US" default-locale="en_US"><name language-id="en_US">Yhteisöt</name></root>	<root />		portlet	layout-template-id=1_column\ncolumn-1=guidance_communities_INSTANCE_Hs9t	f	/yhteisot	f	0						2	0
-# 
-# # layout = Web::Layout.find 8400003
-# # layout = Web::Layout.find 8400002
-# # layout = Web::Layout.find 8400001
-# # _l = Web::Layout.find 25871
-# # layout = Web::Layout.find 25907
-# layout = Web::Layout.find 10199
-# assert_not_nil layout
-# 
-# #   layout.portlets =
-# # _ts = layout.typesettings
-# 
-# puts layout.inspect
-# 
-# # puts layout.settings.inspect
-# # puts layout.portlets.inspect
-# # puts layout.portlets.first.inspect
-# # exit 0
-# 
-# puts
-# 
-# 
-# ### instantiate a rails portlet as Web::Portlet
-# portlet = Web::Portlet.find_caterpillar_portlet :guidance_communities
-# assert_not_nil portlet
-# 
-# ### find a Liferay portlet (hello world) but do not instantiate
-# # portlet = Web::Portlet.create(
-# #   :portletid => '47',
-# #   :instantiate => false
-# # )
-# 
-# portlet.companyid = group.companyid
-# portlet.group = group
-# puts portlet.inspect
-# 
-# ############################
-# 
-# puts
-# 
-# # COPY portletpreferences (portletpreferencesid, ownerid, ownertype, plid, portletid, preferences) FROM stdin;
-# # +10267	0	3	10264	guidance_communities_INSTANCE_Hs9t	<portlet-preferences />
-# 
-# ### instance preferences
-# prefs = portlet.preferences()
-# assert_not_nil prefs
-# assert prefs.portletid[/INSTANCE/]
-# 
-# # prefs = Web::PortletPreferences.create(:portletid => '47')
-# # define the layout
-# prefs.plid = layout.plid
-# 
-# prefs.save
-# puts prefs.inspect
-# ############################
-# 
-# puts
-# 
-# ### insert PortletPreferences into Typesettings
-# ts = layout.settings
-# assert_not_nil ts
-# ts.columns = 1
-# #<Web::Typesettings:0x7fdcc57985e8 @template_id="1_column", @portlets={}>
-# 
-# ts.portlets = {1 => [prefs]}
-# puts ts.inspect
-# puts ts.to_s
-# layout.settings = ts
-# layout.save
-# # puts layout.inspect
-# ############################
-# 
-# puts
-# 
-# 
-# # COPY resourcecode (codeid, companyid, name, scope) FROM stdin;
-# # +111	10178	guidance_communities	4
-# # +112	10178	guidance_communities	1
-# # +113	10178	guidance_communities	2
-# 
-# # COPY resource_ (resourceid, codeid, primkey) FROM stdin;
-# # +137	112	10178
-# # +138	113	10198
-# # +139	111	10264_LAYOUT_guidance_communities_INSTANCE_Hs9t
-# 
-# [1,2,4].each do |scope|
-#   rc = portlet.resource_code(scope)
-#   assert_not_nil rc
-#   assert_equal group.companyid, rc.companyid
-#   assert_equal portlet.name, rc.name
-# 
-#   r = portlet.find_resource(:scope => scope)
-#   assert_not_nil r
-#   assert_equal r.codeid, rc.id
-#   case scope
-#   when 1
-#     assert_equal group.companyid, r.primkey
-#   when 2
-#     assert_equal group.id, r.primkey
-#   when 4
-#     assert_equal prefs.primkey, r.primkey
-#   end
-# end
-# 
-# 
-# # COPY permission_ (permissionid, companyid, actionid, resourceid) FROM stdin;
-# # +135	10178	VIEW	139
-# # +136	10178	CONFIGURATION	139
-# 
-# # COPY groups_permissions (groupid, permissionid) FROM stdin;
-# # +10198	135
-# 
-# # COPY users_permissions (userid, permissionid) FROM stdin;
-# # +10180	135
-# 
-# # preferences.save?
-# 
-# resource = portlet.find_resource(:scope => 4)
-# guest = group.company.guest
-# portlet.class.actions.each do |actionid|
-#   p = Permission.get(
-#     :companyid  => group.companyid,
-#     :actionid   => actionid,
-#     :resourceid => resource.id
-#   )
-#   assert_not_nil p
-#   #puts p.inspect
-#   if actionid=='VIEW'
-#     group.permissions << p
-#     group.reload
-#     assert group.permissions.include?(p)
-# 
-#     guest.permissions << p
-#     guest.reload
-#     assert guest.permissions.include?(p)
-#   end
-# end
-# 
-# 
-# 
-# 
-#   end
+  def test_properties
+    flunk 'no Caterpillar' unless defined? Caterpillar
+
+    @portlets.each do |portlet|
+      pp = portlet.properties
+      unless pp
+        STDERR.puts "\n"+'NOTICE: portlet ”%s” is not parsed from XML. Old data perhaps?' % portlet.portletid
+        next
+      end
+
+      assert_not_nil pp.portletid
+      assert_not_nil pp.name
+      assert_not_nil pp.title
+      assert_not_nil portlet.properties.instanceable
+      assert_equal portlet.properties.instanceable, portlet.instanceable?
+
+      assert_not_nil Web::Portlet.find_by_portletid(pp.portletid)
+    end
+  end
+
 
   # Caterpillar only!
-#   def test_find_by_name
-#     portlet = Web::PortletName.first
-#     flunk 'populoi portlet-taulu'
-#     
-#     portlet_by_id = Web::Portlet.find_by_portletid(portlet.portletid)
-#     assert_not_nil portlet_by_id
-# 
-#     portlet_by_name = Web::Portlet.find_by_name(portlet.name)
-#     assert_not_nil portlet_by_name
-# 
-#     assert_equal portlet_by_id, portlet_by_name
-#   end
+  def test_find_by_name
+    flunk 'no Caterpillar' unless defined? Caterpillar
+
+    Web::PortletProperties.all.each do |pp|
+      portlet = Web::Portlet.find_by_portletid(pp.portletid)
+      next unless portlet
+
+      portlet_by_name = Web::Portlet.find_by_name(pp.name)
+      assert_equal portlet, portlet_by_name
+    end
+  end
 
 
   # each portlet must belong to a company
   def test_company
     @portlets.each do |x|
-      assert_not_nil x.company, "#{x.id} belongs to no companies"
-    end
-  end
-
-  # each role must exist
-  def test_roles
-    @portlets.each do |x|
-      roles = x.roles.split(",")
-      roles.each do |role|
-        role.gsub!(/^\ *|\ *$/,"") # clean leading and trailing spaces
-        assert Role.find_by_name(role), "Role \"#{role}\" does not exist"
-      end
+      assert_not_nil x.company
     end
   end
 

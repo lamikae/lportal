@@ -18,10 +18,11 @@ module Web
       :foreign_key => 'ownerid'
 
 
-    # Actions for Permissions. This list is not complete.
+    # Actions for Permissions.
     def self.actions
       %w{
-      VIEW
+        CONFIGURATION
+        VIEW
       }
     end
 

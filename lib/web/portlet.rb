@@ -1,8 +1,10 @@
-module Web
-  # Portlets can be included onto a Layout. Portlet may be instantiated or not.
-  # TODO: Caterpillar should gather this info.
+module Web # :nodoc:
+  # Portlets can be included onto a Layout. Portlets are in instantiated per se, when one is
+  # inserted on a Layout, PortletPreferences is created. This instance (from Rails' point-of-view),
+  # may be instantiated or not, from its POV. Instantiation in this sense means that each PortletPreferences
+  # may be customised per-session.
   #
-  # When portlets are instantiated, PortletPreferences is created.
+  # Caterpillar can gather this information from the XML files, see its documentation.
   #
   class Portlet < ActiveRecord::Base
     set_table_name       :portlet
@@ -18,14 +20,6 @@ module Web
     belongs_to :company,
       :foreign_key => "companyid"
 
-    # Actions for Permissions.
-    def self.actions
-      %w{
-        CONFIGURATION
-        VIEW
-      }
-    end
-
     # Creates a portlet instance with preferences.
     def initialize(params={})
       super(params)
@@ -39,7 +33,7 @@ module Web
     #
     # This Web::Portlet instance may have several "instances of itself", each of which are stored
     # in PortletPreferences. Each of these are unique rows in the database,
-    # and these are accessable through the 'instances' association.
+    # and these are accessible through the 'instances' association.
     #
     # PortletPreferences are created when the Portlet is added to a Layout.
     # Its portletid, on the other hand, depends on whether this portlet is instanceable.
@@ -69,18 +63,6 @@ module Web
       "#{plid}_LAYOUT_#{self.portletid}"
     end
 
-#     # all resources
-#     def resources
-#   #     Resource.find_by_primkey(self.primkey)
-#   #     Resource.find(:all, :conditions => "primkey='#{self.primkey}'")
-#       resources = []
-#       ResourceCode.find(:all, :conditions => "name='#{portletid}'").each do |rc|
-#         resources << Resource.find(:all, :conditions => "codeid='#{rc.id}'")
-#       end
-# 
-#       return resources.flatten
-#     end
-
     def is_active?
       self.active_
     end
@@ -91,8 +73,8 @@ module Web
     #
     # Defaults to true.
     def instanceable?
-      @instanceable = true if @instanceable.nil?
-      return @instanceable
+      return @instanceable if !@instanceable.nil? # test value
+      self.properties.instanceable
     end
 
     # for testing and debugging
