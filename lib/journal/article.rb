@@ -37,6 +37,10 @@ module Journal
 #       :foreign_key             => 'entryid',
 #       :association_foreign_key => 'assetid'
 
+    # Path to this article. See Tag::Asset#path.
+    def path
+      self.asset.path
+    end
 
   end
 

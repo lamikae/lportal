@@ -3,7 +3,7 @@ require 'test_helper'
 class Tag::AssetTest < ActiveSupport::TestCase
   fixtures [
     :tagsasset, :tagsassets_tagsentries,
-    :resource_, :resourcecode,
+#     :resource_, :resourcecode,
     :classname_,
     :igimage,
     :mbmessage,
@@ -16,6 +16,17 @@ class Tag::AssetTest < ActiveSupport::TestCase
 
   def setup
     @assets = Tag::Asset.all
+  end
+
+  def test_path
+    @assets.each do |asset|
+#       asset = @assets.first
+      path = asset.path
+      assert_not_nil path
+      assert path[/#{asset.id}/]
+      assert path[/tagged_content/]
+#     puts path.inspect
+    end
   end
 
   def test_resource

@@ -4,14 +4,15 @@ module Tag
     set_table_name       :tagsasset
     set_primary_key      :assetid
 
+    include ERB::Util # for u()
+
     # com.liferay.portlet.tags.model.TagsAsset
     def liferay_class
       'com.liferay.portlet.tags.model.TagsAsset'
     end
 
-# COPY tagsasset (assetid, groupid, companyid, userid, username, createdate, modifieddate, classnameid, classpk, startdate, enddate, publishdate, expirationdate, mimetype, title, description, summary, url, height, width, priority, viewcount) FROM stdin;
-# +10311	10166	10109	10129	Test Test	2009-01-17 08:07:12.039	2009-01-17 08:07:12.039	10071	10308	\N	\N	\N	\N	text/html	New thread				0	0	0	0
-
+    # COPY tagsasset (assetid, groupid, companyid, userid, username, createdate, modifieddate, classnameid, classpk, startdate, enddate, publishdate, expirationdate, mimetype, title, description, summary, url, height, width, priority, viewcount) FROM stdin;
+    # +10311	10166	10109	10129	Test Test	2009-01-17 08:07:12.039	2009-01-17 08:07:12.039	10071	10308	\N	\N	\N	\N	text/html	New thread				0	0	0	0
 
     def initialize(params)
       super(params)
@@ -104,6 +105,31 @@ module Tag
         STDERR.puts 'Asset %i has no title' % self.id
         return ''
       end
+    end
+
+    # Presents the Asset resource in ”tagged_content” portlet. See Group#tagged_content_portlet
+    def path(portletpreferences=self.group.tagged_content_portlet)
+      unless portletpreferences
+        logger.error 'No portletpreferences for tagged_content portlet'
+        return ''
+      end
+      logger.debug portletpreferences.inspect
+
+      portletid = portletpreferences.portletid
+      redirect = 'javascript: history.go(-1)'
+
+      params = "?p_p_id=#{portletid}"+\
+        "&p_p_lifecycle=0"+\
+        "&p_p_state=normal"+\
+        "&p_p_mode=view"+\
+        "&_#{portletid}_struts_action=%2Ftagged_content%2Fview_content"+\
+        "&_#{portletid}_assetId=#{self.id}"+\
+        "&_#{portletid}_redirect=#{u(redirect)}"
+        # &p_p_col_id=column-1&p_p_col_count=1
+
+      path = portletpreferences.layout.path + params
+      logger.debug path
+      return path
     end
 
   end
