@@ -3,15 +3,19 @@ require 'test_helper'
 class TypesettingsTest < ActiveSupport::TestCase
   fixtures [
     :layout,
-#     :portlet, :portletpreferences
+    :portlet, :portletpreferences
   ]
+  if defined? Caterpillar
+    fixtures << :portletproperties
+  end
+
 
   def setup
     # test caterpillar migrations
-    p = Web::PortletName.first
+    p = Web::PortletProperties.first
     flunk 'Please run Caterpillar migrations' unless p
 
-    @mb = Web::PortletName.find_by_name 'message_boards'
+    @mb = Web::PortletProperties.find_by_name 'message_boards'
     assert_not_nil @mb
   end
 
@@ -25,12 +29,24 @@ class TypesettingsTest < ActiveSupport::TestCase
     assert_equal typesettings, Web::Typesettings.new.message_boards(:column => 2).to_s
   end
 
-  def test_include
+  def test_include_noninstantiated
     ts = Web::Typesettings.new.message_boards(:column => 2)
-    assert ts.include?(Web::PortletName.find_by_name('message_boards'))
-    assert !ts.include?(Web::PortletName.find_by_name('translator'))
+    assert ts.include?(Web::Portlet.find_by_name('message_boards'))
+    assert !ts.include?(Web::Portlet.find_by_name('translator'))
+    assert ts.include?(Web::PortletProperties.find_by_name('message_boards'))
+    assert !ts.include?(Web::PortletProperties.find_by_name('translator'))
     assert ts.include?('message_boards')
     assert !ts.include?('translator')
+  end
+
+  def test_include_instantiated
+    portlet = Web::Portlet.first
+    portlet.instanceable = true
+#     ts = Web::Typesettings.new.message_boards(:column => 2)
+#     assert ts.include?(Web::PortletProperties.find_by_name('message_boards'))
+#     assert !ts.include?(Web::PortletProperties.find_by_name('translator'))
+#     assert ts.include?('message_boards')
+#     assert !ts.include?('translator')
   end
 
   def test_read

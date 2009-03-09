@@ -329,7 +329,8 @@ class Group < ActiveRecord::Base
 
   # Selects the layout (from both public and private) that has the portlet.
   # Parameters:
-  #  - portlet     can be either a String of portlet name (eg. 'message_boards') or a Web::PortletName instance.
+  #  - portlet     can be either a String of portlet name (eg. 'message_boards'),
+  #                Web::Portlet or Web::PortletProperties instance.
   #  - pl          only check public or private layouts? defaults to both. ( nil | :public | :private )
   def select_layouts_with(portlet,pl=nil)
     layouts = (
@@ -344,7 +345,10 @@ class Group < ActiveRecord::Base
       end
     )
 
-    layouts.select{|l| l.settings.include?(portlet)}
+#     layouts.select{|l| l.settings.include?(portlet)}
+    layouts.select do |l|
+      l.portlets.map {|p| p.name==portlet.name}.any?
+    end
   end
 
   # Does any of the layouts include this portlet? See #select_layouts_with
@@ -355,6 +359,52 @@ class Group < ActiveRecord::Base
   # Helper to collect all tags that are related to this Group through Tag::Asset.
   def assets_tags
     self.assets.collect(&:tags).flatten.uniq
+  end
+
+  # Unless the tagged_content portlet is found in any of the groups layouts,
+  # a new layout (public by default) is created with this portlet.
+  #
+  # See #select_layouts_with
+  def tagged_content_portlet(params={})
+    portlet = Web::Portlet.find_by_name('tagged_content')
+    raise 'tagged_content portlet not found! Check that Caterpillar migrations are up-to-date' unless portlet
+
+    # this says: if <tt>pl</tt> is undefined, use public layout, else use what <tt>pl</tt> specified.
+    params.update(:privatelayout => ( params[:privatelayout].nil? ? false : params[:privatelayout] ))
+
+    pl = (params[:privatelayout] ? :private : :public) # a small "type conversion"
+    layouts = self.select_layouts_with(portlet,pl)
+
+    ### Use existing layout and portlet
+    if layouts.any?
+      logger.debug 'Layout with tagged_content portlet found..'
+      layout = layouts.first
+      layout.portlets.each do |p|
+        return p if p.name==portlet.name
+      end
+    end
+
+    ### Create Layout + PortletPreferences
+    params[:name] ||= 'tagged_content'
+    logger.info 'Creating new Layout ”%s” in Group %s (%i)' % [params[:name],self.name,self.id]
+
+    params[:friendlyurl] ||= '/tagged_content'
+    params.update(:group => self)
+
+    layout = Web::Layout.create(params)
+    logger.debug layout.inspect
+
+    layout.settings = Web::Typesettings.new
+    layout.columns=1
+
+    # the portlet
+    portlet = Web::Portlet.find_by_name 'tagged_content'
+    layout.<<( portlet )
+    layout.save
+
+    portlet.reload
+
+    return portlet.preferences
   end
 
 end

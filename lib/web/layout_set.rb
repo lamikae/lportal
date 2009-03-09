@@ -45,11 +45,13 @@ module Web
     end
 
     def layouts
+      return 0 unless self.group
       Web::Layout.find(:all, :conditions => "groupid=#{self.groupid} AND privatelayout=#{self.privatelayout}" )
     end
 
     # lookup the path prefix for this LayoutSet
     def url_prefix
+      return '' unless self.group
       return '/web' if self.is_public?
       _class = (
         self.group.classnameid==0 ?
@@ -64,8 +66,8 @@ module Web
         #return '/web'
 
       else
-        logger.debug 'FIXME: ' + _class
-        return nil
+        logger.debug 'FIXME: %s' % _class
+        return ''
       end
     end
 

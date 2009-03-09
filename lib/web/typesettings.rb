@@ -56,11 +56,11 @@ module Web
       return s
     end
 
-    # Accepts a PortletName as the first parameter,
+    # Accepts a PortletProperties as the first parameter,
     # the second parameter acceps a Hash {:column => nr} where nr is the column to place the portlet.
     def method_missing(method, *args, &block)
       begin
-        portlet = Web::PortletName.find_by_name(method.to_s)
+        portlet = Web::PortletProperties.find_by_name(method.to_s)
         return nil unless portlet
 
         column = 1
@@ -102,12 +102,22 @@ module Web
     end
 
     # Does this Typesettings include this portlet?
+    #
+    # This does not separate instantiated or non-instantiated portlets.
+    # Instantiated portlets do not theoretically match (TODO: test),
+    # as the portletid in the layout's typesettings contains the _INSTANCE_xxxx suffix.
+    #
+    #
     # Params:
-    #  - portlet (either name as String, or Web::PortletName)
+    #  - portlet (either name as String, or Web::PortletProperties)
     def include?(args)
       if args.is_a?(String)
-        p = Web::PortletName.find_by_name args
-      elsif args.is_a?(Web::PortletName)
+        p = Web::PortletProperties.find_by_name args
+      elsif args.is_a?(Web::PortletProperties)
+        p = args
+      elsif args.is_a?(Web::PortletPreferences)
+        p = args
+      elsif args.is_a?(Web::Portlet)
         p = args
       else
         raise 'Invalid input class: %s' % args.class
