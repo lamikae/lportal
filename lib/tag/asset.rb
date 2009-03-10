@@ -4,7 +4,6 @@ module Tag
     set_table_name       :tagsasset
     set_primary_key      :assetid
 
-    include ERB::Util # for u()
 
     # com.liferay.portlet.tags.model.TagsAsset
     def liferay_class
@@ -112,9 +111,9 @@ module Tag
     # Params:
     #  - content_id     the id of the resource (not always self.resource.id)
     #  - portletpreferences
-    def path(content_id=self.resource.id,portletpreferences=self.group.tagged_content_portlet)
+    def path(content_id=self.resource.id,portletpreferences=self.group.asset_viewer_portlet)
       unless portletpreferences
-        logger.error 'No portletpreferences for tagged_content portlet'
+        logger.error 'No portletpreferences for asset display given'
         return ''
       end
       logger.debug portletpreferences.inspect
@@ -122,26 +121,12 @@ module Tag
       portletid = portletpreferences.portletid
       redirect = 'javascript: history.go(-1)'
 
-      # 5.1.x
-#       params = "?p_p_id=#{portletid}"+\
-#         "&p_p_lifecycle=0"+\
-#         "&p_p_state=normal"+\
-#         "&p_p_mode=view"+\
-#         "&_#{portletid}_struts_action=%2Ftagged_content%2Fview_content"+\
-#         "&_#{portletid}_assetId=#{self.id}"+\
-#         "&_#{portletid}_redirect=#{u(redirect)}"
-#         # &p_p_col_id=column-1&p_p_col_count=1
-
-      # 5.2.x
-      _path = [
-        '-',
-        'asset_publisher',
-        portletpreferences.instance_id,
-        'content',
-        content_id
-      ].join('/')
-
-      path = '%s/%s?redirect=%s' % [portletpreferences.layout.path, _path, u(redirect)]
+      if Lportal::SCHEMA_VERSION[/5.1/]
+        logger.debug 'Using schema 5.1.1'
+      else
+        # 5.2.x
+        path = portlet.preferences.path(:content_id => content_id)
+      end
       logger.debug path
       return path
     end

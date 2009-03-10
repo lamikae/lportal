@@ -84,4 +84,34 @@ class Web::PortletTest < ActiveSupport::TestCase
     end
   end
 
+  def test_asset_publisher_path
+    group = Group.first
+
+    layout = Web::Layout.first
+    flunk 'No layout' unless layout
+
+    content_id = 'foo'
+
+#     %w{ 5.1.x 5.2.x }.each do |version|
+      #Lportal::SCHEMA_VERSION = version
+
+      name = (
+        if Lportal::SCHEMA_VERSION[/5.1/]
+          'tagged_content'
+        else
+          'asset_publisher'
+        end
+      )
+
+      portlet = Web::Portlet.find_by_name(name)
+      layout.<< portlet
+
+      path = portlet.preferences.path(:content_id => content_id)
+      puts path
+
+      assert_not_nil path
+      assert_not_nil path[/#{content_id}/]
+#     end
+  end
+
 end

@@ -4,16 +4,19 @@ require 'active_record'
 file = File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__
 this_dir = File.dirname(File.expand_path(file))
 
-require this_dir+'/version'
+require File.join(this_dir,'version')
 
 # set the migrations directory
 LPORTAL_MIGRATIONS=File.expand_path(
-  File.join(this_dir,'migrations','*.rb')
+  File.join(this_dir,'migrations')
               )
 
 require File.join(this_dir,'lib','acts','resourceful')
 # make models able to act resourceful
 ActiveRecord::Base.class_eval { include Acts::Resourceful }
+
+# Liferay portlet functionalities
+require File.join(this_dir,'portlets')
 
 # include all ruby files
 Find.find(File.join(this_dir,'lib')) do |file|
@@ -28,3 +31,4 @@ Find.find(File.join(this_dir,'lib')) do |file|
   end
 end
 
+#Web::PortletPreferences.class_eval { include Lportal::Portlets }

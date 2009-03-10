@@ -7,7 +7,7 @@ module Web
 
     acts_as_resourceful
 
-#     include Lportal::Portlets
+    include Lportal::Portlets
 
     public
 
@@ -74,14 +74,31 @@ module Web
     def portlet
       unless @portlet
         unless self.companyid
+          puts 'oops'
           logger.warn 'Requested portlet of portletpreferences -- yet no companyid could be fetched.'
           @portlet = nil
         else
+          puts 'ok'
+          puts self.portlet_id
           @portlet = Web::Portlet.find(:first,
             :conditions => "companyid=#{self.companyid} AND portletid='#{self.portlet_id}'")
         end
       end
+      puts @portlet.inspect
       return @portlet
+    end
+
+    # Various static properties of the portlet instance and the portlet in general.
+    # Requires custom migrations for PortletProperties.
+    # The tables within are filled by Caterpillar, since it knows the location of the
+    # portlet XML files.
+    #
+    # This is intentionally duplicated for Web::Portlet to minimize database queries.
+    def properties
+      unless @properties
+        @properties = Web::PortletProperties.find_by_portletid(self.portlet_id)
+      end
+      return @properties
     end
 
     # The portletid of the Web::Portlet. <tt>portletid</tt> is still the actual portletid of the instance.
@@ -110,12 +127,17 @@ module Web
     #   </preference>
     # </portlet-preferences>
     def title
-      self.portlet.title
+      self.properties ?
+        self.properties.title : ''
     end
 
-    # Portlet's JSR286 name. Requires custom migrations for PortletProperties.
+    # Portlet's JSR286 name.
+    #
+    # Requires custom migrations for PortletProperties. Defaults to portlet's portletid.
+    #
     def name
-      self.portlet.name
+      self.properties ?
+        self.properties.name : self.portlet_id
     end
 
     # primkey is the foreign key in the resource_ table.

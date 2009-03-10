@@ -279,16 +279,22 @@ class Web::PortletPreferencesTest < ActiveSupport::TestCase
 
   def test_title
     @prefs.each do |x|
-      if x.portlet
-        assert_not_nil x.title
+      if x.properties
+        assert_equal x.properties.title, x.title
+        if x.portlet
+          assert_equal x.title, x.portlet.title
+        end
       end
     end
   end
 
   def test_name
     @prefs.each do |x|
-      if (x.portlet and x.portlet.properties)
-        assert_equal x.portlet.properties.name, x.name
+      if x.properties
+        assert_equal x.properties.name, x.name
+        if x.portlet
+          assert_equal x.name, x.portlet.name
+        end
       end
     end
   end
@@ -315,6 +321,5 @@ class Web::PortletPreferencesTest < ActiveSupport::TestCase
       end
     end
   end
-
 
 end

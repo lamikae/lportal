@@ -365,10 +365,19 @@ class Group < ActiveRecord::Base
   # a new layout (public by default) is created with this portlet.
   #
   # See #select_layouts_with
-  def tagged_content_portlet(params={})
-    # tagged_content on 5.1.x,
-    # asset_publisher on 5.2.x
-    params[:name] ||= 'asset_publisher' #'tagged_content'
+  #
+  # The asset viewer is different in different versions of the Liferay database.
+  #  - 5.1.x: tagged_content
+  #  - 5.2.x: asset_publisher
+  def asset_viewer_portlet(params={})
+    if Lportal::SCHEMA_VERSION[/5.1/]
+      logger.debug 'Using schema 5.1.1'
+      params[:name] ||= 'tagged_content'
+    else
+      puts 'Using schema 5.2.x'
+      logger.debug 'Using schema 5.2.x'
+      params[:name] ||= 'asset_publisher'
+    end
 
     portlet = Web::Portlet.find_by_name(params[:name])
     raise ('Portlet ”%s” not found! Check that Caterpillar migrations are up-to-date' % params[:name]) unless portlet
