@@ -1,6 +1,4 @@
-require 'lportal'
-
-class LportalSequences < ActiveRecord::Migration
+class AddSequences < ActiveRecord::Migration
   @@tables = [
     Account,
     Address,
@@ -53,6 +51,7 @@ class LportalSequences < ActiveRecord::Migration
 
   # This is VERY DANGEROUS and may lead to breakage.
   def self.down
+    STDOUT.puts 'Nothing will happen.'
     # sql = ""
     # @@tables.each do |model|
     #   table = model.table_name
