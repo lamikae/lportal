@@ -29,6 +29,25 @@ module Web # :nodoc:
       self
     end
 
+
+    # Searches from PortletProperties.
+    def self.find_by_name(name)
+      pp = Web::PortletProperties.find_by_name(name)
+      if pp
+        p = self.find_by_portletid pp.portletid
+        return p if p
+      end
+
+      unless pp
+        raise ActiveRecord::RecordNotFound
+      else
+        return self.create(
+          :portletid => pp.portletid
+        )
+      end
+    end
+
+
     # PortletPreferences for this instance (@preferences)
     #
     # This Web::Portlet instance may have several "instances of itself", each of which are stored
@@ -76,9 +95,13 @@ module Web # :nodoc:
         self.properties.title : ''
     end
 
-    # name = portletid
+    # Portlet's JSR286 name.
+    #
+    # Requires custom migrations for PortletProperties. Defaults to portletid.
+    #
     def name
-      self.portletid
+      self.properties ?
+        self.properties.name : self.portletid
     end
 
     def is_active?

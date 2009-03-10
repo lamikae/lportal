@@ -7,15 +7,18 @@ module Web
 
     acts_as_resourceful
 
+#     include Lportal::Portlets
+
     public
 
     belongs_to :layout,
       :class_name => 'Web::Layout',
       :foreign_key => 'plid'
 
-    belongs_to :owner,
-      :class_name => 'User',
-      :foreign_key => 'ownerid'
+# this is more complicated than this.
+#     belongs_to :owner,
+#       :class_name => 'User',
+#       :foreign_key => 'ownerid'
 
 
     # Actions for Permissions.
@@ -69,13 +72,20 @@ module Web
 
     # The Web::Portlet of this "preferences".
     def portlet
-      return nil unless self.layout
-      Web::Portlet.find(:first,
-        :conditions => "companyid=#{self.layout.companyid} AND portletid='#{self.name}'")
+      unless @portlet
+        unless self.companyid
+          logger.warn 'Requested portlet of portletpreferences -- yet no companyid could be fetched.'
+          @portlet = nil
+        else
+          @portlet = Web::Portlet.find(:first,
+            :conditions => "companyid=#{self.companyid} AND portletid='#{self.portlet_id}'")
+        end
+      end
+      return @portlet
     end
 
-    # the portletid (name) of the portlet
-    def name
+    # The portletid of the Web::Portlet. <tt>portletid</tt> is still the actual portletid of the instance.
+    def portlet_id
       self.portletid.split(/_INSTANCE_/)[0]
     end
 
@@ -103,6 +113,11 @@ module Web
       self.portlet.title
     end
 
+    # Portlet's JSR286 name. Requires custom migrations for PortletProperties.
+    def name
+      self.portlet.name
+    end
+
     # primkey is the foreign key in the resource_ table.
     def primkey
       "#{self.plid}_LAYOUT_#{self.portletid}"
@@ -122,15 +137,20 @@ module Web
       return preferences
     end
 
+    attr_writer :companyid
+
+    # @companyid can be set temporarily.
+    # if layout is set, its companyid is used.
     def companyid
-      self.layout.companyid
+      ( self.layout ? self.layout.companyid : @companyid
+      ) or nil
     end
 
-    # Override acts_as_resourceful. Use portlet name as the ResourceCode name.
+    # Override acts_as_resourceful. Use portlet's portletid (without INSTANCE) as the ResourceCode name.
     def resource_code(scope=4)
       ResourceCode.get({
         :companyid => self.companyid,
-        :name      => self.name,
+        :name      => self.portlet_id,
         :scope     => scope
       })
     end

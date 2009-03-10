@@ -1,12 +1,11 @@
 require 'test_helper'
 
+# Beware, these tests are slow due to the amount of portletpreferences
+
 class Web::PortletPreferencesTest < ActiveSupport::TestCase
   fixtures [
-    :portletpreferences, :portlet, :layout
+    :portletpreferences, :portlet, :layout, :portletproperties
   ]
-  if defined? Caterpillar
-    fixtures << :portletproperties
-  end
 
   def setup
     @prefs = Web::PortletPreferences.all
@@ -249,17 +248,73 @@ class Web::PortletPreferencesTest < ActiveSupport::TestCase
   # each preference must belong to a layout
   def test_layout
     @prefs.each do |x|
-      unless x.plid == 0
-        assert_not_nil x.layout, "#{x.id} refers to non-existing layout #{x.plid}"
+      # quite a many portletpreferences have no layouts. perhaps they are deleted from the page?
+      if x.plid == 0
+        assert_nil x.layout
+      else
+        assert_not_nil x.layout, "#{x.id} belongs to non-existing layout #{x.plid}"
       end
     end
   end
 
-  # each preference must have a portletid
   def test_portletid
     @prefs.each do |x|
-      assert_not_nil x.portletid, "#{x.id} has no portletid"
+      next unless x.portlet
+      if x.portlet.instanceable?
+        assert_not_nil x.portletid[/INSTANCE/]
+      else
+        assert_nil x.portletid[/INSTANCE/]
+      end
     end
   end
+
+#   # Liferay leaves portletpreferences in the database while may portletids change due to upgrades.
+#   def test_portlet
+#     @prefs.each do |x|
+#       unless x.portlet
+#         STDERR.puts 'NOTICE: Portlet not found for PortletPreferences %i' % x.id
+#       end
+#     end
+#   end
+
+  def test_title
+    @prefs.each do |x|
+      if x.portlet
+        assert_not_nil x.title
+      end
+    end
+  end
+
+  def test_name
+    @prefs.each do |x|
+      if (x.portlet and x.portlet.properties)
+        assert_equal x.portlet.properties.name, x.name
+      end
+    end
+  end
+
+  def test_portlet_id
+    @prefs.each do |x|
+      assert_not_nil x.portlet_id
+      assert_nil x.portlet_id[/INSTANCE/]
+      if x.portlet
+        assert_equal x.portlet.portletid, x.portlet_id
+      end
+    end
+  end
+
+  def test_companyid
+    @prefs.each do |x|
+      if x.layout
+        assert_equal x.layout.companyid, x.companyid
+      else
+        assert_nil x.companyid
+        c = Company.first
+        x.companyid=c.id
+        assert_equal c.id, x.companyid
+      end
+    end
+  end
+
 
 end
