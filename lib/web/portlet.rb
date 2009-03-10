@@ -39,17 +39,41 @@ module Web # :nodoc:
     # Its portletid, on the other hand, depends on whether this portlet is instanceable.
     def preferences
       unless @preferences
-        @preferences = Web::PortletPreferences.create(
-          {:portlet => self}
-        )
+        @preferences = Web::PortletPreferences.create({:portlet => self})
       end
       return @preferences
     end
 
     attr_writer :preferences
 
+    # All instances of a specific portlet. See also preferences.
     def instances
-      Web::PortletPreferences.find_all_by_portletid self.portletid
+      unless @instances
+        @instances = Web::PortletPreferences.find_all_by_portletid(self.portletid)
+      end
+      return @instances
+    end
+
+    # Various static properties of the portlet instance and the portlet in general.
+    # Requires custom migrations for PortletProperties.
+    # The tables within are filled by Caterpillar, since it knows the location of the
+    # portlet XML files.
+    def properties
+      unless @properties
+        @properties = Web::PortletProperties.find_by_portletid(self.portletid)
+      end
+      return @properties
+    end
+
+    # The default title string that is displayed.
+    #
+    # Requires custom migrations for PortletProperties. Defaults to an empty string.
+    #
+    # PortletPreferences may override this, see PortletPreferences#title.
+    #
+    def title
+      self.properties ?
+        self.properties.title : ''
     end
 
     # name = portletid
@@ -57,24 +81,18 @@ module Web # :nodoc:
       self.portletid
     end
 
-    # primkey in resource_ table
-    def primkey(plid)
-      STDERR.puts 'DEPRECATED -- use %s.preferences.primkey' % self
-      "#{plid}_LAYOUT_#{self.portletid}"
-    end
-
     def is_active?
       self.active_
     end
 
-    # This portlet setting is not in the database.
-    # This method exists to make it possible to call this method from Layout.
-    # Caterpillar re-defines this method and returns the value in the XML configuration.
+    # Is the portlet instanceable? This is defined in the XML configuration.
+    # Requires custom migrations for PortletProperties.
     #
     # Defaults to true.
     def instanceable?
       return @instanceable if !@instanceable.nil? # test value
-      self.properties.instanceable
+      self.properties ?
+        self.properties.instanceable : true
     end
 
     # for testing and debugging

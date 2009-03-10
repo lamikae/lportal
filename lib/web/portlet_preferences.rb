@@ -84,6 +84,25 @@ module Web
       self.portletid.split(/_INSTANCE_/)[1]
     end
 
+    # The default title string that is displayed. Requires custom migrations for PortletProperties.
+    # Rails-portlets override this, with the value of <head><title>.
+    # There are no Ruby setters yet, this value is read-only.
+    #
+    # TODO: parse self.preferences:
+    # <portlet-preferences>
+    #   <preference>
+    #     <name>portlet-setup-title-fi_FI</name>
+    #     <value>my custom title</value>
+    #   </preference>
+    #   <preference>
+    #     <name>portlet-setup-use-custom-title</name>
+    #     <value>true</value>
+    #   </preference>
+    # </portlet-preferences>
+    def title
+      self.portlet.title
+    end
+
     # primkey is the foreign key in the resource_ table.
     def primkey
       "#{self.plid}_LAYOUT_#{self.portletid}"
