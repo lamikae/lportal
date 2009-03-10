@@ -7,7 +7,8 @@ class GroupTest < ActiveSupport::TestCase
     :users_orgs,
     :usergroup,
     :role_,
-    :classname_
+    :classname_,
+    :portlet, :portletproperties, :portletpreferences, :tagsasset
   ]
 
   def setup
@@ -200,19 +201,21 @@ class GroupTest < ActiveSupport::TestCase
     end
   end
 
-  def test_tagged_content_portlet
-    @groups.each do |group|
-      portletpreferences = group.tagged_content_portlet
-      assert_equal Web::PortletPreferences, portletpreferences.class
-      assert_not_nil portletpreferences.layout
-      #puts portletpreferences.inspect
-      #puts portletpreferences.layout.inspect
-      assert_equal group, portletpreferences.layout.group
+  def test_asset_viewer_portlet
+    group = Group.first
+    asset = Tag::Asset.first
 
-      # 2nd time the portlet should be retrieved from DB
-      group.reload
-      assert_equal portletpreferences, group.tagged_content_portlet
-    end
+    portletpreferences = group.asset_viewer_portlet
+    assert_not_nil portletpreferences.path(:content_id => asset.resource.id)
+    assert_equal Web::PortletPreferences, portletpreferences.class
+
+    assert_not_nil portletpreferences.layout
+    assert_equal group, portletpreferences.layout.group
+    assert_equal group.companyid, portletpreferences.layout.companyid
+
+    # 2nd time the portlet should be retrieved from DB
+    group.reload
+    assert_equal portletpreferences, group.asset_viewer_portlet
   end
 
 #   def test_resource
@@ -220,5 +223,6 @@ class GroupTest < ActiveSupport::TestCase
 # #       assert !x.resource.nil?, "#{x.id} has no resource"
 #     end
 #   end
+
 
 end

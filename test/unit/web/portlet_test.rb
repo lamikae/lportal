@@ -107,7 +107,6 @@ class Web::PortletTest < ActiveSupport::TestCase
       layout.<< portlet
 
       path = portlet.preferences.path(:content_id => content_id)
-      puts path
 
       assert_not_nil path
       assert_not_nil path[/#{content_id}/]

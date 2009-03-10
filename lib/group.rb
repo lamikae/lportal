@@ -371,11 +371,10 @@ class Group < ActiveRecord::Base
   #  - 5.2.x: asset_publisher
   def asset_viewer_portlet(params={})
     if Lportal::SCHEMA_VERSION[/5.1/]
-      logger.debug 'Using schema 5.1.1'
+      logger.debug 'Using lportal schema 5.1.x'
       params[:name] ||= 'tagged_content'
     else
-      puts 'Using schema 5.2.x'
-      logger.debug 'Using schema 5.2.x'
+      logger.debug 'Using lportal schema 5.2.x'
       params[:name] ||= 'asset_publisher'
     end
 
