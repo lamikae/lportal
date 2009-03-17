@@ -31,4 +31,16 @@ Find.find(File.join(this_dir,'lib')) do |file|
   end
 end
 
-#Web::PortletPreferences.class_eval { include Lportal::Portlets }
+# define the schema
+require File.join(this_dir,'schema')
+release = Release.current
+last_supported_release = 5201
+Lportal::Schema.buildnumber = (release ? release.buildnumber : last_supported_release)
+
+msg = 'Using Liferay schema build %i, version %s' % [
+  Lportal::Schema.buildnumber, Lportal::Schema.version]
+
+puts msg
+
+defined?(RAILS_DEFAULT_LOGGER) ?
+  RAILS_DEFAULT_LOGGER.info(msg) : STDOUT.puts(msg)
