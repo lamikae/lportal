@@ -225,6 +225,9 @@ class Web::PortletPreferencesTest < ActiveSupport::TestCase
     assert_not_nil preferences
     preferences.layout = @layout
 
+    rc = preferences.resource_code()
+    assert_equal @portlet.portletid, rc.name
+
     assert_not_nil preferences.get_resource(:scope => 1)
 
     assert_not_nil preferences.scope2_primkey
@@ -241,7 +244,7 @@ class Web::PortletPreferencesTest < ActiveSupport::TestCase
   # each preference must define ownertype
   def test_ownertype
     @prefs.each do |x|
-      assert_not_nil x.ownertype, "#{x.id} defines no ownertype"
+      assert_not_nil x.ownertype, "PortletPreferences #{x.id} defines no ownertype"
     end
   end
 
@@ -252,13 +255,15 @@ class Web::PortletPreferencesTest < ActiveSupport::TestCase
       if x.plid == 0
         assert_nil x.layout
       else
-        assert_not_nil x.layout, "#{x.id} belongs to non-existing layout #{x.plid}"
+        assert_not_nil x.layout, "PortletPreferences #{x.id} belongs to non-existing layout #{x.plid}"
       end
     end
   end
 
   def test_portletid
     @prefs.each do |x|
+      assert_not_nil x.portletid
+      assert_not_equal '', x.portletid
       next unless x.portlet
       if x.portlet.instanceable?
         assert_not_nil x.portletid[/INSTANCE/]
@@ -301,11 +306,29 @@ class Web::PortletPreferencesTest < ActiveSupport::TestCase
 
   def test_portlet_id
     @prefs.each do |x|
+      next unless x.portletid or x.portletid.empty?
       assert_not_nil x.portlet_id
       assert_nil x.portlet_id[/INSTANCE/]
-      if x.portlet
-        assert_equal x.portlet.portletid, x.portlet_id
+      next unless x.portlet # these cannot be tested without knowing the portlet
+      if x.portlet.instanceable?
+        assert_not_nil x.instance_id
+      else
+        assert_nil x.instance_id
       end
+      assert_equal x.portlet.portletid, x.portlet_id
+    end
+  end
+
+  def test_tos
+    @prefs.each do |x|
+      assert_not_nil x.preferences
+      assert_equal String, x.preferences.class
+      xml = x.to_xml
+      assert_not_nil xml
+      assert_equal REXML::Document, xml.class
+      arr = x.to_a
+      assert_not_nil arr
+      assert_equal Array, arr.class
     end
   end
 

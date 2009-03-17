@@ -1,10 +1,10 @@
 module Web # :nodoc:
-  # Portlets can be included onto a Layout. Portlets are in instantiated per se, when one is
-  # inserted on a Layout, PortletPreferences is created. This instance (from Rails' point-of-view),
-  # may be instantiated or not, from its POV. Instantiation in this sense means that each PortletPreferences
-  # may be customised per-session.
+  # Portlets can be included onto a Layout. Portlets are not instantiated per se; when one is
+  # inserted on a Layout, PortletPreferences is created. This instance (from ActiveRecord's point-of-view),
+  # may be instantiated or not, from Liferay's POV. Instantiation in this sense means that each PortletPreferences
+  # may have session-based customization.
   #
-  # Caterpillar can gather this information from the XML files, see its documentation.
+  # Caterpillar can gather this information from the Liferay XML files, see its documentation.
   #
   class Portlet < ActiveRecord::Base
     set_table_name       :portlet
@@ -31,20 +31,14 @@ module Web # :nodoc:
 
 
     # Searches from PortletProperties.
+    # Returns nil unless one is found. Returns a Portlet if the properties are found.
     def self.find_by_name(name)
       pp = Web::PortletProperties.find_by_name(name)
-      if pp
-        p = self.find_by_portletid pp.portletid
-        return p if p
-      end
-
       unless pp
-        raise ActiveRecord::RecordNotFound
-      else
-        return self.create(
-          :portletid => pp.portletid
-        )
+        logger.warn 'Portlet by name was not found -- are portletproperties up-to-date?'
+        return nil
       end
+      pp.portlet
     end
 
 

@@ -328,11 +328,14 @@ class Group < ActiveRecord::Base
   end
 
   # Selects the layout (from both public and private) that has the portlet.
+  #
   # Parameters:
   #  - portlet     can be either a String of portlet name (eg. 'message_boards'),
-  #                Web::Portlet or Web::PortletProperties instance.
+  #                or a Web::Portlet, Web::PortletPreferences or Web::PortletProperties instance.
   #  - pl          only check public or private layouts? defaults to both. ( nil | :public | :private )
+  #
   def select_layouts_with(portlet,pl=nil)
+    name = (portlet.is_a?(String) ? portlet : portlet.name)
     layouts = (
       if pl.nil?
         self.layouts
@@ -347,7 +350,7 @@ class Group < ActiveRecord::Base
 
 #     layouts.select{|l| l.settings.include?(portlet)}
     layouts.select do |l|
-      l.portlets.map {|p| p.name==portlet.name}.any?
+      l.portlets.map {|p| p.name==name}.any?
     end
   end
 
@@ -370,7 +373,7 @@ class Group < ActiveRecord::Base
   #  - 5.1.x: tagged_content
   #  - 5.2.x: asset_publisher
   def asset_viewer_portlet(params={})
-    if Lportal::SCHEMA_VERSION[/5.1/]
+    if Lportal::Schema.buildnumber < 5200
       logger.debug 'Using lportal schema 5.1.x'
       params[:name] ||= 'tagged_content'
     else
@@ -403,6 +406,7 @@ class Group < ActiveRecord::Base
     params.update(:group => self)
 
     layout = Web::Layout.create(params)
+    logger.debug 'Layout ready'
     logger.debug layout.inspect
 
     layout.settings = Web::Typesettings.new
@@ -413,7 +417,7 @@ class Group < ActiveRecord::Base
     layout.save
 
     portlet.reload
-
+    logger.debug portlet.preferences.inspect
     return portlet.preferences
   end
 

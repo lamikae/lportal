@@ -5,6 +5,7 @@ class Journal::ArticleTest < ActiveSupport::TestCase
     :journalarticle,
     :journalarticleresource,
     :tagsasset,
+    :tagsproperty,
     :portlet
   ]
 
@@ -48,6 +49,13 @@ class Journal::ArticleTest < ActiveSupport::TestCase
       assert_not_nil x.asset, "#{x.id} has no asset!"
     end
   end
+
+#   def test_properties
+#     @articles.each do |x|
+#       assert_not_nil x.properties
+#       assert !x.properties.empty?
+#     end
+#   end
 
   def test_path
     @articles.each do |x|

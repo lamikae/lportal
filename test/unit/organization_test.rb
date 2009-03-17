@@ -2,13 +2,18 @@ require 'test_helper'
 
 class OrganizationTest < ActiveSupport::TestCase
   fixtures [
-    :organization_, :groups_orgs,
+    :company,
+    :organization_,
+    :user_,
+    :users_orgs,
+    :group_,
+    :groups_orgs,
     :classname_
   ]
 
   def setup
     @orgs = Organization.all
-    assert !@orgs.empty?
+    flunk 'No organizations to test' unless @orgs.any?
   end
 
   # each organization must belong to a company

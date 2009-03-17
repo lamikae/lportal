@@ -15,6 +15,7 @@ class MB::MessageTest < ActiveSupport::TestCase
 
   def setup
     @messages = MB::Message.all
+    flunk 'No messages to test' unless @messages.any?
   end
 
   def test_new_rootmsg

@@ -9,6 +9,10 @@ class CompanyTest < ActiveSupport::TestCase
     :resource_, :resourcecode
   ]
 
+  def setup
+    @companies = Company.all
+    flunk 'No companies in database!' unless @companies.any?
+  end
 
   # each company must have an account
   def test_account
@@ -52,11 +56,13 @@ class CompanyTest < ActiveSupport::TestCase
     end
   end
 
-#   def test_organizations
-#     @companies.each do |c|
-#       assert !c.organizations.empty?, "#{c.id} has no organizations"
-#     end
-#   end
+  def test_organizations
+    @companies.each do |c|
+      c.organizations.each do |o|
+        assert_not_nil o
+      end
+    end
+  end
 
   def test_administrators
     @companies.each do |c|
@@ -66,7 +72,7 @@ class CompanyTest < ActiveSupport::TestCase
 
   def test_guest
     @companies.each do |c|
-      assert_not_nil c.guest
+      assert_not_nil c.guest, 'Company %i does not have a guest account' % c.id
     end
   end
 

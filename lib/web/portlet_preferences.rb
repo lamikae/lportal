@@ -1,6 +1,8 @@
 module Web
   # While PortletPreferences acts_as_resourceful, it is a resource as the portlet it represents.
   # The ResourceCode has a 'name' value that is the Portlet's portletid.
+  #
+  # Also see Lportal::Portlets, that adds a method +path+.
   class PortletPreferences < ActiveRecord::Base
     set_table_name       :portletpreferences
     set_primary_key      :portletpreferencesid
@@ -11,6 +13,12 @@ module Web
 
     public
 
+    # com.liferay.portal.model.PortletPreferences
+    def liferay_class
+      'com.liferay.portal.model.PortletPreferences'
+    end
+
+    # add portlets to layouts via Layout#<<
     belongs_to :layout,
       :class_name => 'Web::Layout',
       :foreign_key => 'plid'
@@ -74,17 +82,16 @@ module Web
     def portlet
       unless @portlet
         unless self.companyid
-          puts 'oops'
           logger.warn 'Requested portlet of portletpreferences -- yet no companyid could be fetched.'
           @portlet = nil
         else
-          puts 'ok'
-          puts self.portlet_id
+          logger.debug 'ok'
+          logger.debug self.portlet_id
           @portlet = Web::Portlet.find(:first,
             :conditions => "companyid=#{self.companyid} AND portletid='#{self.portlet_id}'")
         end
       end
-      puts @portlet.inspect
+      logger.debug @portlet.inspect
       return @portlet
     end
 
@@ -142,14 +149,19 @@ module Web
 
     # primkey is the foreign key in the resource_ table.
     def primkey
+      logger.debug 'primkey'
       "#{self.plid}_LAYOUT_#{self.portletid}"
+    end
+
+    # Parses the preferences string to an XML structure
+    def to_xml
+      REXML::Document.new(self.preferences)
     end
 
     # Translates the preferences XML structure to Array of Hashes.
     def to_a
-      xml = REXML::Document.new(self.preferences)
       preferences = []
-      xml.elements.each("portlet-preferences/preference") do |pref|
+      self.to_xml.elements.each("portlet-preferences/preference") do |pref|
         phash = {
           :name  => pref.elements["name"].text,
           :value => (pref.elements["value"] ? pref.elements["value"].text : "")

@@ -33,7 +33,7 @@ class ResourceCode < ActiveRecord::Base
       conditions << (k==:name ?
         ("%s='%s'" % [k,v]) : ("%s=%s" % [k,v]))
     }
-    #puts conditions.inspect
+    #logger.debug conditions.inspect
     rc = ResourceCode.find(:first, :conditions => conditions.join(' AND '))
     unless rc
       logger.debug 'creating new ResourceCode'

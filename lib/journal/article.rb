@@ -27,10 +27,10 @@ module Journal
       self.resource.asset
     end
 
-    has_many :properties,
-      :class_name => 'TagsProperty',
-      :foreign_key => 'entryid'
-
+#     has_many :properties,
+#       :class_name => 'TagsProperty',
+#       :foreign_key => 'entryid'
+# 
 #     # association to assets
 #     has_and_belongs_to_many  :assets,
 #       :join_table              => 'tagsassets_tagsentries',

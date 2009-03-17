@@ -11,6 +11,34 @@ class Web::PortletTest < ActiveSupport::TestCase
     flunk 'no portlet to test on' unless @portlet
     @layout = Web::Layout.first
     flunk 'no layout to test on' unless @layout
+
+    # TODO: DRY up, the same creation code is in asset test.
+    unless Web::Portlet.find_by_name('asset_publisher')
+      Company.all.each do |c|
+        Web::Portlet.create(
+          :companyid => c.id,
+          :portletid => '9998'
+        )
+        Web::PortletProperties.create(
+          :portletid => 9998,
+          :name => 'asset_publisher',
+          :title => ''
+        )
+      end
+    end
+    unless Web::Portlet.find_by_name('tagged_content')
+      Company.all.each do |c|
+        Web::Portlet.create(
+          :companyid => c.id,
+          :portletid => '9999'
+        )
+        Web::PortletProperties.create(
+          :portletid => 9999,
+          :name => 'tagged_content',
+          :title => ''
+        )
+      end
+    end
   end
 
   def test_noninstanceable
@@ -31,7 +59,7 @@ class Web::PortletTest < ActiveSupport::TestCase
     @portlets.each do |portlet|
       pp = portlet.properties
       unless pp
-        STDERR.puts 'NOTICE: portlet ”%s” is not parsed from XML. Old data perhaps?' % portlet.portletid
+        #RAILS_DEFAULT_LOGGER.warn 'NOTICE: portlet ”%s” is not parsed from XML. Old data perhaps?' % portlet.portletid
         next
       end
 
@@ -46,15 +74,10 @@ class Web::PortletTest < ActiveSupport::TestCase
   end
 
   def test_find_by_name
-    Web::PortletProperties.all.each do |pp|
-      portlet_by_name = Web::Portlet.find_by_name(pp.name)
+    @portlets.each do |p|
+      next unless p.name
+      portlet_by_name = Web::Portlet.find_by_name(p.name)
       assert_not_nil portlet_by_name
-
-      assert_equal pp, portlet_by_name.properties
-
-      portlet = Web::Portlet.find_by_portletid(pp.portletid)
-      next unless portlet
-
       assert_equal portlet, portlet_by_name
     end
   end
@@ -86,17 +109,19 @@ class Web::PortletTest < ActiveSupport::TestCase
 
   def test_asset_publisher_path
     group = Group.first
+    flunk 'No group to test on' unless group
 
     layout = Web::Layout.first
-    flunk 'No layout' unless layout
+    flunk 'No layout to test on' unless layout
 
-    content_id = 'foo'
+    asset = Tag::Asset.first
+    flunk 'No asset to test on' unless asset
 
-#     %w{ 5.1.x 5.2.x }.each do |version|
-      #Lportal::SCHEMA_VERSION = version
+    [5100, 5200].each do |build|
+      Lportal::Schema.buildnumber = build
 
       name = (
-        if Lportal::SCHEMA_VERSION[/5.1/]
+        if build==5100
           'tagged_content'
         else
           'asset_publisher'
@@ -104,13 +129,13 @@ class Web::PortletTest < ActiveSupport::TestCase
       )
 
       portlet = Web::Portlet.find_by_name(name)
+      assert_not_nil portlet, 'Could not find portlet %s' % name
       layout.<< portlet
 
-      path = portlet.preferences.path(:content_id => content_id)
-
+      path = portlet.preferences.path(:asset => asset)
       assert_not_nil path
-      assert_not_nil path[/#{content_id}/]
-#     end
+      #assert_not_nil path[/#{portlet.portletid}/]
+    end
   end
 
 end

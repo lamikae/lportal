@@ -7,21 +7,33 @@ class GroupTest < ActiveSupport::TestCase
     :users_orgs,
     :usergroup,
     :role_,
-    :classname_,
-    :portlet, :portletproperties, :portletpreferences, :tagsasset
+    :classname_
+  ]
+  # to test asset_viewer_portlet, these are required
+  fixtures << [
+    :portlet, :portletproperties, :portletpreferences,
+    :layout,
+    :tagsasset,
+    :igimage,
+    :mbmessage,
+    :blogsentry,
+    :wikipage,
+    :bookmarksentry,
+    :journalarticle,
+    :dlfileentry
   ]
 
   def setup
-    @groups = Group.find :all
-    assert !@groups.empty?, "No groups"
+    @groups = Group.all
+    flunk 'No groups in database!' unless @groups.any?
 
     @company = Company.first
-    flunk 'No company!' unless @company
+    flunk 'No companies in database!' unless @company
   end
 
   def test_create_group
+    flunk ('No administrators in Company %i!' % @company.id) unless @company.administrators.any?
     user = @company.administrators.first
-    flunk 'No user!' unless user
 
     # Type Group
     group = Group.create(
@@ -202,20 +214,22 @@ class GroupTest < ActiveSupport::TestCase
   end
 
   def test_asset_viewer_portlet
-    group = Group.first
-    asset = Tag::Asset.first
+    @groups.each do |group|
+      asset = Tag::Asset.first
+      flunk 'No asset to test on' unless asset
 
-    portletpreferences = group.asset_viewer_portlet
-    assert_not_nil portletpreferences.path(:content_id => asset.resource.id)
-    assert_equal Web::PortletPreferences, portletpreferences.class
+      portletpreferences = group.asset_viewer_portlet
+      assert_equal Web::PortletPreferences, portletpreferences.class
+      assert_not_nil portletpreferences.path(:asset => asset)
 
-    assert_not_nil portletpreferences.layout
-    assert_equal group, portletpreferences.layout.group
-    assert_equal group.companyid, portletpreferences.layout.companyid
+      assert_not_nil portletpreferences.layout
+      assert_equal group, portletpreferences.layout.group
+      assert_equal group.companyid, portletpreferences.layout.companyid
 
-    # 2nd time the portlet should be retrieved from DB
-    group.reload
-    assert_equal portletpreferences, group.asset_viewer_portlet
+      # 2nd time the portlet should be retrieved from DB
+      group.reload
+      assert_equal portletpreferences, group.asset_viewer_portlet
+    end
   end
 
 #   def test_resource

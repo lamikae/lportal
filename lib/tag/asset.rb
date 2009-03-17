@@ -101,32 +101,29 @@ module Tag
       if self.resource.respond_to?(:name) && self.resource.name.any?
         return self.resource.name
       else
-        STDERR.puts 'Asset %i has no title' % self.id
+        logger.warn 'Asset %i has no title' % self.id
         return ''
       end
     end
 
-    # Presents the Asset resource in ”tagged_content” portlet. See Group#tagged_content_portlet
+    # Presents the Asset resource in a portlet that is capable of viewing tagged content.
+    # This depends on the version of Liferay. See Group#asset_viewer_portlet.
+    #
+    # This method requires that the Asset belongs to a Group, or that the portletpreferences is given.
     #
     # Params:
-    #  - content_id     the id of the resource (not always self.resource.id)
-    #  - portletpreferences
-    def path(content_id=self.resource.id,portletpreferences=self.group.asset_viewer_portlet)
-      unless portletpreferences
+    #  - content_id           the id of the resource (not always self.resource.id)
+    #  - portletpreferences   defaults to the asset_viewer_portlet of the Asset's Group.
+    def path(portletpreferences=self.group.asset_viewer_portlet)
+      if self.group==0
+        logger.warn 'No asset path will be given for assets with groupid 0'
+        return ''
+      elsif !portletpreferences.is_a?(Web::PortletPreferences)
         logger.error 'No portletpreferences for asset display given'
         return ''
       end
       logger.debug portletpreferences.inspect
-
-      portletid = portletpreferences.portletid
-      redirect = 'javascript: history.go(-1)'
-
-      if Lportal::SCHEMA_VERSION[/5.1/]
-        logger.debug 'Using schema 5.1.1'
-      else
-        # 5.2.x
-        path = portlet.preferences.path(:content_id => content_id)
-      end
+      path = portletpreferences.path(:asset => self)
       logger.debug path
       return path
     end

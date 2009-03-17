@@ -11,21 +11,58 @@ class Tag::AssetTest < ActiveSupport::TestCase
     :wikipage,
     :bookmarksentry,
     :journalarticle,
-    :dlfileentry
+    :dlfileentry,
+    :layout
   ]
 
   def setup
     @assets = Tag::Asset.all
+    # TODO: DRY up, the same creation code is in portlet test.
+    unless Web::Portlet.find_by_name('asset_publisher')
+      Company.all.each do |c|
+        Web::Portlet.create(
+          :companyid => c.id,
+          :portletid => '9998'
+        )
+        Web::PortletProperties.create(
+          :portletid => 9998,
+          :name => 'asset_publisher',
+          :title => ''
+        )
+      end
+    end
+    unless Web::Portlet.find_by_name('tagged_content')
+      Company.all.each do |c|
+        Web::Portlet.create(
+          :companyid => c.id,
+          :portletid => '9999'
+        )
+        Web::PortletProperties.create(
+          :portletid => 9999,
+          :name => 'tagged_content',
+          :title => ''
+        )
+      end
+    end
   end
 
   def test_path
     @assets.each do |asset|
-#       asset = @assets.first
-      path = asset.path
-      assert_not_nil path
-      assert path[/#{asset.id}/]
-      assert path[/tagged_content/]
-#     puts path.inspect
+      next if asset.groupid==0
+
+      [5100, 5200].each do |build|
+        Lportal::Schema.buildnumber = build
+
+        path = asset.path
+        assert_not_nil path
+        if build==5100
+          assert path[/#{asset.id}/], 'Path ”%s” does not contain asset id (%i)' % [path, asset.id]
+          assert path[/tagged_content/]
+        elsif build==5200
+          assert path[/#{asset.resource.id}/], 'Path ”%s” does not contain asset resource id (%i)' % [path, asset.resource.id]
+          assert path[/asset_publisher/]
+        end
+      end
     end
   end
 
@@ -60,6 +97,13 @@ class Tag::AssetTest < ActiveSupport::TestCase
     @assets.each do |asset|
       assert_not_nil asset.owner
       assert_equal User, asset.owner.class
+    end
+  end
+
+  def test_group
+    @assets.each do |asset|
+      next if asset.groupid==0
+      assert_not_nil asset.group
     end
   end
 

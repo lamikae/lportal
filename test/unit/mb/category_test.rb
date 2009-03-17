@@ -7,17 +7,14 @@ class MB::CategoryTest < ActiveSupport::TestCase
     :mbmessage,
     :mbthread,
     :group_,
-    :layout
+    :layout,
+    :portletproperties
   ]
-  if defined? Caterpillar
-    fixtures << :portletproperties
-  end
 
 
   def setup
     @categories = MB::Category.all
-    @rootcategory = MB::Category.find 0
-    @categories.delete @rootcategory
+    flunk 'No categories to test' unless @categories.any?
   end
 
   def test_create
@@ -72,39 +69,36 @@ class MB::CategoryTest < ActiveSupport::TestCase
   # each article must belong to a company
   def test_company
     @categories.each do |x|
-      assert_not_nil x.company, "#{x.id} belongs to no company"
+      assert_not_nil x.company, "Category #{x.id} belongs to no company"
     end
   end
 
   def test_group
     @categories.each do |x|
-      assert_not_nil x.group, "#{x.id} belongs to no group!"
+      assert_not_nil x.group, "Category #{x.id} belongs to no group!"
     end
   end
 
   def test_user
     @categories.each do |x|
-      assert_not_nil x.user, "#{x.id} belongs to no user!"
+      assert_not_nil x.user, "Category #{x.id} belongs to no user!"
     end
   end
 
   def test_parent
     @categories.each do |x|
       unless x.parentcategoryid == 0 then
-        assert_not_nil x.parent, "#{x.id} refers to parent category #{x.parentcategoryid} which does not exist"
+        assert_not_nil x.parent, "Category #{x.id} refers to parent category #{x.parentcategoryid} which does not exist"
       end
     end
   end
 
-  def test_root
-    assert_equal 0, @rootcategory.companyid
-    assert_equal 0, @rootcategory.groupid
-    assert_equal 0, @rootcategory.userid
-    assert_equal 0, @rootcategory.parentcategoryid
-  end
-
   def test_path
     @categories.each do |x|
+      unless x.group
+        STDERR.puts 'WARN: message_boards category %i does not belong to a group' % x.id
+        next
+      end
       if x.group.layouts_include?('message_boards')
         assert_not_nil x.path
       else

@@ -2,12 +2,8 @@ require 'test_helper'
 
 class Web::LayoutTest < ActiveSupport::TestCase
   fixtures [
-    :layout, :layoutset, :portlet, :portletpreferences, :resourcecode
+    :layout, :layoutset, :portlet, :portletpreferences, :resourcecode, :portletproperties
   ]
-  if defined? Caterpillar
-    fixtures << :portletproperties
-  end
-
 
   def setup
     @layouts = Web::Layout.all
@@ -97,10 +93,10 @@ class Web::LayoutTest < ActiveSupport::TestCase
     ### instantiate a rails portlet as Web::Portlet
     ### find a Liferay portlet (hello world)
     [
-      Web::Portlet.find_by_name(portlet_name),
+      Web::Portlet.first,
       Web::Portlet.find_by_name('hello_world')
     ].each do |portlet|
-      assert_not_nil portlet
+      flunk 'No portlet to test on' unless portlet
       assert_not_nil portlet.preferences
       #puts portlet.inspect
 #             puts portlet.resource.inspect
@@ -209,8 +205,12 @@ class Web::LayoutTest < ActiveSupport::TestCase
 
     layout.save
 
-    assert layout.portlets.include?(login_portlet)
-    assert layout.portlets.include?(hw_portlet.preferences) # instantiated
+    assert_equal 2, layout.portlets.size
+
+    portletids = layout.portlets.collect(&:portletid)
+
+    assert portletids.include?(login_portlet.portletid)
+    assert (portletids && [/#{hw_portlet.portletid}_INSTANCE/]).any?
   end
 
   def test_columns
@@ -299,20 +299,31 @@ class Web::LayoutTest < ActiveSupport::TestCase
       assert !x.typesettings.nil?, "#{x} has no typesettings"
 
       x.portlets.each do |p|
-        assert_equal x, p.preferences.layout
+        if p.is_a?(Web::PortletPreferences)
+          assert_equal x, p.layout, 'Layout has a portlet(preferences) (%i) that does not belong there' % p.id
+          if p.portlet
+            assert p.portlet.instanceable?
+          end
+
+        else # not instantiated
+          assert_equal x, p.preferences.layout
+          assert !p.instanceable?
+        end
       end
 
       # check portlets
       x.portletids.each do |id|
         next if id[/INSTANCE/]
-        assert Web::Portlet.find_by_portletid(id), "Layout #{x.id} defines portlet #{id} but it is not found in the portlet table"
+        unless Web::Portlet.find_by_portletid(id)
+          STDERR.puts "WARN: Layout #{x.id} defines portlet #{id} but it is not found in the portlet table"
+        end
       end
 
       # check instances
       x.instances.each do |portlet|
         portletid = portlet.portletid
         next unless portletid[/INSTANCE/]
-        assert Web::PortletPreferences.find_by_portletid(), "#{x.id} defines portlet instance #{portletid} but it is not found in portletpreferences"
+        assert Web::PortletPreferences.find_by_portletid(portletid), "#{x.id} defines portlet instance #{portletid} but it is not found in portletpreferences"
       end
     end
   end

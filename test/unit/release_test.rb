@@ -1,0 +1,25 @@
+require 'test_helper'
+
+class ReleaseTest < ActiveSupport::TestCase
+  fixtures :release_
+
+  def test_releases
+    releases = Release.all
+    assert_not_nil releases
+    assert !releases.empty?, 'No releases found'
+  end
+
+  def test_current
+    assert_not_nil Release.current
+  end
+
+  def test_schema_version
+    assert_equal Release.current.buildnumber, Lportal::Schema.buildnumber
+    assert_equal Fixnum, Release.current.buildnumber.class
+
+    Lportal::Schema.buildnumber = 5100
+    assert_equal 5100, Lportal::Schema.buildnumber
+    assert_equal '5.1', Lportal::Schema.version
+  end
+
+end

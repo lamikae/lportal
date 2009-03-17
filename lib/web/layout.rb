@@ -7,7 +7,8 @@ module Web
 
     acts_as_resourceful
 
-    validates_uniqueness_of :layoutid, :scope => [:groupid, :privatelayout]
+    # FIXME: does not work properly. even if the layoutid is available, this causes self.errors
+    #validates_uniqueness_of :layoutid, :scope => [:groupid, :privatelayout]
 
 
     # com.liferay.portal.model.Layout
@@ -55,11 +56,13 @@ module Web
       name += _name
       name += '</name></root>'
       self.name = name
+      self.save
 
       # perhaps layoutid could be sequenced.
       layouts = (self.is_public? ? self.group.public_layouts : self.group.private_layouts)
       _ids = (layouts.any? ? layouts.collect(&:layoutid) : nil)
       self.layoutid = (_ids.nil? ? 1 : _ids.sort.max+1)
+      self.save
 
       # increment pagecount
       _set = self.layoutset
@@ -95,6 +98,7 @@ module Web
 
       # Create a resource with scope=4 for this Layout.
       resource = self.get_resource(:scope => 4)
+      logger.debug 'resource: %s' % resource.inspect
 
       # COPY permission_ (permissionid, companyid, actionid, resourceid) FROM stdin;
       # +301	10109	ADD_DISCUSSION	202
@@ -141,15 +145,19 @@ module Web
 
       # COPY portletpreferences (portletpreferencesid, ownerid, ownertype, plid, portletid, preferences) FROM stdin;
       # +10259	0	3	10301	88	<portlet-preferences />
-      
-      # perhaps this will create itself?
 
-      # only Caterpillar can find the correct portlet
-#       if defined? Caterpillar
-#         Web::PortletPreferences.create(:plid => self.plid, :portletid => 88)
-#       end
+      # perhaps this will create itself?
+      # Web::PortletPreferences.create(:plid => self.plid, :portletid => 88)
 
       return self
+    end
+
+    def save
+      super
+      if self.errors.any?
+        logger.error self.errors.inspect
+        raise self.errors[:layoutid] if self.errors[:layoutid]
+      end
     end
 
     public
