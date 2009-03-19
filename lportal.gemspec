@@ -13,7 +13,7 @@ spec = Gem::Specification.new do |s|
   s.rubyforge_project = "lportal"
   s.platform = Gem::Platform::RUBY
   s.summary = "Liferay ActiveRecord models."
-  s.files = FileList["*.rb", "lib/**/*"].to_a
+  s.files = FileList["*.rb", "lib/**/*", "migrations/**/*"].to_a
   s.files.reject! { |fn| fn.include? "deprecated" }
   s.require_paths = ["."]
   s.test_files = FileList["{test}/**/*test.rb"].to_a
