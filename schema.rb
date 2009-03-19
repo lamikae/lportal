@@ -5,6 +5,7 @@ module Lportal
   # the +version+ method is a String of form '5.2.x'.
   class Schema
     @@BUILD = nil
+    @@VERSION = nil
 
     def self.buildnumber
       @@BUILD
@@ -16,8 +17,15 @@ module Lportal
     end
 
     def self.version
-      return nil if @@BUILD.nil?
-      '%s.%s' % @@BUILD.to_s.split('')
+      unless @@VERSION
+        return nil if @@BUILD.nil?
+        @@VERSION = '%s.%s.%d' % @@BUILD.to_s.scan(/(.)(.)(..)/).flatten
+      end
+      return @@VERSION
+    end
+
+    def self.version=(val)
+      @@VERSION = val
     end
 
   end
