@@ -15,60 +15,57 @@
 
 
 = 1.0.9
-- creation of MB::Messages
-- new models: SocialActivity, SocialRelation, RatingsStats, MB::MessageFlag, MB::StatsUser
-- URL path to download Document Library File
-- helper methods to find various types of groups and groups assets tags
+	- creation of MB::Messages
+	- new models: SocialActivity, SocialRelation, RatingsStats, MB::MessageFlag, MB::StatsUser
+	- URL path to download Document Library File
+	- helper methods to find various types of groups and groups assets tags
 
 
 = 1.0.8
-- Uniqueness scopes in User
-- Group members taken from Organization, if Group type if Organization
-- Role creation and deletion
-- Group creation
-- Added a method to clean Phone number
-- Web::Layout creation
-- Typesettings model for Layout content
-- MB::Category creation, MB::Category.path
-- User.activate, User.portrait_path, User.path
-- Group.name returns the name of Group's owner, if classnameid != 0
-- Layout portlets helper methods
-- fixed Tag::Asset relations
-
+	- Uniqueness scopes in User
+	- Group members taken from Organization, if Group type if Organization
+	- Role creation and deletion
+	- Group creation
+	- Added a method to clean Phone number
+	- Web::Layout creation
+	- Typesettings model for Layout content
+	- MB::Category creation, MB::Category.path
+	- User.activate, User.portrait_path, User.path
+	- Group.name returns the name of Group's owner, if classnameid != 0
+	- Layout portlets helper methods
+	- fixed Tag::Asset relations
 
 Known bugs:
-- Typesettings does not parse all existing Layouts correctly!
+	- Typesettings does not parse all existing Layouts correctly!
 
 
 = 1.0.7
-- User creation
-- new models: Listtype, Announcement::Delivery
-- Counter increment method
-- better creation of Phone, Contact and Group
+	- User creation
+	- new models: Listtype, Announcement::Delivery
+	- Counter increment method
+	- better creation of Phone, Contact and Group
 
 
 = 1.0.6
-- fixed a bug in user.gsm= method
-- portlet names
-- Company's guest
-- layouts and various Liferay URL handling
+	- fixed a bug in user.gsm= method
+	- portlet names
+	- Company's guest
+	- layouts and various Liferay URL handling
 
 
 = 1.0.5
-- Group types
+	- Group types
 
 
 = 1.0.4
-- Saving user's birthday through User.birthday=
-- New relations
-- New models
-- More tests!
+	- Saving user's birthday through User.birthday=
+	- New relations
+	- New models
+	- More tests!
 
 
 = 1.0.0
 Initial release on 18.11.2008.
 
 The structure is usable (though not complete), so tagged as version 1.0.0.
-
-
 
