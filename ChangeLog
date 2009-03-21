@@ -1,9 +1,17 @@
-- api change; layout.contents -> layout.settings
-- api change; user.user_permissions -> user.permissions
-- self.get methods to ResourceCode, Resource and Permission
-- Web::PortletPreferences: add layout management portlet on creation, setters for name and settings
-- Typesettings: accept Strings and Portlet* models
-- Web::Portlet: initialize PortletPreferences upon creation; preferences to an instance variable; use Resource*.get methods
+= 1.0.17
+	- introduced schema versions, automatic detection from the release_ table
+	- migrations imported from caterpillar trunk, define the migrations directory for caterpillar
+	- Group#asset_viewer_portlet(), the asset viewer selection is based on the schema version
+	- Liferay portlet path definitions (tagged_content, asset_publisher)
+	- Journal::Article#path(), Tag::Asset#path()
+	- fixed journal article link
+	- Web::PortletPreferences and Web::Portlet: cleanup
+	- DRY up various models with Acts::Resourceful
+	- api change; layout.contents -> layout.settings
+	- api change; user.user_permissions -> user.permissions
+	- self.get methods to ResourceCode, Resource and Permission
+	- Typesettings: accept Strings and Portlet* models
+	- Company: methods to find various groups by type
 
 
 = 1.0.9
@@ -59,4 +67,8 @@ Known bugs:
 
 = 1.0.0
 Initial release on 18.11.2008.
+
 The structure is usable (though not complete), so tagged as version 1.0.0.
+
+
+
