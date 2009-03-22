@@ -3,7 +3,7 @@ class Release < ActiveRecord::Base
   set_primary_key      :releaseid
 
   def self.current
-    self.find(:first, :order => "releaseid ASC")
+    self.find(:first, :order => "#{self.primary_key} DESC")
   end
 
 end
