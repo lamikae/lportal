@@ -13,13 +13,13 @@ spec = Gem::Specification.new do |s|
   s.rubyforge_project = "lportal"
   s.platform = Gem::Platform::RUBY
   s.summary = "Liferay ActiveRecord models."
-  s.files = FileList["*.rb", "lib/**/*", "migrations/**/*"].to_a
+  s.files = FileList["lib/**/*", "*.rb", "Rakefile", "migrations/**/*"].to_a
   s.files.reject! { |fn| fn.include? "deprecated" }
   s.require_paths = ["."]
   s.test_files = FileList["{test}/**/*test.rb"].to_a
   s.has_rdoc = true
   s.autorequire = "init"
-  s.extra_rdoc_files = ["README"]
+  s.extra_rdoc_files = ["README","ChangeLog","MIT-LICENSE"]
   s.add_dependency("activerecord", ">= 1.2.6")
   s.add_dependency("uuidtools", "= 1.0.3")
 end

@@ -1,24 +1,27 @@
+module Lportal
+  VERSION='1.0.17'
+end
+
 require 'find'
 require 'active_record'
 
 file = File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__
 this_dir = File.dirname(File.expand_path(file))
 
-require File.join(this_dir,'version')
-
-# set the migrations directory
+# set the migrations directory for Caterpillar
 LPORTAL_MIGRATIONS=File.expand_path(
   File.join(this_dir,'migrations')
               )
 
-require File.join(this_dir,'lib','acts','resourceful')
 # make models able to act resourceful
+require File.join(this_dir,'lib','acts','resourceful')
 ActiveRecord::Base.class_eval { include Acts::Resourceful }
 
-# Liferay portlet functionalities
+# Define Liferay (asset viewer) portlets.
+# This class is for defining specific portlet functionality.
 require File.join(this_dir,'portlets')
 
-# include all ruby files
+# include all models from lib
 Find.find(File.join(this_dir,'lib')) do |file|
   if FileTest.directory?(file)
     if File.basename(file) == "deprecated"
@@ -31,7 +34,7 @@ Find.find(File.join(this_dir,'lib')) do |file|
   end
 end
 
-# define the schema
+# define this database's schema version
 require File.join(this_dir,'schema')
 release = Release.current
 last_supported_release = 5201
