@@ -18,12 +18,12 @@ LPORTAL_MIGRATIONS=File.expand_path(
               )
 
 # load a set of hacks for PostgreSQL
-# if ActiveRecord::Base.connection.adapter_name=='PostgreSQL'
-#   info 'Loading a set of PostgreSQL hacks'
-#   Find.find(File.join(this_dir,'active_record')) do |file|
-#     require file if file[/.rb$/]
-#   end
-# end
+if ActiveRecord::Base.connection.adapter_name=='PostgreSQL'
+  info 'Loading a set of PostgreSQL hacks'
+  Find.find(File.join(this_dir,'active_record')) do |file|
+    require file if file[/.rb$/]
+  end
+end
 
 # make models able to act resourceful
 require File.join(this_dir,'lib','acts','resourceful')
