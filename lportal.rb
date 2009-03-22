@@ -1,12 +1,10 @@
-module Lportal
-  VERSION='1.0.17'
-end
-
 require 'find'
 require 'active_record'
 
 file = File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__
 this_dir = File.dirname(File.expand_path(file))
+
+require File.join(this_dir,'version')
 
 # set the migrations directory for Caterpillar
 LPORTAL_MIGRATIONS=File.expand_path(
