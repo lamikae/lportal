@@ -1,7 +1,7 @@
 # Liferay users.
 class User < ActiveRecord::Base
-  set_table_name       :User_
-  set_primary_key      :userId
+  set_table_name       :user_
+  set_primary_key      :userid
 
   acts_as_resourceful
 

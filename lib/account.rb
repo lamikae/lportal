@@ -1,6 +1,6 @@
 class Account < ActiveRecord::Base
-  set_table_name       :Account_
-  set_primary_key      :accountId
+  set_table_name       :account_
+  set_primary_key      :accountid
 
   # com.liferay.portal.model.Account
   def liferay_class
@@ -8,9 +8,9 @@ class Account < ActiveRecord::Base
   end
 
   belongs_to :company,
-    :foreign_key => Company.primary_key
+    :foreign_key => 'companyid'
 
   belongs_to :user,
-    :foreign_key => User.primary_key
+    :foreign_key => 'userid'
 
 end
