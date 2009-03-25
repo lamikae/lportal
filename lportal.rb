@@ -50,15 +50,23 @@ end
 require File.join(this_dir,'schema')
 release = Release.current
 last_supported_release = 5201
-Lportal::Schema.buildnumber = (
-  if release
-    msg = 'Detected'
-    release.buildnumber
-  else
-    msg = 'Using default'
-    last_supported_release
-  end
-)
+begin
+	Lportal::Schema.buildnumber = (
+	if release
+		msg = 'Detected'
+		release.buildnumber
+	else
+		msg = 'Using default'
+		last_supported_release
+	end
+	)
+rescue
+	STDERR.puts ' ***'
+	STDERR.puts ' * Either you do not have a proper Liferay schema or you have encountered a bug in lportal.'
+	STDERR.puts ' * Please contact the mailing list for support. Describe your setup and paste the trace below.'
+	STDERR.puts ' ***'
+	raise $!
+end
 
 msg << ' Liferay schema build %i, version %s' % [
   Lportal::Schema.buildnumber, Lportal::Schema.version]
