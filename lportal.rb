@@ -54,7 +54,7 @@ begin
 	Lportal::Schema.buildnumber = (
 	if release
 		msg = 'Detected'
-		release.buildnumber
+		release.buildNumber
 	else
 		msg = 'Using default'
 		last_supported_release
