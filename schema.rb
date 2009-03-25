@@ -17,11 +17,8 @@ module Lportal
     end
 
     def self.version
-      unless @@VERSION
-        return nil if @@BUILD.nil?
-        @@VERSION = '%s.%s.%d' % @@BUILD.to_s.scan(/(.)(.)(..)/).flatten
-      end
-      return @@VERSION
+      return nil if @@BUILD.nil?
+      @@VERSION = '%s.%s.%d' % @@BUILD.to_s.scan(/(.)(.)(..)/).flatten
     end
 
     def self.version=(val)

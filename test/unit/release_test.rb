@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ReleaseTest < ActiveSupport::TestCase
-  fixtures :release_
+  fixtures :Release_
 
   def test_releases
     releases = Release.all
@@ -14,12 +14,12 @@ class ReleaseTest < ActiveSupport::TestCase
   end
 
   def test_schema_version
-    assert_equal Release.current.buildnumber, Lportal::Schema.buildnumber
-    assert_equal Fixnum, Release.current.buildnumber.class
+    assert_equal Release.current.buildNumber, Lportal::Schema.buildnumber
+    assert_equal Fixnum, Release.current.buildNumber.class
 
     Lportal::Schema.buildnumber = 5100
     assert_equal 5100, Lportal::Schema.buildnumber
-    assert_equal '5.1', Lportal::Schema.version
+    assert_equal '5.1.0', Lportal::Schema.version
   end
 
 end
