@@ -16,9 +16,6 @@ class Company < ActiveRecord::Base
   has_one :address,
     :foreign_key => self.primary_key
 
-  has_many :organizations,
-    :foreign_key => self.primary_key
-
   has_many :contacts,
     :foreign_key => self.primary_key
 
@@ -26,6 +23,9 @@ class Company < ActiveRecord::Base
     :foreign_key => self.primary_key
 
   has_many :groups,
+    :foreign_key => self.primary_key
+
+  has_many :organizations,
     :foreign_key => self.primary_key
 
   has_many :layoutsets,
@@ -36,9 +36,11 @@ class Company < ActiveRecord::Base
     :foreign_key => 'primkey'
 
   # A list of Users who have the Role 'Administrator'. Scope is not checked!
+  # Returns a list of Users, or nil if there is no Administrator Role in this Company.
   def administrators
-    adminrole = Role.find(:first, :conditions => "companyid=#{self.id} AND name='Administrator'")
-    return self.users.select{|u| u.roles.include?(adminrole) }
+    adminrole = Role.find(:first, :conditions => "#{self.class.primary_key}=#{self.id} AND name='Administrator'")
+    adminrole ?
+      adminrole.users.select{|u| u.company==self} : nil
   end
   alias :admins :administrators
 

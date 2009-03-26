@@ -2,14 +2,17 @@ class Role < ActiveRecord::Base
   set_table_name       :Role_
   set_primary_key      :roleId
 
+  # com.liferay.portal.model.Role
+  def self.liferay_class
+    'com.liferay.portal.model.Role'
+  end
+  def liferay_class
+    self.class.liferay_class
+  end
+
   acts_as_resourceful
 
   #validates_uniqueness_of :name, :scope => 'companyid'
-
-  # com.liferay.portal.model.Role
-  def liferay_class
-    'com.liferay.portal.model.Role'
-  end
 
   # Actions for Permissions.
   def self.actions
@@ -62,7 +65,7 @@ class Role < ActiveRecord::Base
       rc = self.resource_code(scope)
       unless rc
         ResourceCode.create(
-          :companyid => self.companyid,
+          Company.primary_key => self.companyid,
           :name      => self.liferay_class,
           :scope     => scope
         )
@@ -116,7 +119,7 @@ class Role < ActiveRecord::Base
         if r
           self.class.actions.each do |actionid|
             p = Permission.find(:first,
-              :conditions => "companyid=#{self.companyid} AND actionid='#{actionid}' AND resourceid=#{r.id}")
+              :conditions => "#{Company.primary_key}=#{self.companyid} AND actionid='#{actionid}' AND resourceid=#{r.id}")
             next unless p
             p.users.each do |user|
               user.permissions.delete(p)
@@ -146,23 +149,23 @@ class Role < ActiveRecord::Base
   end
 
   belongs_to :company,
-    :foreign_key => "companyid"
+    :foreign_key => Company.primary_key
 
   has_and_belongs_to_many :permissions,
-    :join_table              => "roles_permissions",
-    :foreign_key             => "roleid",
-    :association_foreign_key => "permissionid"
+    :join_table              => "Roles_Permissions",
+    :foreign_key             => "roleId",
+    :association_foreign_key => "permissionId"
 
   # association to users
   has_and_belongs_to_many  :users,
-                           :join_table              => "users_roles",
-                           :foreign_key             => "roleid",
-                           :association_foreign_key => "userid"
+                           :join_table              => "Users_Roles",
+                           :foreign_key             => "roleId",
+                           :association_foreign_key => "userId"
 
   # association to users
   has_and_belongs_to_many  :groups,
-                           :join_table              => "groups_roles",
-                           :foreign_key             => "roleid",
-                           :association_foreign_key => "groupid"
+                           :join_table              => "Groups_Roles",
+                           :foreign_key             => "roleId",
+                           :association_foreign_key => "groupId"
 
 end

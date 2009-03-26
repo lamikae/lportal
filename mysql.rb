@@ -33,7 +33,13 @@ module Web
   end
 end
 
-[Company].each do |cl|
+class User < ActiveRecord::Base
+  def defaultuser
+    self.defaultUser
+  end
+end
+
+[Company,User,Account].each do |cl|
   cl.class_eval {
     def companyid
       self.companyId

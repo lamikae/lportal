@@ -204,13 +204,13 @@ class User < ActiveRecord::Base
 
   has_many :phones,
     :class_name  => 'Phone',
-    :foreign_key => 'userid'
+    :foreign_key => self.primary_key
 
   belongs_to :contact,
-    :foreign_key => 'contactid'
+    :foreign_key => 'contactId'
 
   belongs_to :company,
-    :foreign_key => 'companyid'
+    :foreign_key => 'companyId'
 
   # association to organizations
   has_and_belongs_to_many  :organizations,
