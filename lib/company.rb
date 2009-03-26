@@ -10,11 +10,6 @@ class Company < ActiveRecord::Base
     self.class.liferay_class
   end
 
-
-def self.foo
-  'companyId'
-end
-
   has_one :account,
     :foreign_key => self.primary_key
 
@@ -49,12 +44,12 @@ end
 
   # The default user for this Company.
   def guest
-    User.find(:first, :conditions => "#{self.primary_key}=#{self.id} AND defaultuser = true" )
+    User.find(:first, :conditions => "#{self.class.primary_key}=#{self.id} AND defaultuser = true" )
   end
 
   # Oddly enough, guest user's does not have a personal group relation in 5.1.1 nor 5.2.1
   def guest_group
-    Group.find(:first, :conditions => "#{self.primary_key}=#{self.id} AND name='Guest'")
+    Group.find(:first, :conditions => "#{self.class.primary_key}=#{self.id} AND name='Guest'")
   end
 
   # 0 = personal user groups
