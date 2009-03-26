@@ -1,4 +1,4 @@
 class ListType < ActiveRecord::Base
-  set_table_name       :listtype
-  set_primary_key      :listtypeid
+  set_table_name       :ListType
+  set_primary_key      :listTypeId
 end

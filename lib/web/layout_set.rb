@@ -1,8 +1,8 @@
 module Web
   # LayoutSets contain individual Layout s. They are either private or public.
   class LayoutSet < ActiveRecord::Base
-    set_table_name       :layoutset
-    set_primary_key      :layoutsetid
+    set_table_name       :LayoutSet
+    set_primary_key      :layoutSetId
 
     # com.liferay.portal.model.LayoutSet
     def liferay_class

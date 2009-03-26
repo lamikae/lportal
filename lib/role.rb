@@ -1,10 +1,10 @@
 class Role < ActiveRecord::Base
-  set_table_name       :role_
-  set_primary_key      :roleid
+  set_table_name       :Role_
+  set_primary_key      :roleId
 
   acts_as_resourceful
 
-  validates_uniqueness_of :name, :scope => 'companyid'
+  #validates_uniqueness_of :name, :scope => 'companyid'
 
   # com.liferay.portal.model.Role
   def liferay_class

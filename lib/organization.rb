@@ -1,6 +1,6 @@
 class Organization < ActiveRecord::Base
-  set_table_name       :organization_
-  set_primary_key      :organizationid
+  set_table_name       :Organization_
+  set_primary_key      :organizationId
 
   # com.liferay.portal.model.Organization
   def liferay_class

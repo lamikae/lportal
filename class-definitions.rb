@@ -4,8 +4,6 @@ class Address < ActiveRecord::Base
 end
 class BlogPost < ActiveRecord::Base
 end
-class Bookmark < ActiveRecord::Base
-end
 class Community < ActiveRecord::Base
 end
 class Company < ActiveRecord::Base
@@ -32,6 +30,8 @@ class Permission < ActiveRecord::Base
 end
 class Phone < ActiveRecord::Base
 end
+class Release < ActiveRecord::Base
+end
 class ResourceCode < ActiveRecord::Base
 end
 class Resource < ActiveRecord::Base
@@ -46,6 +46,14 @@ end
 
 module IG
   class Image < ActiveRecord::Base
+  end
+  class Folder < ActiveRecord::Base
+  end
+end
+
+
+module Bookmark
+  class Entry < ActiveRecord::Base
   end
   class Folder < ActiveRecord::Base
   end

@@ -1,14 +1,16 @@
 class ResourceCode < ActiveRecord::Base
-  set_table_name       :resourcecode
-  set_primary_key      :codeid
+  set_table_name       :ResourceCode
+  set_primary_key      :codeId
 
   public
 
-  belongs_to :company,
-    :foreign_key => "companyid"
+  # belongs to Company
+  def company
+    Company.find(self.send(Company.primary_key))
+  end
 
   has_many :resources,
-    :foreign_key => "codeid"
+    :foreign_key => self.primary_key
 
   # ResourceCode associated to an Liferay class
   #
@@ -19,7 +21,7 @@ class ResourceCode < ActiveRecord::Base
   def self.find_by_liferay_class(args={})
     args.update(:scope => 4) unless args[:scope]
     ResourceCode.get(:first,
-      :conditions => "companyid=#{args[:companyid]} AND name='#{args[:name]}' AND scope=#{args[:scope]}")
+      :conditions => "#{Company.primary_key}=#{args[:companyid]} AND name='#{args[:name]}' AND scope=#{args[:scope]}")
   end
 
   # Finds existing or creates a new ResourceCode

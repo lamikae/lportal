@@ -7,7 +7,7 @@ module Web # :nodoc:
   # Caterpillar can gather this information from the Liferay XML files, see its documentation.
   #
   class Portlet < ActiveRecord::Base
-    set_table_name       :portlet
+    set_table_name       :Portlet
     set_primary_key      :id_
 
     public

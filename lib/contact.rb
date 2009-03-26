@@ -1,6 +1,6 @@
 class Contact < ActiveRecord::Base
-  set_table_name       :contact_
-  set_primary_key      :contactid
+  set_table_name       :Contact_
+  set_primary_key      :contactId
 
   public
 

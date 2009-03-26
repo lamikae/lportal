@@ -69,11 +69,4 @@ class Company < ActiveRecord::Base
     Group.find_private self.id
   end
 
-#   has_one :frontpage,
-#     :class_name  => "Web::LayoutSet",
-#     :foreign_key => "companyid",
-#     :conditions  => "privatelayout=false AND virtualhost='#{@virtualhost}'"
-
-
-
 end

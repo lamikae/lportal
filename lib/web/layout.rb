@@ -2,7 +2,7 @@ module Web
   # Page layouts. These are individual layouts for items in the navigation bar.
   # Layouts have portlets, these are modeled by parsing (by regexp) the typesettings xml. Layouts belong to a certain LayoutSet.
   class Layout < ActiveRecord::Base
-    set_table_name       :layout
+    set_table_name       :Layout
     set_primary_key      :plid
 
     acts_as_resourceful

@@ -1,6 +1,6 @@
 class Permission < ActiveRecord::Base
-  set_table_name       :permission_
-  set_primary_key      :permissionid
+  set_table_name       :Permission_
+  set_primary_key      :permissionId
 
   belongs_to :company,
     :foreign_key => 'companyid'

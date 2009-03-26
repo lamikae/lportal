@@ -17,12 +17,19 @@ LPORTAL_MIGRATIONS=File.expand_path(
   File.join(this_dir,'migrations')
               )
 
-# load a set of hacks for PostgreSQL
-if ActiveRecord::Base.connection.adapter_name=='PostgreSQL'
+# load class definitions
+require File.join(this_dir,'class-definitions')
+
+# load a set of database-specific monkey patches
+case ActiveRecord::Base.connection.adapter_name
+when 'PostgreSQL'
   info 'Loading a set of PostgreSQL hacks'
   Find.find(File.join(this_dir,'active_record')) do |file|
     require file if file[/.rb$/]
   end
+when 'MySQL'
+  info 'Loading a set of MySQL hacks'
+  require File.join(this_dir,'mysql')
 end
 
 # make models able to act resourceful
@@ -54,7 +61,7 @@ begin
 	Lportal::Schema.buildnumber = (
 	if release
 		msg = 'Detected'
-		release.buildNumber
+		release.buildnumber
 	else
 		msg = 'Using default'
 		last_supported_release

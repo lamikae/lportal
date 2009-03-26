@@ -1,16 +1,17 @@
 class Classname < ActiveRecord::Base
-  set_table_name       :classname_
-  set_primary_key      :classnameid
+  set_table_name       :ClassName_
+  set_primary_key      :classNameId
 
   # Returns the Class of the model for a certain Java class
   def self.model(codename)
     case codename
 
-    # TODO: rake task to caterpillar..
-    # when "56" #journal_content
-    # when "58" #login
-    # when "101" #tagged_content
-    # when "103" #tags_compiler
+    # Numbers signify portlets, and can be fetched from the PortletProperties table.
+    # when "56" journal_content
+    # when "58" login
+    # when "101" tagged_content
+    # when "103" tags_compiler
+    # etc...
 
     when 'com.liferay.portal.model.Layout'
       Web::Layout

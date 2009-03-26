@@ -1,8 +1,8 @@
 class Counter < ActiveRecord::Base
-  set_table_name       :counter
+  set_table_name       :Counter
   set_primary_key      :name
 
-  # Increments the counter
+  # Increments the counter +name+ by +value+.
   def self.increment(name, value)
     if name.is_a?(Symbol)
       name = (

@@ -6,8 +6,8 @@ class User < ActiveRecord::Base
   acts_as_resourceful
 
   validates_uniqueness_of :uuid_
-  validates_uniqueness_of :emailaddress, :scope => :companyid
-  validates_uniqueness_of :screenname, :scope => :companyid
+  validates_uniqueness_of :emailaddress, :scope => Company.primary_key
+  validates_uniqueness_of :screenname,   :scope => Company.primary_key
 
   public
 

@@ -7,10 +7,14 @@ class Account < ActiveRecord::Base
     'com.liferay.portal.model.Account'
   end
 
-  belongs_to :company,
-    :foreign_key => Company.primary_key
+  # belongs to Company
+  def company
+    Company.find(self.send(Company.primary_key))
+  end
 
-  belongs_to :user,
-    :foreign_key => User.primary_key
+  # belongs to User
+  def user
+    User.find(self.send(User.primary_key))
+  end
 
 end

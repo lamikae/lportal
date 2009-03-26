@@ -1,7 +1,7 @@
 # This model represents the user groups (communities) in the lportal database.
 class Group < ActiveRecord::Base
-  set_table_name       :group_
-  set_primary_key      :groupid
+  set_table_name       :Group_
+  set_primary_key      :groupId
 
   acts_as_resourceful
 
