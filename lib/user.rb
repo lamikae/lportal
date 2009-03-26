@@ -3,6 +3,14 @@ class User < ActiveRecord::Base
   set_table_name       :User_
   set_primary_key      :userId
 
+  # com.liferay.portal.model.User
+  def self.liferay_class
+    'com.liferay.portal.model.User'
+  end
+  def liferay_class
+    self.class.liferay_class
+  end
+
   acts_as_resourceful
 
   validates_uniqueness_of :uuid_
@@ -10,16 +18,6 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :screenname,   :scope => Company.primary_key
 
   public
-
-  # com.liferay.portal.model.User
-  def self.liferay_class
-    'com.liferay.portal.model.User'
-  end
-
-  # FIXME: move all references from instance method to class method
-  def liferay_class
-    self.class.liferay_class
-  end
 
   # Actions for Permissions.
   def self.actions
@@ -202,7 +200,7 @@ class User < ActiveRecord::Base
   end
 
   has_one :account,
-    :foreign_key => 'userid'
+    :foreign_key => self.primary_key
 
   has_many :phones,
     :class_name  => 'Phone',

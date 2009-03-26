@@ -32,3 +32,11 @@ module Web
     end
   end
 end
+
+[Company].each do |cl|
+  cl.class_eval {
+    def companyid
+      self.companyId
+    end
+  }
+end

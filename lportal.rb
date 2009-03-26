@@ -40,6 +40,14 @@ ActiveRecord::Base.class_eval { include Acts::Resourceful }
 # This class is for defining specific portlet functionality.
 require File.join(this_dir,'portlets')
 
+# require certain classes first
+%w{
+  company
+  user
+  }.each do |cl|
+  require File.join(this_dir,'lib',cl)
+end
+
 # include all models from lib
 Find.find(File.join(this_dir,'lib')) do |file|
   if FileTest.directory?(file)

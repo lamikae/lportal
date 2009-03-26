@@ -2,6 +2,19 @@ class Company < ActiveRecord::Base
   set_table_name       :Company
   set_primary_key      :companyId
 
+  # com.liferay.portal.model.Company
+  def self.liferay_class
+    'com.liferay.portal.model.Company'
+  end
+  def liferay_class # :nodoc:
+    self.class.liferay_class
+  end
+
+
+def self.foo
+  'companyId'
+end
+
   has_one :account,
     :foreign_key => self.primary_key
 
@@ -26,11 +39,6 @@ class Company < ActiveRecord::Base
 
   has_one :resource,
     :foreign_key => 'primkey'
-
-  # com.liferay.portal.model.Company
-  def liferay_class
-    'com.liferay.portal.model.Company'
-  end
 
   # A list of Users who have the Role 'Administrator'. Scope is not checked!
   def administrators
