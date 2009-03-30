@@ -46,10 +46,18 @@ class Company < ActiveRecord::Base
 
   # The default user for this Company.
   def guest
-    User.find(:first, :conditions => "#{self.class.primary_key}=#{self.id} AND defaultuser = true" )
+    defaultuser = (
+      case ActiveRecord::Base.connection.adapter_name
+      when 'MySQL'
+        'defaultUser'
+      else
+        'defaultuser'
+      end
+    )
+    User.find(:first, :conditions => "#{self.class.primary_key}=#{self.id} AND #{defaultuser} = true" )
   end
 
-  # Oddly enough, guest user's does not have a personal group relation in 5.1.1 nor 5.2.1
+  # Oddly enough, guest user does not have a personal group relation in 5.1.1 nor 5.2.1
   def guest_group
     Group.find(:first, :conditions => "#{self.class.primary_key}=#{self.id} AND name='Guest'")
   end

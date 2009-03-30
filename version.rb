@@ -1,3 +1,3 @@
 module Lportal
-  VERSION='1.0.18'
+  VERSION='1.1.0_RC1'
 end

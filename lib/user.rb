@@ -199,18 +199,13 @@ class User < ActiveRecord::Base
     raise self.errors[:screenname] if self.errors[:screenname]
   end
 
-  has_one :account,
-    :foreign_key => self.primary_key
+  has_one :account, :foreign_key => self.primary_key
 
-  has_many :phones,
-    :class_name  => 'Phone',
-    :foreign_key => self.primary_key
+  has_many :phones, :foreign_key => self.primary_key
 
-  belongs_to :contact,
-    :foreign_key => 'contactId'
+  belongs_to :contact, :foreign_key => Contact.primary_key
 
-  belongs_to :company,
-    :foreign_key => 'companyId'
+  belongs_to :company, :foreign_key => Company.primary_key
 
   # association to organizations
   has_and_belongs_to_many  :organizations,
@@ -254,23 +249,23 @@ class User < ActiveRecord::Base
   # association to tags
   has_many :tags,
            :class_name => 'Tag::Entry',
-           :foreign_key => 'userid'
+           :foreign_key => self.primary_key
 
   # association to assets
   has_many :assets,
            :order       => 'publishdate',
-           :foreign_key => 'userid'
+           :foreign_key => self.primary_key
 
   # association to wiki pages
   has_many :wikipages,
     :class_name  => 'Wiki::Page',
-    :foreign_key => 'userid'
+    :foreign_key => self.primary_key
   alias :articles :wikipages
 
   # association to MessageBoardMessages
   has_many :mbmessages,
            :class_name  => 'MB::Message',
-           :foreign_key => 'userid'
+           :foreign_key => self.primary_key
 
 
   def group_permissions
@@ -331,7 +326,7 @@ class User < ActiveRecord::Base
       c.save
     else
       c = Contact.create(
-        :userid => self.userid,
+        :user => self,
         :firstname => v )
       self.contact = c
       self.save
@@ -350,7 +345,7 @@ class User < ActiveRecord::Base
       c.save
     else
       c = Contact.create(
-        :userid => self.userid,
+        :user => self,
         :lastname => v )
       self.contact = c
       self.save
@@ -374,7 +369,7 @@ class User < ActiveRecord::Base
       c.save
     else
       c = Contact.create(
-        :userid => self.userid,
+        :user => self,
         :male => male )
       self.contact = c
       self.save
@@ -423,7 +418,7 @@ class User < ActiveRecord::Base
       phone.save
     else
       Phone.create(
-        :userid => self.id,
+        :user => self,
         :number_ => _number,
         :primary_ => true
       )

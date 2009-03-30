@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class AccountTest < ActiveSupport::TestCase
-  fixtures :Account_, :Company, :User_
+  fixtures [:Account_, :Company, :User_]
 
   def setup
     @accounts = Account.find :all

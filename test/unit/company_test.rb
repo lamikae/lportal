@@ -19,7 +19,7 @@ class CompanyTest < ActiveSupport::TestCase
   def test_account
     @companies.each do |c|
       assert_not_nil c.account, "#{c.id} has no account"
-      assert_equal 0, c.account.userId
+      assert_equal 0, c.account.send(User.primary_key)
     end
   end
   
