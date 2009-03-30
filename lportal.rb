@@ -23,12 +23,11 @@ require File.join(this_dir,'class-definitions')
 # load a set of database-specific monkey patches
 case ActiveRecord::Base.connection.adapter_name
 when 'PostgreSQL'
-  info 'Loading a set of PostgreSQL hacks'
-  Find.find(File.join(this_dir,'active_record')) do |file|
-    require file if file[/.rb$/]
-  end
+  info 'Loading a set of PostgreSQL patches'
+  require File.join(this_dir,'active_record','base')
+  require File.join(this_dir,'active_record','connection_adapters','postgresql_adapter')
 when 'MySQL'
-  info 'Loading a set of MySQL hacks'
+  info 'Loading a set of MySQL patches'
   require File.join(this_dir,'mysql')
 end
 
