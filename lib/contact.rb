@@ -1,22 +1,10 @@
 class Contact < ActiveRecord::Base
-  set_table_name       :Contact_
-  set_primary_key      :contactId
 
-  public
+  belongs_to :company, :foreign_key => Company.primary_key
 
-  # com.liferay.portal.model.Contact
-  def liferay_class
-    'com.liferay.portal.model.Contact'
-  end
+  belongs_to :user,    :foreign_key => User.primary_key
 
-  belongs_to :company,
-    :foreign_key => 'companyid'
-
-  belongs_to :user,
-    :foreign_key => 'userid'
-
-  belongs_to :account,
-    :foreign_key => 'accountid'
+  belongs_to :account, :foreign_key => Account.primary_key
 
   # Creates new contact_
   def initialize(params)

@@ -1,12 +1,7 @@
 class Phone < ActiveRecord::Base
-  set_table_name       :phone
-  set_primary_key      :phoneid
 
-  belongs_to :company,
-    :foreign_key => 'companyid'
-
-  belongs_to :user,
-    :foreign_key => 'userid'
+  belongs_to :company, :foreign_key => Company.primary_key
+  belongs_to :user,    :foreign_key => User.primary_key
 
   def initialize(params)
     super(params)
@@ -15,7 +10,7 @@ class Phone < ActiveRecord::Base
     self.modifieddate = Time.now
     self.companyid    = self.user.companyid
     self.username     ||= self.user.fullname
-    self.classnameid  = Classname.find_by_value('com.liferay.portal.model.Contact').id
+    self.classnameid  = Classname.find_by_value(Contact.liferay_class).id
     self.classpk      = self.user.contact.id
     self.typeid       ||= ListType.find_by_name('Mobile').id
     self.primary_=true if self.primary_.nil?

@@ -1,7 +1,5 @@
 # Liferay users.
 class User < ActiveRecord::Base
-  set_table_name       :User_
-  set_primary_key      :userId
 
   # com.liferay.portal.model.User
   def self.liferay_class
@@ -29,6 +27,8 @@ class User < ActiveRecord::Base
   # It is a complicated process, as Liferay inserts new data into many tables.
   # This process is engineered by creating a new role with Liferay's (v. 5.1.1) tools and
   # inspecting the database dump diffs.
+  #
+  # Does not (yet) work on MySQL.
   #
   # Mandatory parameters:
   #  - companyid
@@ -206,6 +206,8 @@ class User < ActiveRecord::Base
   belongs_to :contact, :foreign_key => Contact.primary_key
 
   belongs_to :company, :foreign_key => Company.primary_key
+
+  # TODO: fix these associations for Mysql
 
   # association to organizations
   has_and_belongs_to_many  :organizations,

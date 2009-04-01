@@ -1,6 +1,4 @@
 class Company < ActiveRecord::Base
-  set_table_name       :Company
-  set_primary_key      :companyId
 
   # com.liferay.portal.model.Company
   def self.liferay_class
