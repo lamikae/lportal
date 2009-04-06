@@ -362,9 +362,9 @@ class User < ActiveRecord::Base
 
   # Creates a new Contact unless it exists
   #
-  # 1=female, 2=male (WHERE IS CONSISTENCY?!)
+  # 0=female, 1=male
   def sex=(v)
-    male = (v==2 ? true : false)
+    male = (v==0 ? false : true)
     if self.contact
       c = self.contact
       c.male=male
