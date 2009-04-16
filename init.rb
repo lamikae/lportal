@@ -34,7 +34,32 @@ else
   STDERR.puts 'You are using a database that is not supported by lportal.'
 end
 
-# main libraries
+# load class definitions
+require File.join(this_dir,'class-definitions')
+
+# make models able to act resourceful
+require File.join(this_dir,'lib','acts','resourceful')
+ActiveRecord::Base.class_eval { include Acts::Resourceful }
+
+# Define Liferay (asset viewer) portlets.
+# This class is for defining specific portlet functionality.
+require File.join(this_dir,'portlets')
+
+# include all database models from lib
+require 'find'
+Find.find(File.join(this_dir,'lib')) do |file|
+  if FileTest.directory?(file)
+    if File.basename(file) == "deprecated"
+      Find.prune # Don't look any further into this directory.
+    else
+      next
+    end
+  else
+    require file if file[/.rb$/]
+  end
+end
+
+# portal methods
 require File.join(this_dir,'lportal')
 
 # define this database's schema version

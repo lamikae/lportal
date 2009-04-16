@@ -1,32 +1,35 @@
-# Lportal models.
-# This prepares the environment by loading a set of active_record patches.
+# This module is a home for various classes and methods that handle portal logic, that do not belong to the database models.
+module Lportal
+  # Portal urls.
+  class Url
+    class << self
 
-file = File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__
-this_dir = File.dirname(File.expand_path(file))
-
-# load class definitions
-require File.join(this_dir,'class-definitions')
-
-# make models able to act resourceful
-require File.join(this_dir,'lib','acts','resourceful')
-ActiveRecord::Base.class_eval { include Acts::Resourceful }
-
-# Define Liferay (asset viewer) portlets.
-# This class is for defining specific portlet functionality.
-require File.join(this_dir,'portlets')
-
-require 'find'
-
-# include all models from lib
-Find.find(File.join(this_dir,'lib')) do |file|
-  if FileTest.directory?(file)
-    if File.basename(file) == "deprecated"
-      Find.prune # Don't look any further into this directory.
-    else
-      next
+    def logout
+      '/c/portal/logout'
     end
-  else
-    require file if file[/.rb$/]
+
+    # Control panel
+    def control_panel(groupid=nil,referer_plid=nil)
+      url = '/group/control_panel?'
+      url << 'doAsGroupId=%i&' % groupid if groupid
+      url << 'refererPlid=%i' % referer_plid if referer_plid
+    end
+
+    # Control panel manage function
+    def manage(action=:my_account,referer_plid=nil)
+      url = '/group/control_panel/manage?'
+      portletid = Web::Portlet.find_by_name(action).portletid
+      if portletid
+        url << 'p_p_id=%i' % portlet_id
+        url << '&p_p_lifecycle=0'
+        url << '&p_p_state=maximized'
+        url << '&p_p_mode=view&'
+      else
+        RAILS_DEFAULT_LOGGER.warn('Portlet by name %s was not found!' % action)
+      end
+      url << 'refererPlid=%i' % referer_plid if referer_plid
+    end
+
+    end
   end
 end
-
