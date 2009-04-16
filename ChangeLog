@@ -1,4 +1,10 @@
-= 1.0.17
+Changed VCM to git; 
+the master branch contains the following:
+
+	- initial hack to support databases with slightly different schemas (MySQL, PostgreSQL)
+
+
+= 1.0.17 (commit a294a5010c60864c73c26757ec44a69e689c4961)
 	- introduced schema versions, automatic detection from the release_ table
 	- migrations imported from caterpillar trunk, define the migrations directory for caterpillar
 	- Group#asset_viewer_portlet(), the asset viewer selection is based on the schema version
