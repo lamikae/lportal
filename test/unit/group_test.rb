@@ -2,25 +2,25 @@ require 'test_helper'
 
 class GroupTest < ActiveSupport::TestCase
   fixtures [
-    :organization_,
-    :groups_orgs,
-    :users_orgs,
-    :usergroup,
-    :role_,
-    :classname_
+    :Organization_,
+    :Groups_Orgs,
+    :Users_Orgs,
+    :UserGroup,
+    :Role_,
+    :ClassName_
   ]
   # to test asset_viewer_portlet, these are required
   fixtures << [
-    :portlet, :portletproperties, :portletpreferences,
-    :layout,
-    :tagsasset,
-    :igimage,
-    :mbmessage,
-    :blogsentry,
-    :wikipage,
-    :bookmarksentry,
-    :journalarticle,
-    :dlfileentry
+    :Portlet, :PortletProperties, :PortletPreferences,
+    :Layout,
+    :TagsAsset,
+    :IGImage,
+    :MBMessage,
+    :BlogsEntry,
+    :WikiPage,
+    :BookmarksEntry,
+    :JournalArticle,
+    :DLFileEntry
   ]
 
   def setup

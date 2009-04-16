@@ -1,13 +1,5 @@
 class Company < ActiveRecord::Base
 
-  # com.liferay.portal.model.Company
-  def self.liferay_class
-    'com.liferay.portal.model.Company'
-  end
-  def liferay_class # :nodoc:
-    self.class.liferay_class
-  end
-
   has_one :account,
     :foreign_key => self.primary_key
 

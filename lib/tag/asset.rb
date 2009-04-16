@@ -1,20 +1,12 @@
 module Tag
-  # Represents the table tagsasset
   class Asset < ActiveRecord::Base
-    set_table_name       :tagsasset
-    set_primary_key      :assetid
-
-
-    # com.liferay.portlet.tags.model.TagsAsset
-    def liferay_class
-      'com.liferay.portlet.tags.model.TagsAsset'
-    end
-
-    # COPY tagsasset (assetid, groupid, companyid, userid, username, createdate, modifieddate, classnameid, classpk, startdate, enddate, publishdate, expirationdate, mimetype, title, description, summary, url, height, width, priority, viewcount) FROM stdin;
-    # +10311	10166	10109	10129	Test Test	2009-01-17 08:07:12.039	2009-01-17 08:07:12.039	10071	10308	\N	\N	\N	\N	text/html	New thread				0	0	0	0
 
     def initialize(params)
       super(params)
+
+      # COPY tagsasset (assetid, groupid, companyid, userid, username, createdate, modifieddate, classnameid, classpk, startdate, enddate, publishdate, expirationdate, mimetype, title, description, summary, url, height, width, priority, viewcount) FROM stdin;
+      # +10311    10166   10109   10129   Test Test   2009-01-17 08:07:12.039 2009-01-17 08:07:12.039 10071   10308   \N  \N  \N  \N  text/html   New thread              0   0   0   0
+
       self.createdate     ||= Time.now
       self.modifieddate   ||= Time.now
       self.startdate      ||= nil

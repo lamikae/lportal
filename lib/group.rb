@@ -1,16 +1,7 @@
 # This model represents the user groups (communities) in the lportal database.
 class Group < ActiveRecord::Base
-  set_table_name       :Group_
-  set_primary_key      :groupId
 
   acts_as_resourceful
-
-  public
-
-  # com.liferay.portal.model.Group
-  def liferay_class
-    'com.liferay.portal.model.Group'
-  end
 
   # Actions for Permissions.
   def self.actions

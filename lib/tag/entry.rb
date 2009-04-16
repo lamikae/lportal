@@ -1,12 +1,5 @@
 module Tag
   class Entry < ActiveRecord::Base
-    set_table_name       :tagsentry
-    set_primary_key      :entryid
-
-    # com.liferay.portlet.tags.model.TagsEntry
-    def liferay_class
-      'com.liferay.portlet.tags.model.TagsEntry'
-    end
 
     # association to user
     belongs_to :user,

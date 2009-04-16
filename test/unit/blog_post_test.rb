@@ -2,9 +2,11 @@ require 'test_helper'
 
 class AssetTest < ActiveSupport::TestCase
   fixtures [
-    :tagsasset,
-    :resource_, :resourcecode,
-    :blogsentry
+    :TagsAsset,
+    :Resource_, :ResourceCode,
+    :BlogsEntry,
+    :User_,
+    :Group_
   ]
 
   def setup

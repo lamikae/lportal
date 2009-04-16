@@ -1,12 +1,5 @@
 module Wiki
   class Page < ActiveRecord::Base
-    set_table_name       :wikipage
-    set_primary_key      :pageid
-
-    # com.liferay.portlet.wiki.model.WikiPage
-    def liferay_class
-      'com.liferay.portlet.wiki.model.WikiPage'
-    end
 
     belongs_to :company,
       :foreign_key => 'companyid'

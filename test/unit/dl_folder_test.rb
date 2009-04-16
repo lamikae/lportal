@@ -1,8 +1,35 @@
 require 'test_helper'
 
 class DlFolderTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+  fixtures [:DLFileEntry, :DLFolder, :Company, :User_, :Group_]
+
+  def setup
+    @folders = DlFile.all
+  end
+
+  def test_files
+    @folders.each do |dlf|
+      dlf.files.each do |f|
+        assert_not_nil f
+      end
+    end
+  end
+
+  def test_company
+    @folders.each do |dlf|
+      assert_not_nil dlf.company
+    end
+  end
+
+  def test_user
+    @folders.each do |dlf|
+      assert_not_nil dlf.user
+    end
+  end
+
+  def test_group
+    @folders.each do |dlf|
+      assert_not_nil dlf.group
+    end
   end
 end

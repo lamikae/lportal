@@ -1,6 +1,4 @@
 class Permission < ActiveRecord::Base
-  set_table_name       :Permission_
-  set_primary_key      :permissionId
 
   belongs_to :company,
     :foreign_key => 'companyid'
@@ -43,6 +41,5 @@ class Permission < ActiveRecord::Base
   def holders
     self.users + self.roles + self.groups
   end
-
 
 end

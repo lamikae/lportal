@@ -1,12 +1,5 @@
 module Tag
   class Property < ActiveRecord::Base
-    set_table_name       :tagsproperty
-    set_primary_key      :propertyid
-
-    # com.liferay.portlet.tags.model.TagsProperty
-    def liferay_class
-      'com.liferay.portlet.tags.model.TagsProperty'
-    end
 
     # association to user
     belongs_to :user,

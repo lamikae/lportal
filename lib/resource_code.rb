@@ -1,8 +1,4 @@
 class ResourceCode < ActiveRecord::Base
-  set_table_name       :ResourceCode
-  set_primary_key      :codeId
-
-  public
 
   # belongs to Company
   def company

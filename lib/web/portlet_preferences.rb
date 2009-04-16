@@ -4,19 +4,10 @@ module Web
   #
   # Also see Lportal::Portlets, that adds a method +path+.
   class PortletPreferences < ActiveRecord::Base
-    set_table_name       :portletpreferences
-    set_primary_key      :portletpreferencesid
 
     acts_as_resourceful
 
     include Lportal::Portlets
-
-    public
-
-    # com.liferay.portal.model.PortletPreferences
-    def liferay_class
-      'com.liferay.portal.model.PortletPreferences'
-    end
 
     # add portlets to layouts via Layout#<<
     belongs_to :layout,

@@ -1,8 +1,4 @@
 class Resource < ActiveRecord::Base
-  set_table_name       :resource_
-  set_primary_key      :resourceid
-
-  public
 
   belongs_to :resourcecode,
     :class_name => 'ResourceCode',

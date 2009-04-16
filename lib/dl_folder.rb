@@ -1,25 +1,15 @@
 class DlFolder < ActiveRecord::Base
-  set_table_name       :dlfolder
-  set_primary_key      :folderid
-
-  # com.liferay.portlet.documentlibrary.model.DLFolder
-  def liferay_class
-    'com.liferay.portlet.documentlibrary.model.DLFolder'
-  end
 
   has_many :files,
     :class_name  => 'DlFile',
-    :foreign_key => 'folderid'
+    :foreign_key => DlFile.primary_key
 
-  belongs_to :company,
-    :foreign_key => 'companyid'
+  belongs_to :company, :foreign_key => Company.primary_key
 
-  belongs_to :user,
-    :foreign_key => 'userid'
+  belongs_to :user,    :foreign_key => User.primary_key
   alias :owner :user
 
-  belongs_to :group,
-    :foreign_key => 'groupid'
+  belongs_to :group,   :foreign_key => Group.primary_key
   alias :community :group
 
 #   has_one :asset,

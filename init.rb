@@ -22,6 +22,9 @@ end
 
 info 'version ' + Lportal::VERSION
 
+# load class definitions
+require File.join(this_dir,'class-definitions')
+
 # load a set of monkey patches that alter the functionality a bit based on the database type
 require File.join(this_dir,'active_record','base')
 info 'using %s adapter' % ActiveRecord::Base.connection.adapter_name
@@ -29,13 +32,10 @@ case ActiveRecord::Base.connection.adapter_name
 when 'PostgreSQL'
   require File.join(this_dir,'active_record','connection_adapters','postgresql_adapter')
 when 'MySQL'
-  require File.join(this_dir,'mysql')
+ require File.join(this_dir,'mysql')
 else
   STDERR.puts 'You are using a database that is not supported by lportal.'
 end
-
-# load class definitions
-require File.join(this_dir,'class-definitions')
 
 # make models able to act resourceful
 require File.join(this_dir,'lib','acts','resourceful')

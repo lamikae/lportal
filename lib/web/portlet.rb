@@ -7,15 +7,6 @@ module Web # :nodoc:
   # Caterpillar can gather this information from the Liferay XML files, see its documentation.
   #
   class Portlet < ActiveRecord::Base
-    set_table_name       :Portlet
-    set_primary_key      :id_
-
-    public
-
-    # com.liferay.portal.model.Portlet
-    def liferay_class
-      'com.liferay.portal.model.Portlet'
-    end
 
     belongs_to :company,
       :foreign_key => "companyid"

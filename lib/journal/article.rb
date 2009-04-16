@@ -1,12 +1,5 @@
 module Journal
   class Article < ActiveRecord::Base
-    set_table_name       :journalarticle
-    set_primary_key      :id_
-
-    # com.liferay.portlet.journal.model.JournalArticle
-    def liferay_class
-      'com.liferay.portlet.journal.model.JournalArticle'
-    end
 
     belongs_to :company,
       :foreign_key => 'companyid'

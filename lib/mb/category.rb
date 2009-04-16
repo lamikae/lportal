@@ -1,18 +1,11 @@
 # Message Board
 module MB
   class Category < ActiveRecord::Base
-    set_table_name       :mbcategory
-    set_primary_key      :categoryid
 
     acts_as_resourceful
 
     # this causes trouble when modifying instance attributes (!)
     #validates_uniqueness_of :uuid_
-
-    # com.liferay.portlet.messageboards.model.MBCategory
-    def liferay_class
-      'com.liferay.portlet.messageboards.model.MBCategory'
-    end
 
     # Actions for Permissions.
     def self.actions

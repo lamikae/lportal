@@ -1,14 +1,6 @@
 # Liferay users.
 class User < ActiveRecord::Base
 
-  # com.liferay.portal.model.User
-  def self.liferay_class
-    'com.liferay.portal.model.User'
-  end
-  def liferay_class
-    self.class.liferay_class
-  end
-
   acts_as_resourceful
 
   validates_uniqueness_of :uuid_

@@ -1,12 +1,5 @@
 module MB
   class Thread < ActiveRecord::Base
-    set_table_name       :mbthread
-    set_primary_key      :threadid
-
-    # com.liferay.portlet.messageboards.model.MBThread
-    def liferay_class
-      'com.liferay.portlet.messageboards.model.MBThread'
-    end
 
     belongs_to :category,
       :class_name => 'MB::Category',

@@ -1,11 +1,4 @@
 class Organization < ActiveRecord::Base
-  set_table_name       :Organization_
-  set_primary_key      :organizationId
-
-  # com.liferay.portal.model.Organization
-  def liferay_class
-    'com.liferay.portal.model.Organization'
-  end
 
   belongs_to :company,
     :foreign_key => 'companyid'

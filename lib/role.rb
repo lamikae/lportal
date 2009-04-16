@@ -1,14 +1,4 @@
 class Role < ActiveRecord::Base
-  set_table_name       :Role_
-  set_primary_key      :roleId
-
-  # com.liferay.portal.model.Role
-  def self.liferay_class
-    'com.liferay.portal.model.Role'
-  end
-  def liferay_class
-    self.class.liferay_class
-  end
 
   acts_as_resourceful
 

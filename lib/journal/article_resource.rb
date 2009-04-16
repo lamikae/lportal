@@ -1,12 +1,5 @@
 module Journal
   class ArticleResource < ActiveRecord::Base
-    set_table_name       :journalarticleresource
-    set_primary_key      :resourceprimkey
-
-    # com.liferay.portlet.journal.model.JournalArticleResource
-    def liferay_class
-      'com.liferay.portlet.journal.model.JournalArticleResource'
-    end
 
     belongs_to :group,
       :foreign_key => 'groupid'

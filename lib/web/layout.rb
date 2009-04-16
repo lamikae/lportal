@@ -2,19 +2,11 @@ module Web
   # Page layouts. These are individual layouts for items in the navigation bar.
   # Layouts have portlets, these are modeled by parsing (by regexp) the typesettings xml. Layouts belong to a certain LayoutSet.
   class Layout < ActiveRecord::Base
-    set_table_name       :Layout
-    set_primary_key      :plid
 
     acts_as_resourceful
 
     # FIXME: does not work properly. even if the layoutid is available, this causes self.errors
     #validates_uniqueness_of :layoutid, :scope => [:groupid, :privatelayout]
-
-
-    # com.liferay.portal.model.Layout
-    def liferay_class
-      'com.liferay.portal.model.Layout'
-    end
 
     # Actions for Permissions.
     def self.actions

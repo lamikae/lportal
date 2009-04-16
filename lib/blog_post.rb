@@ -1,12 +1,5 @@
 # TODO: rename to Blog::Entry
 class BlogPost < ActiveRecord::Base
-  set_table_name       :blogsentry
-  set_primary_key      :entryid
-
-  # com.liferay.portlet.blogs.model.BlogsEntry
-  def liferay_class
-    'com.liferay.portlet.blogs.model.BlogsEntry'
-  end
 
   belongs_to :company,
     :foreign_key => 'companyid'

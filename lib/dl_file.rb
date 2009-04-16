@@ -1,27 +1,17 @@
 class DlFile < ActiveRecord::Base
-  set_table_name       :dlfileentry
-  set_primary_key      :fileentryid
-
-  # com.liferay.portlet.documentlibrary.model.DLFileEntry
-  def liferay_class
-    'com.liferay.portlet.documentlibrary.model.DLFileEntry'
-  end
 
   belongs_to :folder,
     :class_name  => 'DlFolder',
-    :foreign_key => 'folderid'
+    :foreign_key => DlFolder.primary_key
 
-  belongs_to :company,
-    :foreign_key => 'companyid'
+  belongs_to :company, :foreign_key => Company.primary_key
 
-  belongs_to :user,
-    :foreign_key => 'userid'
+  belongs_to :user,    :foreign_key => User.primary_key
   alias :owner :user
 
   has_one :asset,
     :class_name  => 'Tag::Asset',
-    :foreign_key => 'classpk'
-
+    :foreign_key => 'classPK'
 
   # URL path to download this Document Library File
   def path

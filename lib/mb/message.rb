@@ -1,17 +1,9 @@
 module MB
   class Message < ActiveRecord::Base
-    set_table_name       :mbmessage
-    set_primary_key      :messageid
 
     acts_as_resourceful
 
 #     validates_presence_of :user, :category, :subject, :body
-
-
-    # com.liferay.portlet.messageboards.model.MBMessage
-    def liferay_class
-      'com.liferay.portlet.messageboards.model.MBMessage'
-    end
 
     # Actions for Permissions.
     def self.actions

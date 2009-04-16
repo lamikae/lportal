@@ -1,27 +1,17 @@
 module IG
-  # Image gallery image
   class Image < ActiveRecord::Base
-    set_table_name       :igimage
-    set_primary_key      :imageid
 
-    # com.liferay.portlet.imagegallery.model.IGImage
-    def liferay_class
-      'com.liferay.portlet.imagegallery.model.IGImage'
-    end
+    belongs_to :company, :foreign_key => Company.primary_key
 
-    belongs_to :company,
-      :foreign_key => 'companyid'
-
-    belongs_to :user,
-      :foreign_key => 'userid'
+    belongs_to :user,    :foreign_key => User.primary_key
 
     has_one :asset,
       :class_name  => 'Tag::Asset',
-      :foreign_key => 'classpk'
+      :foreign_key => 'classPK'
 
     belongs_to :folder,
       :class_name  => 'IG::Folder',
-      :foreign_key => 'folderid'
+      :foreign_key => IG::Folder.primary_key
 
     def large
       ::Image.find self.largeimageid

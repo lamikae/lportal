@@ -1,8 +1,5 @@
 module Web # :nodoc:
-  # This table is not in the original lportal database.
-  # This is created by a ActiveRecord migration and contains metadata about portlets.
-  class PortletProperties < ActiveRecord::Base
-    set_table_name       :portletproperties
+  class PortletProperties < ActiveRecord::Base # :nodoc: see class definitions
 
     # Returns a portlet from a random company unless @companyid is set.
     def portlet

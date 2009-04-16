@@ -1,6 +1,4 @@
 class Release < ActiveRecord::Base
-  set_table_name       :Release_
-  set_primary_key      :releaseId
 
   def self.current
     self.find(:first, :order => "#{self.primary_key} DESC")
