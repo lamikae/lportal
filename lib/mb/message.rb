@@ -84,9 +84,7 @@ module MB
       unless thread
         thread = MB::Thread.create(
           :category => category,
-          :rootmessage => self,
-          :messagecount => 0,
-          :viewcount => 0
+          :rootmessage => self
         )
       end
       thread.messagecount += 1

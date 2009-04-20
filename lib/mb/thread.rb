@@ -8,6 +8,15 @@ module MB
       'com.liferay.portlet.messageboards.model.MBThread'
     end
 
+    # Creates a new Thread.
+    #
+    def initialize(params)
+      super(params)
+      self.messagecount ||= 0
+      self.viewcount    ||= 0
+      self.save
+    end
+
     belongs_to :category,
       :class_name => 'MB::Category',
       :foreign_key => 'categoryid'
