@@ -51,10 +51,10 @@ module MB
         self.anonymous = false
       #end
 
-      self.subject         ||= ''
-      self.username        ||= ''
       self.createdate      = Time.now
       self.modifieddate    = Time.now
+      self.subject         ||= ''
+      self.username        ||= self.user ? self.user.fullname : ''
       self.parentmessageid ||= 0
       self.attachments     ||= false
       self.save
