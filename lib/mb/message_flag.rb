@@ -15,5 +15,10 @@ module MB
       :class_name => 'MB::Message',
       :foreign_key => 'messageid'
 
+    def initialize(params)
+      raise 'No messageid' unless params[:message] or params[:messageid]
+      super(params)
+    end
+
   end
 end
