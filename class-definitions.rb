@@ -50,14 +50,14 @@ end
 
 # com.liferay.portlet.documentlibrary.model.DLFileEntry
 class DlFile < ActiveRecord::Base
-  def self.liferay_class; 'com.liferay.portal.model.DLFileEntry'; end
+  def self.liferay_class; 'com.liferay.portlet.documentlibrary.model.DLFileEntry'; end
   set_table_name       :DLFileEntry
   set_primary_key      :fileEntryId
 end
 
 # com.liferay.portlet.documentlibrary.model.DLFolder
 class DlFolder < ActiveRecord::Base
-  def self.liferay_class; 'com.liferay.portal.model.DLFolder'; end
+  def self.liferay_class; 'com.liferay.portlet.documentlibrary.model.DLFolder'; end
   set_table_name       :DLFolder
   set_primary_key      :folderId
 end
@@ -133,7 +133,7 @@ end
 
 # com.liferay.portal.model.UserGroup
 class Usergroup < ActiveRecord::Base
-  def self.liferay_class; 'com.liferay.portal.model.'; end
+  def self.liferay_class; 'com.liferay.portal.model.UserGroup'; end
   set_table_name       :UserGroup
   set_primary_key      :userGroupId
 end
@@ -149,14 +149,14 @@ end
 module IG
   # com.liferay.portlet.imagegallery.model.IGImage
   class Image < ActiveRecord::Base
-  def self.liferay_class; 'com.liferay.portal.model.IGImage'; end
+  def self.liferay_class; 'com.liferay.portlet.imagegallery.model.IGImage'; end
     set_table_name       :IGImage
     set_primary_key      :imageId
   end
 
   # com.liferay.portlet.imagegallery.model.IGFolder
   class Folder < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.IGFolder'; end
+    def self.liferay_class; 'com.liferay.portlet.imagegallery.model.IGFolder'; end
     set_table_name       :IGFolder
     set_primary_key      :folderId
   end
@@ -165,14 +165,14 @@ end
 module Bookmark
   # com.liferay.portlet.bookmarks.model.BookmarksEntry
   class Entry < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.BookmarksEntry'; end
+    def self.liferay_class; 'com.liferay.portlet.bookmarks.model.BookmarksEntry'; end
     set_table_name       :BookmarksEntry
     set_primary_key      :entryId
   end
 
   # com.liferay.portlet.bookmarks.model.BookmarksFolder
   class Folder < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.BookmarksFolder'; end
+    def self.liferay_class; 'com.liferay.portlet.bookmarks.model.BookmarksFolder'; end
     set_table_name       :BookmarksFolder
     set_primary_key      :folderId
   end
@@ -181,14 +181,14 @@ end
 module Journal
   # com.liferay.portlet.journal.model.JournalArticle
   class Article < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.JournalArticle'; end
+    def self.liferay_class; 'com.liferay.portlet.journal.model.JournalArticle'; end
     set_table_name       :JournalArticle
     set_primary_key      :id_
   end
 
   # com.liferay.portlet.journal.model.JournalArticleResource
   class ArticleResource < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.JournalArticleResource'; end
+    def self.liferay_class; 'com.liferay.portlet.journal.model.JournalArticleResource'; end
     set_table_name       :JournalArticleResource
     set_primary_key      :resourcePrimKey
   end
@@ -198,28 +198,28 @@ end
 module MB
   # com.liferay.portlet.messageboards.model.MBThread
   class Thread < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.MBThread'; end
+    def self.liferay_class; 'com.liferay.portlet.messageboards.model.MBThread'; end
     set_table_name       :MBThread
     set_primary_key      :threadId
   end
 
   # com.liferay.portlet.messageboards.model.MBMessage
   class Message < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.MBMessage'; end
+    def self.liferay_class; 'com.liferay.portlet.messageboards.model.MBMessage'; end
     set_table_name       :MBMessage
     set_primary_key      :messageId
   end
 
   # com.liferay.portlet.messageboards.model.MBCategory
   class Category < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.MBCategory'; end
+    def self.liferay_class; 'com.liferay.portlet.messageboards.model.MBCategory'; end
     set_table_name       :MBCategory
     set_primary_key      :categoryId
   end
 
   # com.liferay.portlet.messageboards.model.MBDiscussion
   class Discussion < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.MBDiscussion'; end
+    def self.liferay_class; 'com.liferay.portlet.messageboards.model.MBDiscussion'; end
     set_table_name       :MBDiscussion
     set_primary_key      :discussionId
   end
@@ -228,21 +228,21 @@ end
 module Tag
   # com.liferay.portlet.tags.model.TagsAsset
   class Asset < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.TagsAsset'; end
+    def self.liferay_class; 'com.liferay.portlet.tags.model.TagsAsset'; end
     set_table_name       :TagsAsset
     set_primary_key      :assetId
   end
 
   # com.liferay.portlet.tags.model.TagsEntry
   class Entry < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.TagsEntry'; end
+    def self.liferay_class; 'com.liferay.portlet.tags.model.TagsEntry'; end
     set_table_name       :TagsEntry
     set_primary_key      :entryId
   end
 
   # com.liferay.portlet.tags.model.TagsProperty
   class Property < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.TagsProperty'; end
+    def self.liferay_class; 'com.liferay.portlet.tags.model.TagsProperty'; end
     set_table_name       :TagsProperty
     set_primary_key      :propertyId
   end
@@ -289,21 +289,21 @@ end
 module Wiki
   # com.liferay.portlet.wiki.model.WikiNode
   class Node < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.WikiNode'; end
+    def self.liferay_class; 'com.liferay.portlet.wiki.model.WikiNode'; end
     set_table_name       :WikiNode
     set_primary_key      :nodeId
   end
 
   # com.liferay.portlet.wiki.model.WikiPage
   class Page < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.WikiPage'; end
+    def self.liferay_class; 'com.liferay.portlet.wiki.model.WikiPage'; end
     set_table_name       :WikiPage
     set_primary_key      :pageId
   end
 
   # com.liferay.portlet.wiki.model.WikiPageResource
   class PageResource < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.WikiPageResource'; end
+    def self.liferay_class; 'com.liferay.portlet.wiki.model.WikiPageResource'; end
     set_table_name       :WikiPageResource
     set_primary_key      :resourcePrimKey
   end
