@@ -22,24 +22,34 @@ end
 
 info 'version ' + Lportal::VERSION
 
-# load class definitions
-# require File.join(this_dir,'class-definitions')
+### DATABASE HACKS
+# FIXME: the whole process of DB hacks is unclean.
 
-# load a set of monkey patches that alter the functionality a bit based on the database type
-require File.join(this_dir,'active_record','base')
-info 'using %s adapter' % ActiveRecord::Base.connection.adapter_name
-case ActiveRecord::Base.connection.adapter_name
-when 'PostgreSQL'
-  require File.join(this_dir,'active_record','connection_adapters','postgresql_adapter')
-when 'MySQL'
- require File.join(this_dir,'mysql')
-else
-  STDERR.puts 'You are using a database that is not supported by the lportal Ruby library.'
-  STDERR.puts 'Please join the mailing list.'
-end
+  # MySQL; load class definitions BEFORE patching AR,
+  # otherwise ”uninitialized constant Account”
+  if ActiveRecord::Base.connection.adapter_name=='MySQL'
+    require File.join(this_dir,'class-definitions')
+  end
 
-# load class definitions AFTER patching AR, to make postgres hacks work!
-require File.join(this_dir,'class-definitions')
+  # load a set of monkey patches that alter the functionality a bit based on the database type
+  require File.join(this_dir,'active_record','base')
+  info 'using %s adapter' % ActiveRecord::Base.connection.adapter_name
+  case ActiveRecord::Base.connection.adapter_name
+  when 'PostgreSQL'
+    require File.join(this_dir,'active_record','connection_adapters','postgresql_adapter')
+  when 'MySQL'
+  require File.join(this_dir,'mysql')
+  else
+    STDERR.puts 'You are using a database that is not supported by the lportal Ruby library.'
+    STDERR.puts 'Please join the mailing list.'
+  end
+
+  # PostgreSQL; load class definitions AFTER patching AR
+  if ActiveRecord::Base.connection.adapter_name=='PostgreSQL'
+    require File.join(this_dir,'class-definitions')
+  end
+
+### end of DATABASE HACKS
 
 # make models able to act resourceful
 require File.join(this_dir,'lib','acts','resourceful')
