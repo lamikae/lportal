@@ -7,6 +7,7 @@ module Web
 
     acts_as_resourceful
 
+    # this defines +path+
     include Lportal::Portlets
 
     # add portlets to layouts via Layout#<<

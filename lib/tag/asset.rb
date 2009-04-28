@@ -115,6 +115,7 @@ module Tag
         return ''
       end
       logger.debug portletpreferences.inspect
+      # path is defined in Lportal::Portlets
       path = portletpreferences.path(:asset => self)
       logger.debug path
       return path
