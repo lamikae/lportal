@@ -32,7 +32,7 @@ module Journal
 
     # Path to this article. See Tag::Asset#path.
     def path
-      self.asset.path(self.articleid)
+      self.asset.path
     end
 
   end
