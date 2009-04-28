@@ -34,6 +34,8 @@ class DlFileTest < ActiveSupport::TestCase
   def test_path
     @files.each do |dlf|
       assert_not_nil dlf.path
+      assert dlf.path[/#{dlf.folderid}/]
+      assert dlf.path[/#{dlf.name}/]
     end
   end
 end
