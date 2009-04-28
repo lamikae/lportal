@@ -58,8 +58,10 @@ module Web
 
       # increment pagecount
       _set = self.layoutset
-      _set.pagecount += 1
-      _set.save
+      if _set
+        _set.pagecount += 1
+        _set.save
+      end
 
       self.friendlyurl    ||= '/'+self.layoutid.to_s
       self.type_          ||= 'portlet'
