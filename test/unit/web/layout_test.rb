@@ -237,26 +237,33 @@ class Web::LayoutTest < ActiveSupport::TestCase
   # each layout must belong to a company
   def test_company
     @layouts.each do |x|
-      assert !x.company.nil?, "#{x} has no company"
+      assert_not_nil x.company
     end
   end
 
   # each layout must belong to a group
   def test_group
     @layouts.each do |x|
-      assert !x.group.nil?, "#{x} has no group"
+      assert_not_nil x.group
+    end
+  end
+
+  # each layout must belong to a group
+  def test_group
+    @layouts.each do |x|
+      assert_not_nil x.layoutset
     end
   end
 
   def test_rigidity
     @layouts.each do |x|
-      assert !x.is_public?.nil?
+      assert_not_nil x.is_public?
     end
 
     # each group must exist!
     groups = @layouts.map{|x| x.group}.uniq
     groups.each do |group|
-      assert !group.nil?, "Reference to non-existing group  #{group.inspect}"
+      assert_not_nil group, "Reference to non-existing group  #{group.inspect}"
     end
   end
 
@@ -264,7 +271,7 @@ class Web::LayoutTest < ActiveSupport::TestCase
   # there must be no duplicate layoutids
   def test_layoutid
     @layouts.each do |x|
-      assert !x.layoutid.nil?, "#{x} has no local layout number"
+      assert_not_nil x.layoutid, "#{x} has no local layout number"
     end
 
       groupids = @layouts.map{|x| x.groupid}.uniq
@@ -289,41 +296,43 @@ class Web::LayoutTest < ActiveSupport::TestCase
   # each layout must have a name
   def test_name
     @layouts.each do |x|
-      assert !x.name.nil?, "#{x} has no name"
+      assert_not_nil x.name, "#{x} has no name"
     end
   end
 
   # each layout must have a typesettings, and the defined portlets exist
   def test_portlets
-    @layouts.each do |x|
-      assert !x.typesettings.nil?, "#{x} has no typesettings"
+    @layouts.each do |layout|
+      assert_not_nil layout.typesettings, "#{layout} has no typesettings"
 
-      x.portlets.each do |p|
+      layout.portlets.each do |p|
+        assert_equal layout, p.layout
+
         if p.is_a?(Web::PortletPreferences)
-          assert_equal x, p.layout, 'Layout has a portlet(preferences) (%i) that does not belong there' % p.id
+          assert_equal layout, p.layout, 'Layout has a portlet(preferences) (%i) that does not belong there' % p.id
           if p.portlet
-            assert p.portlet.instanceable?
+            assert p.portlet.instanceable?, 'Portlet (%s) is not instanceable' % p.portlet.name
           end
 
         else # not instantiated
-          assert_equal x, p.preferences.layout
+          assert_equal layout, p.preferences.layout
           assert !p.instanceable?
         end
       end
 
       # check portlets
-      x.portletids.each do |id|
+      layout.portletids.each do |id|
         next if id[/INSTANCE/]
         unless Web::Portlet.find_by_portletid(id)
-          STDERR.puts "WARN: Layout #{x.id} defines portlet #{id} but it is not found in the portlet table"
+          STDERR.puts "WARN: Layout #{layout.id} defines portlet #{id} but it is not found in the portlet table"
         end
       end
 
       # check instances
-      x.instances.each do |portlet|
+      layout.instances.each do |portlet|
         portletid = portlet.portletid
         next unless portletid[/INSTANCE/]
-        assert Web::PortletPreferences.find_by_portletid(portletid), "#{x.id} defines portlet instance #{portletid} but it is not found in portletpreferences"
+        assert Web::PortletPreferences.find_by_portletid(portletid), "#{layout.id} defines portlet instance #{portletid} but it is not found in portletpreferences"
       end
     end
   end

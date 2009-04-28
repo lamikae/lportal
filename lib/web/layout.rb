@@ -179,17 +179,28 @@ module Web
       rescue
       end
     end
-  
+
+#--
 #     def instanceids
 #       self.portletids.map{|p| p if p[/INSTANCE/]}.compact.uniq
 #     end
-  
+#++
+
     #
     def portlets
       portlets = []
-      return portlets unless self.portletids
+      return portlets unless self.portletids # no portlets in this layout
       self.portletids.each do |id|
-        portlets << (Web::Portlet.find_by_portletid(id) or Web::PortletPreferences.find_by_portletid(id))
+        # sometimes this returns portlets that do not belong to this layout
+        portlets << (
+          p = Web::PortletPreferences.find_by_portletid(id)
+          if p
+            p.layout = self
+            p
+          else
+            Web::Portlet.find_by_portletid(id)
+          end
+        )
       end
       return portlets.compact
     end
