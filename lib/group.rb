@@ -372,16 +372,16 @@ class Group < ActiveRecord::Base
       params[:name] ||= 'asset_publisher'
     end
 
+    # first locate the portlet
     portlet = Web::Portlet.find_by_name(params[:name])
     raise ('Portlet ”%s” not found! Check that Caterpillar migrations are up-to-date' % params[:name]) unless portlet
 
-    # this says: if <tt>pl</tt> is undefined, use public layout, else use what <tt>pl</tt> specified.
+    # if <tt>pl</tt> is undefined, use public layout, else use what <tt>pl</tt> specified.
     params.update(:privatelayout => ( params[:privatelayout].nil? ? false : params[:privatelayout] ))
-
-    pl = (params[:privatelayout] ? :private : :public) # a small "type conversion"
+    pl = (params[:privatelayout]==true ? :private : :public) # a small "type conversion"
     layouts = self.select_layouts_with(portlet,pl)
 
-    ### Use existing layout and portlet
+    # select the portlet from existing layouts
     if layouts.any?
       logger.debug 'Layout with tagged_content portlet found..'
       layout = layouts.first

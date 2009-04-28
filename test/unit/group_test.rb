@@ -12,7 +12,7 @@ class GroupTest < ActiveSupport::TestCase
   # to test asset_viewer_portlet, these are required
   fixtures << [
     :Portlet, :PortletProperties, :PortletPreferences,
-    :Layout,
+    :Layout, :LayoutSet,
     :TagsAsset,
     :IGImage,
     :MBMessage,
@@ -220,23 +220,23 @@ class GroupTest < ActiveSupport::TestCase
 
       portletpreferences = group.asset_viewer_portlet
       assert_equal Web::PortletPreferences, portletpreferences.class
-      assert_not_nil portletpreferences.path(:asset => asset)
 
       assert_not_nil portletpreferences.layout
       assert_equal group, portletpreferences.layout.group
-      assert_equal group.companyid, portletpreferences.layout.companyid
+      assert_equal group.company, portletpreferences.layout.company
+
+      if Lportal::Schema.buildnumber < 5200
+        assert_equal 'tagged_content', portletpreferences.name
+      else
+        assert_equal 'asset_publisher', portletpreferences.name
+      end
+
+      assert_not_nil portletpreferences.path(:asset => asset)
 
       # 2nd time the portlet should be retrieved from DB
       group.reload
       assert_equal portletpreferences, group.asset_viewer_portlet
     end
   end
-
-#   def test_resource
-#     @groups.each do |x|
-# #       assert !x.resource.nil?, "#{x.id} has no resource"
-#     end
-#   end
-
 
 end
