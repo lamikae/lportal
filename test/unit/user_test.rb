@@ -2,15 +2,20 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
   fixtures [
-    :organization_,
-    :address,
-    :phone,
-    :contact_,
-    :classname_,
-    :listtype,
-    :layoutset,
-    :counter,
-    :resourcecode
+    :Address,
+    :Company,
+    :Phone,
+    :Contact_,
+    :ClassName_,
+    :ListType,
+    :LayoutSet,
+    :Counter,
+    :Role_,
+    :ResourceCode,
+    :Organization_,
+    :Users_Orgs,
+    :Group_,
+    :Users_Groups
   ]
 
   def setup
@@ -206,7 +211,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   # each user can belong to many organizations (they don't have to)
-  def test_organization
+  def test_organizations
     @users.each do |x|
       x.organizations.each do |o|
         assert_not_nil o
@@ -218,7 +223,7 @@ class UserTest < ActiveSupport::TestCase
   # each user must have a contact
   def test_contact
     @users.each do |x|
-      assert_not_nil x.contact
+      assert_not_nil x.contact, x.inspect unless x.is_default?
     end
   end
 
@@ -230,7 +235,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_sex
     @users.each do |x|
-      assert_not_nil x.sex
+      assert_not_nil x.sex unless x.is_default?
     end
   end
 
@@ -265,33 +270,37 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-#   def test_rigidity
-#     # each group must exist!
-#     groups = @users.map{|x| x.groups}.uniq
-#     groups.each do |group|
-#       assert_not_nil group, "Reference to non-existing group  #{group.inspect}"
-#     end
-# 
-#     # each role must exist!
-#     roles = @users.map{|x| x.roles}.uniq
-#     roles.each do |role|
-#       assert_not_nil role, "Reference to non-existing role #{role.inspect}"
-#     end
-# 
+  def test_groups
+    # each group must exist!
+    groups = @users.map{|x| x.groups}.uniq
+    groups.each do |group|
+      assert_not_nil group
+    end
+  end
+  
+  def test_roles
+    # each role must exist!
+    roles = @users.map{|x| x.roles}.uniq
+    roles.each do |role|
+      assert_not_nil role
+    end
+  end
+
+#   def 
 #     # each permission must exist!
 #     perms = @users.map{|x| x.permissions}.uniq
 #     perms.each do |p|
 #       assert_not_nil p, "Reference to non-existing permission #{p.inspect}"
 #     end
 #   end
-# 
-#   def test_path
-#     @users.each do |u|
-#       unless u.hive.nil?
-#         assert_not_nil u.path(:public), u.id if u.hive.public_layoutset
-#         assert_not_nil u.path(:private), u.id if u.hive.private_layoutset
-#       end
-#     end
-#   end
+
+  def test_path
+    @users.each do |u|
+      unless u.hive.nil?
+        assert_not_nil u.path(:public), u.id if u.hive.public_layoutset
+        assert_not_nil u.path(:private), u.id if u.hive.private_layoutset
+      end
+    end
+  end
 
 end

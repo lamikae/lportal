@@ -55,6 +55,7 @@ class Tag::AssetTest < ActiveSupport::TestCase
 
         path = asset.path
         assert_not_nil path
+        assert !path.empty?
         if build==5100
           assert path[/#{asset.id}/], 'Path ”%s” does not contain asset id (%i)' % [path, asset.id]
           assert path[/tagged_content/]

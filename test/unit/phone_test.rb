@@ -13,6 +13,10 @@ class PhoneTest < ActiveSupport::TestCase
   def setup
     @phones = Phone.all
   end
+  
+  def test_create
+    flunk 'todo'
+  end
 
   def test_phones
     @phones.each do |phone|
