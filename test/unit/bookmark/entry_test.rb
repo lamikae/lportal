@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class Bookmark::EntryTest < ActiveSupport::TestCase
-  fixtures :bookmarksentry, :bookmarksfolder
+  fixtures :Company, :User_, :BookmarksEntry, :BookmarksFolder
 
   def setup
     @bookmarks = Bookmark::Entry.all

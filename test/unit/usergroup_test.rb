@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class UsergroupTest < ActiveSupport::TestCase
-  fixtures :usergroup
+  fixtures :Company, :Group_, :UserGroup
 
   def setup
     @usergroups = Usergroup.all

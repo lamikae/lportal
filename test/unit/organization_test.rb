@@ -2,13 +2,14 @@ require 'test_helper'
 
 class OrganizationTest < ActiveSupport::TestCase
   fixtures [
-    :company,
-    :organization_,
-    :user_,
-    :users_orgs,
-    :group_,
-    :groups_orgs,
-    :classname_
+    :Company,
+    :Group_,
+    :User_,
+    :Organization_,
+    :Groups_Orgs,
+    :Users_Groups,
+    :Users_Orgs,
+    :ClassName_
   ]
 
   def setup

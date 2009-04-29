@@ -2,17 +2,20 @@ require 'test_helper'
 
 class Tag::AssetTest < ActiveSupport::TestCase
   fixtures [
-    :tagsasset, :tagsassets_tagsentries,
-#     :resource_, :resourcecode,
-    :classname_,
-    :igimage,
-    :mbmessage,
-    :blogsentry,
-    :wikipage,
-    :bookmarksentry,
-    :journalarticle,
-    :dlfileentry,
-    :layout
+    :Company,
+    :User_,
+    :Group_,
+    :TagsAsset, :TagsAssets_TagsEntries,
+#     :Resource_, :ResourceCode,
+    :ClassName_,
+    :IGImage,
+    :MBMessage,
+    :BlogsEntry,
+    :WikiPage,
+    :BookmarksEntry,
+    :JournalArticle,
+    :DLFileEntry,
+    :Layout
   ]
 
   def setup
@@ -94,10 +97,10 @@ class Tag::AssetTest < ActiveSupport::TestCase
     end
   end
 
-  def test_owner
+  def test_user
     @assets.each do |asset|
-      assert_not_nil asset.owner
-      assert_equal User, asset.owner.class
+      assert_not_nil asset.user
+      assert_equal User, asset.user.class
     end
   end
 

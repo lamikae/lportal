@@ -2,9 +2,12 @@ require 'test_helper'
 
 class Journal::ArticleResourceTest < ActiveSupport::TestCase
   fixtures [
-    :journalarticle,
-    :journalarticleresource,
-    :tagsasset
+    :Company,
+#     :User_,
+    :Group_,
+    :JournalArticle,
+    :JournalArticleResource,
+    :TagsAsset
   ]
 
   def setup

@@ -2,11 +2,14 @@ require 'test_helper'
 
 class Journal::ArticleTest < ActiveSupport::TestCase
   fixtures [
-    :journalarticle,
-    :journalarticleresource,
-    :tagsasset,
-    :tagsproperty,
-    :portlet
+    :Company,
+    :User_,
+    :Group_,
+    :JournalArticle,
+    :JournalArticleResource,
+    :TagsAsset
+    :TagsProperty,
+    :Portlet
   ]
 
   def setup
@@ -25,9 +28,9 @@ class Journal::ArticleTest < ActiveSupport::TestCase
     end
   end
 
-  def test_owner
+  def test_user
     @articles.each do |x|
-      assert_not_nil x.owner, "#{x.id} belongs to no user!"
+      assert_not_nil x.user, "#{x.id} belongs to no user!"
     end
   end
 

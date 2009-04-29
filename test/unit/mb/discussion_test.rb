@@ -2,10 +2,13 @@ require 'test_helper'
 
 class MB::DiscussionTest < ActiveSupport::TestCase
   fixtures [
-    :mbcategory,
-    :mbdiscussion,
-    :mbmessage,
-    :mbthread
+#     :Company,
+#     :User_,
+#     :Group_,
+    :MBCategory,
+    :MBDiscussion,
+    :MBMessage,
+    :MBThread
   ]
 
   def setup

@@ -1,7 +1,12 @@
 require 'test_helper'
 
 class Tag::PropertyTest < ActiveSupport::TestCase
-  fixtures :tagsentry, :tagsproperty
+  fixtures [
+    :Company,
+    :User_,
+    :TagsEntry,
+    :TagsProperty
+  ]
 
   def setup
     @properties = Tag::Property.find :all
@@ -13,9 +18,9 @@ class Tag::PropertyTest < ActiveSupport::TestCase
     end
   end
 
-  def test_owner
+  def test_user
     @properties.each do |x|
-      assert_not_nil x.owner, "#{x.id} belongs to no user"
+      assert_not_nil x.user, "#{x.id} belongs to no user"
     end
   end
 

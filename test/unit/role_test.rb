@@ -2,14 +2,17 @@ require 'test_helper'
 
 class RoleTest < ActiveSupport::TestCase
   fixtures [
-    :role_,
-    :users_roles,
-    :groups_roles,
-#     :permission_,
-#     :users_permissions,
-#     :groups_permissions,
-#     :resource_,
-#     :resourcecode
+    :Company,
+    :Role_,
+    :Users_Roles,
+    :Group_,
+    :Groups_Roles,
+
+#     :Permission_,
+#     :Roles_Permissions,
+#     :Users_Permissions,
+#     :Groups_Permissions,
+#     :Resource_, :ResourceCode
   ]
 
   def setup

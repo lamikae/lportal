@@ -3,11 +3,14 @@ require 'test_helper'
 # this test is SLOW
 class PermissionTest < ActiveSupport::TestCase
   fixtures [
-    :permission_,
-    :role_,
-    :roles_permissions,
-    :users_permissions,
-    :groups_permissions
+    :Company,
+    :Group_,
+    :User_,
+    :Permission_,
+    :Role_,
+    :Roles_Permissions,
+    :Users_Permissions,
+    :Groups_Permissions
   ]
 
   def setup

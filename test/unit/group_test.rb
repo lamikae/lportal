@@ -2,8 +2,12 @@ require 'test_helper'
 
 class GroupTest < ActiveSupport::TestCase
   fixtures [
+    :Company,
+    :Group_,
+    :User_,
     :Organization_,
     :Groups_Orgs,
+    :Users_Groups,
     :Users_Orgs,
     :UserGroup,
     :Role_,

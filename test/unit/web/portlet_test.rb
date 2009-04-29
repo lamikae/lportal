@@ -2,7 +2,14 @@ require 'test_helper'
 
 class Web::PortletTest < ActiveSupport::TestCase
   fixtures [
-    :portletpreferences, :portlet, :layout, :portletproperties
+    :Company,
+#     :User_,
+    :Portlet,
+    :PortletPreferences,
+    :PortletProperties,
+    :Layout,
+    :Group_,
+    :TagsAsset
   ]
 
   def setup

@@ -2,7 +2,15 @@ require 'test_helper'
 
 class Web::LayoutTest < ActiveSupport::TestCase
   fixtures [
-    :layout, :layoutset, :portlet, :portletpreferences, :resourcecode, :portletproperties
+    :Company,
+    :User_,
+    :Group_,
+    :Layout,
+    :LayoutSet,
+    :Portlet,
+    :PortletPreferences,
+    :PortletProperties,
+    :ResourceCode
   ]
 
   def setup

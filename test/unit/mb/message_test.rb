@@ -2,15 +2,16 @@ require 'test_helper'
 
 class MB::MessageTest < ActiveSupport::TestCase
   fixtures [
-    :mbcategory,
-    :mbdiscussion,
-    :mbmessage,
-    :mbthread,
-    :mbstatsuser,
-    :mbmessageflag,
-    :classname_,
-    :group_,
-    :user_
+    :Company,
+    :User_,
+    :Group_,
+    :MBCategory,
+    :MBDiscussion,
+    :MBMessage,
+    :MBThread,
+    :MBStatsUser,
+    :MBMessageFlag,
+    :ClassName_
   ]
 
   def setup

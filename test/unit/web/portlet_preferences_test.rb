@@ -4,7 +4,13 @@ require 'test_helper'
 
 class Web::PortletPreferencesTest < ActiveSupport::TestCase
   fixtures [
-    :portletpreferences, :portlet, :layout, :portletproperties
+    :Company,
+#     :User_,
+#     :Group_,
+    :Portlet,
+    :PortletPreferences,
+    :PortletProperties,
+    :Layout
   ]
 
   def setup

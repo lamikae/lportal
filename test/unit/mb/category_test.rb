@@ -2,15 +2,16 @@ require 'test_helper'
 
 class MB::CategoryTest < ActiveSupport::TestCase
   fixtures [
-    :mbcategory,
-    :mbdiscussion,
-    :mbmessage,
-    :mbthread,
-    :group_,
-    :layout,
-    :portletproperties
+    :Company,
+    :User_,
+    :Group_,
+    :MBCategory,
+    :MBDiscussion,
+    :MBMessage,
+    :MBThread,
+    :Layout,
+    :PortletProperties
   ]
-
 
   def setup
     @categories = MB::Category.all

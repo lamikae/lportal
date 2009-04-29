@@ -2,17 +2,18 @@ require 'test_helper'
 
 class ResourceTest < ActiveSupport::TestCase
   fixtures [
-    :resource_, :resourcecode,
-    :igimage,
-    :portletpreferences,
-    :mbmessage,
-    :layout,
-    :journalarticle,
-    :bookmarksfolder,
-    :wikinode, :wikipage, :wikipageresource,
-    :announcementsentry,
-    :calevent,
-    :dlfolder, :dlfileentry
+    :Company,
+    :Resource_, :ResourceCode,
+    :IGImage,
+    :PortletPreferences,
+    :MBMessage,
+    :Layout,
+    :JournalArticle,
+    :BookmarksFolder,
+    :WikiNode, :WikiPage, :WikiPageResource,
+    :AnnouncementsEntry,
+    :CalEvent,
+    :DLFolder, :DLFileEntry
   ]
 
   def setup
