@@ -249,15 +249,13 @@ class Web::LayoutTest < ActiveSupport::TestCase
     end
   end
 
-  # each layout must belong to a group
   def test_group
     @layouts.each do |x|
       assert_not_nil x.group
     end
   end
 
-  # each layout must belong to a group
-  def test_group
+  def test_layoutset
     @layouts.each do |x|
       assert_not_nil x.layoutset
     end

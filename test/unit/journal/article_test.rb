@@ -7,7 +7,7 @@ class Journal::ArticleTest < ActiveSupport::TestCase
     :Group_,
     :JournalArticle,
     :JournalArticleResource,
-    :TagsAsset
+    :TagsAsset,
     :TagsProperty,
     :Portlet
   ]
@@ -25,6 +25,7 @@ class Journal::ArticleTest < ActiveSupport::TestCase
   def test_group
     @articles.each do |x|
       assert_not_nil x.group, "#{x.id} belongs to no group!"
+      assert_equal x.group, x.resource.group
     end
   end
 
@@ -49,13 +50,6 @@ class Journal::ArticleTest < ActiveSupport::TestCase
   def test_asset
     @articles.each do |x|
       assert_not_nil x.asset, "#{x.id} has no asset!"
-    end
-  end
-
-  def test_properties
-    @articles.each do |x|
-      assert_not_nil x.properties
-      assert !x.properties.empty?
     end
   end
 

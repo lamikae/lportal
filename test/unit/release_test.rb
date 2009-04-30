@@ -14,8 +14,8 @@ class ReleaseTest < ActiveSupport::TestCase
   end
 
   def test_schema_version
-    assert_equal Release.current.buildNumber, Lportal::Schema.buildnumber
-    assert_equal Fixnum, Release.current.buildNumber.class
+    assert_equal Release.current.buildnumber, Lportal::Schema.buildnumber
+    assert_equal Fixnum, Release.current.buildnumber.class
 
     Lportal::Schema.buildnumber = 5100
     assert_equal 5100, Lportal::Schema.buildnumber

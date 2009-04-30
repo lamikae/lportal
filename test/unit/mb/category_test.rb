@@ -16,6 +16,7 @@ class MB::CategoryTest < ActiveSupport::TestCase
   def setup
     @categories = MB::Category.all
     flunk 'No categories to test' unless @categories.any?
+    @categories.delete(MB::Category.find(0))
   end
 
   def test_create

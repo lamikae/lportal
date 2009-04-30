@@ -32,5 +32,4 @@ class Journal::ArticleResourceTest < ActiveSupport::TestCase
     end
   end
 
-
 end

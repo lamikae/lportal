@@ -22,11 +22,13 @@ class CompanyTest < ActiveSupport::TestCase
       assert_equal 0, c.account.send(User.primary_key)
     end
   end
-  
+
   def test_address
-    flunk 'todo'
+    @companies.each do |c|
+      assert_not_nil c.address
+    end
   end
-  
+
   # each company must have contacts
   def test_contacts
     @companies.each do |c|
@@ -41,7 +43,7 @@ class CompanyTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   def test_groups
     @companies.each do |c|
       c.groups.each do |g|
@@ -59,13 +61,19 @@ class CompanyTest < ActiveSupport::TestCase
   end
 
   def test_layoutsets
-    flunk 'todo'
+    @companies.each do |c|
+      assert c.layoutsets.any?, 'Company %i has no layoutsets' % c.id
+      c.layoutsets.each do |ls|
+        assert_equal c, ls.company
+      end
+    end
   end
 
-  def test_resource
-    flunk 'todo'
-  end
-
+#   def test_resources
+#     @companies.each do |c|
+#       assert c.resources.any?, 'Company %i has no resources' % c.id
+#     end
+#   end
 
   def test_administrators
     @companies.each do |c|
@@ -78,7 +86,6 @@ class CompanyTest < ActiveSupport::TestCase
   def test_guest
     @companies.each do |c|
       assert_not_nil c.guest, 'Company %i does not have a guest account' % c.id
-      
       assert c.guest.is_default?, "No default user for #{c.id}"
       assert c.guest.is_active?, "Default user account for #{c.id} is not active"
       assert c.guest.company == c, "Default user for #{c.id} has wrong company"
@@ -135,6 +142,5 @@ class CompanyTest < ActiveSupport::TestCase
       assert !layoutsets_virtualhosts.include?(c.virtualhost), "Duplicate virtualhost #{c.virtualhost} in layoutsets"
     end
   end
-
 
 end

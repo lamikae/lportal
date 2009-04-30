@@ -85,7 +85,7 @@ class Web::PortletTest < ActiveSupport::TestCase
       next unless p.name
       portlet_by_name = Web::Portlet.find_by_name(p.name)
       assert_not_nil portlet_by_name
-      assert_equal portlet, portlet_by_name
+      assert_equal p, portlet_by_name
     end
   end
 

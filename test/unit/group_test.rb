@@ -11,7 +11,8 @@ class GroupTest < ActiveSupport::TestCase
     :Users_Orgs,
     :UserGroup,
     :Role_,
-    :ClassName_
+    :ClassName_,
+    :Release_
   ]
   # to test asset_viewer_portlet, these are required
   fixtures << [

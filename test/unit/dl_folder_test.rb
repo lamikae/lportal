@@ -4,7 +4,7 @@ class DlFolderTest < ActiveSupport::TestCase
   fixtures [:DLFileEntry, :DLFolder, :Company, :User_, :Group_]
 
   def setup
-    @folders = DlFile.all
+    @folders = DlFolder.all
   end
 
   def test_files

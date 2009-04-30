@@ -99,7 +99,7 @@ class Tag::AssetTest < ActiveSupport::TestCase
 
   def test_user
     @assets.each do |asset|
-      assert_not_nil asset.user
+      assert_not_nil asset.user, 'Asset %i has no user' % asset.id
       assert_equal User, asset.user.class
     end
   end
