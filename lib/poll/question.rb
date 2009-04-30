@@ -1,21 +1,14 @@
 module Poll
   class Question < ActiveRecord::Base
-    set_table_name       :pollsquestion
-    set_primary_key      :questionid
-
-    # com.liferay.portlet.polls.model.PollsQuestion
-    def liferay_class
-      'com.liferay.portlet.polls.model.PollsQuestion'
-    end
 
     belongs_to :company,
-      :foreign_key => 'companyid'
+      :foreign_key => Company.primary_key
 
     belongs_to :user,
-      :foreign_key => 'userid'
+      :foreign_key => User.primary_key
 
     belongs_to :group,
-      :foreign_key => 'groupid'
+      :foreign_key => Group.primary_key
 
   end
 end

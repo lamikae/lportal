@@ -1,17 +1,14 @@
 module Announcement
   class Entry < ActiveRecord::Base
-    set_table_name       :announcementsentry
-    set_primary_key      :entryid
 
     belongs_to :company,
-      :foreign_key => 'companyid'
+      :foreign_key => Company.primary_key
 
     belongs_to :user,
-      :foreign_key => 'userid'
+      :foreign_key => User.primary_key
 
 #     has_one :asset,
 #       :foreign_key => 'classpk'
-
 
   end
 end

@@ -12,7 +12,7 @@ module Journal
     #       :class_name => 'Journal::Article',
     #       :foreign_key => 'articleid'
 
-    # verbose has_one :article, as articleid does not refer the primkey of Journal::Article
+    # articleid does not refer the primkey of Journal::Article
     def article
       Journal::Article.find_by_articleid self.articleid
     end

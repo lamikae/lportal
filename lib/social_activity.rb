@@ -1,20 +1,13 @@
 class SocialActivity < ActiveRecord::Base
-  set_table_name       :socialactivity
-  set_primary_key      :activityid
-
-  # com.liferay.portlet.social.model.SocialActivity
-  def liferay_class
-    'com.liferay.portlet.social.model.SocialActivity'
-  end
-
-  belongs_to :group,
-    :foreign_key => 'groupid'
 
   belongs_to :company,
-    :foreign_key => 'companyid'
+    :foreign_key => Company.primary_key
 
   belongs_to :user,
-    :foreign_key => 'userid'
+    :foreign_key => User.primary_key
+
+  belongs_to :group,
+    :foreign_key => Group.primary_key
 
   def initialize(params)
     super(params)

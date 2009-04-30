@@ -1,6 +1,4 @@
 class Classname < ActiveRecord::Base
-  set_table_name       :ClassName_
-  set_primary_key      :classNameId
 
   # Returns the Class of the model for a certain Java class
   def self.model(codename)

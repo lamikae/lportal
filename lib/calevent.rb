@@ -1,20 +1,12 @@
 class Calevent < ActiveRecord::Base
-  set_table_name       :calevent
-  set_primary_key      :eventid
-
-  # com.liferay.portlet.calendar.model.CalEvent
-  def liferay_class
-    'com.liferay.portlet.calendar.model.CalEvent'
-  end
 
   belongs_to :company,
-    :foreign_key => 'companyid'
+    :foreign_key => Company.primary_key
 
   belongs_to :user,
-    :foreign_key => 'userid'
+    :foreign_key => User.primary_key
 
   belongs_to :group,
-    :foreign_key => 'groupid'
-
+    :foreign_key => Group.primary_key
 
 end

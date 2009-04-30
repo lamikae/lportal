@@ -2,14 +2,14 @@ module Journal
   class Article < ActiveRecord::Base
 
     belongs_to :company,
-      :foreign_key => 'companyid'
+      :foreign_key => Company.primary_key
 
     belongs_to :group,
-      :foreign_key => 'groupid'
+      :foreign_key => Group.primary_key
 
     # association to user
     belongs_to :user,
-      :foreign_key => 'userid'
+      :foreign_key => User.primary_key
     alias :owner :user
 
     belongs_to :resource,
@@ -20,10 +20,6 @@ module Journal
       self.resource.asset
     end
 
-#     has_many :properties,
-#       :class_name => 'TagsProperty',
-#       :foreign_key => 'entryid'
-# 
 #     # association to assets
 #     has_and_belongs_to_many  :assets,
 #       :join_table              => 'tagsassets_tagsentries',

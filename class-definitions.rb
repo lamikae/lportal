@@ -18,15 +18,41 @@ class Address < ActiveRecord::Base
   set_table_name       :Address
   set_primary_key      :addressId
 end
-# ActiveRecord::StatementInvalid: Mysql::Error: Table 'lportal_test.announcementsentry' doesn't exist: DELETE FROM `announcementsentry`
+
+module Announcement
+  # com.liferay.portlet.announcements.model.AnnouncementsDelivery
+  class Delivery < ActiveRecord::Base
+    def self.liferay_class; 'com.liferay.portlet.announcements.model.AnnouncementsDelivery'; end
+    set_table_name       :AnnouncementsDelivery
+    set_primary_key      :deliveryId
+  end
+
+  # com.liferay.portlet.announcements.model.AnnouncementsEntry
+  class Entry < ActiveRecord::Base
+    def self.liferay_class; 'com.liferay.portlet.announcements.model.AnnouncementsEntry'; end
+    set_table_name       :AnnouncementsEntry
+    set_primary_key      :entryId
+  end
+end
 
 # com.liferay.portlet.blogs.model.BlogsEntry
 class BlogPost < ActiveRecord::Base
-  def self.liferay_class; 'com.liferay.portal.model.BlogsEntry'; end
+  def self.liferay_class; 'com.liferay.portlet.blogs.model.BlogsEntry'; end
   set_table_name       :BlogsEntry
   set_primary_key      :entryId
 end
-# ActiveRecord::StatementInvalid: Mysql::Error: Table 'lportal_test.calevent' doesn't exist: DELETE FROM `calevent`
+
+# com.liferay.portlet.calendar.model.CalEvent
+class Calevent < ActiveRecord::Base
+  def self.liferay_class; 'com.liferay.portlet.calendar.model.CalEvent'; end
+  set_table_name       :CalEvent
+  set_primary_key      :eventId
+end
+
+class Classname < ActiveRecord::Base
+  set_table_name       :ClassName_
+  set_primary_key      :classNameId
+end
 
 # com.liferay.portal.model.Company
 class Company < ActiveRecord::Base
@@ -83,6 +109,11 @@ class Image < ActiveRecord::Base
   set_primary_key      :imageId
 end
 
+class ListType < ActiveRecord::Base
+  set_table_name       :ListType
+  set_primary_key      :listTypeId
+end
+
 # com.liferay.portal.model.Organization
 class Organization < ActiveRecord::Base
   def self.liferay_class; 'com.liferay.portal.model.Organization'; end
@@ -102,6 +133,22 @@ class Phone < ActiveRecord::Base
   def self.liferay_class; 'com.liferay.portal.model.Phone'; end
   set_table_name       :Phone
   set_primary_key      :phoneId
+end
+
+module Poll
+  # com.liferay.portlet.polls.model.PollsQuestion
+  class Question < ActiveRecord::Base
+    def self.liferay_class; 'com.liferay.portlet.polls.model.PollsQuestion'; end
+    set_table_name       :PollsQuestion
+    set_primary_key      :questionId
+  end
+end
+
+# com.liferay.portlet.ratings.model.RatingsStats
+class RatingsStats < ActiveRecord::Base
+  def self.liferay_class; 'com.liferay.portlet.ratings.model.RatingsStats'; end
+  set_table_name       :RatingsStats
+  set_primary_key      :statsId
 end
 
 # Version of the database schema.
@@ -129,6 +176,20 @@ class Role < ActiveRecord::Base
   def self.liferay_class; 'com.liferay.portal.model.Role'; end
   set_table_name       :Role_
   set_primary_key      :roleId
+end
+
+# com.liferay.portlet.social.model.SocialActivity
+class SocialActivity < ActiveRecord::Base
+  def self.liferay_class; 'com.liferay.portlet.social.model.SocialActivity'; end
+  set_table_name       :SocialActivity
+  set_primary_key      :activityId
+end
+
+# com.liferay.portlet.social.model.SocialRelation
+class SocialRelation < ActiveRecord::Base
+  def self.liferay_class; 'com.liferay.portlet.social.model.SocialRelation'; end
+  set_table_name       :SocialRelation
+  set_primary_key      :relationId
 end
 
 # com.liferay.portal.model.UserGroup
@@ -192,6 +253,27 @@ module Journal
     set_table_name       :JournalArticleResource
     set_primary_key      :resourcePrimKey
   end
+
+  # com.liferay.portlet.journal.model.JournalFeed
+  class Feed < ActiveRecord::Base
+    def self.liferay_class; 'com.liferay.portlet.journal.model.JournalFeed'; end
+    set_table_name       :JournalFeed
+    set_primary_key      :id_
+  end
+
+  # com.liferay.portlet.journal.model.JournalStructure
+  class Structure < ActiveRecord::Base
+    def self.liferay_class; 'com.liferay.portlet.journal.model.JournalStructure'; end
+    set_table_name       :JournalStructure
+    set_primary_key      :id_
+  end
+
+  # com.liferay.portlet.journal.model.JournalTemplate
+  class Template < ActiveRecord::Base
+    def self.liferay_class; 'com.liferay.portlet.journal.model.JournalTemplate'; end
+    set_table_name       :JournalTemplate
+    set_primary_key      :id_
+  end
 end
 
 # Message Boards
@@ -210,6 +292,13 @@ module MB
     set_primary_key      :messageId
   end
 
+  # com.liferay.portlet.messageboards.model.MBMessageFlag
+  class MessageFlag < ActiveRecord::Base
+    def self.liferay_class; 'com.liferay.portlet.messageboards.model.MBMessageFlag'; end
+    set_table_name       :MBMessageFlag
+    set_primary_key      :messageFlagId
+  end
+
   # com.liferay.portlet.messageboards.model.MBCategory
   class Category < ActiveRecord::Base
     def self.liferay_class; 'com.liferay.portlet.messageboards.model.MBCategory'; end
@@ -223,6 +312,14 @@ module MB
     set_table_name       :MBDiscussion
     set_primary_key      :discussionId
   end
+
+  # com.liferay.portlet.messageboards.model.MBStatsUser
+  class StatsUser < ActiveRecord::Base
+    def self.liferay_class; 'com.liferay.portlet.messageboards.model.MBStatsUser'; end
+    set_table_name       :MBStatsUser
+    set_primary_key      :statsUserId
+  end
+
 end
 
 module Tag

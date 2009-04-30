@@ -1,21 +1,14 @@
 module Journal
   class Template < ActiveRecord::Base
-    set_table_name       :journaltemplate
-    set_primary_key      :id_
-
-    # com.liferay.portlet.journal.model.JournalTemplate
-    def liferay_class
-      'com.liferay.portlet.journal.model.JournalTemplate'
-    end
 
     belongs_to :company,
-      :foreign_key => 'companyid'
+      :foreign_key => Company.primary_key
 
     belongs_to :user,
-      :foreign_key => 'userid'
+      :foreign_key => User.primary_key
 
     belongs_to :group,
-      :foreign_key => 'groupid'
+      :foreign_key => Group.primary_key
 
   end
 end
