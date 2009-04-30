@@ -22,8 +22,8 @@ class Company < ActiveRecord::Base
     :class_name  => 'Web::LayoutSet',
     :foreign_key => self.primary_key
 
-  has_one :resource,
-    :foreign_key => 'primkey'
+#   has_many :resources,
+#     :foreign_key => 'primkey'
 
   # A list of Users who have the Role 'Administrator'. Scope is not checked!
   # Returns a list of Users, or nil if there is no Administrator Role in this Company.
