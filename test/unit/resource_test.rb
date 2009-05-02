@@ -40,7 +40,7 @@ class ResourceTest < ActiveSupport::TestCase
   def test_layout
     @resources.each do |x|
       if x.layout
-        assert_equal Web::Layout, x.class
+        assert_equal Web::Layout, x.layout.class
       end
     end
   end
