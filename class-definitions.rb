@@ -378,8 +378,9 @@ module Web
   # This table is not in the original lportal database.
   # This is created by a ActiveRecord migration and contains metadata about portlets.
   class PortletProperties < ActiveRecord::Base
-    def self.liferay_class; 'com.liferay.portal.model.LayoutSet'; end
-    set_table_name       :portletproperties
+    def self.liferay_class; nil; end
+    set_table_name       :portletproperties # ! downcase
+    set_primary_key      :id
   end
 end
 
