@@ -99,6 +99,12 @@ class Tag::AssetTest < ActiveSupport::TestCase
     end
   end
 
+  def test_company
+    @assets.each do |asset|
+      assert_not_nil asset.company
+    end
+  end
+
   def test_user
     @assets.each do |asset|
       assert_not_nil asset.user, 'Asset %i has no user' % asset.id
