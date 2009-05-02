@@ -9,7 +9,7 @@ module Web # :nodoc:
   class Portlet < ActiveRecord::Base
 
     belongs_to :company,
-      :foreign_key => "companyid"
+      :foreign_key => Company.primary_key
 
     # Creates a portlet instance with preferences.
     def initialize(params={})

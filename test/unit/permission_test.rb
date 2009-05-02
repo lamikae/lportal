@@ -29,7 +29,41 @@ class PermissionTest < ActiveSupport::TestCase
     end
   end
 
+  def test_users
+    flunk mysql_bug if defined?(mysql_bug)
+
+    @permissions.each do |p|
+      assert_not_nil p.users
+    end
+  end
+
+  def test_roles
+    flunk mysql_bug if defined?(mysql_bug)
+
+    @permissions.each do |p|
+      assert_not_nil p.roles
+    end
+  end
+
+  def test_groups
+    flunk mysql_bug if defined?(mysql_bug)
+
+    @permissions.each do |p|
+      assert_not_nil p.groups
+    end
+  end
+
+  def test_holders
+    flunk mysql_bug if defined?(mysql_bug)
+
+    @permissions.each do |p|
+      assert_not_nil p.holders
+    end
+  end
+
   def test_rigidity
+    flunk mysql_bug if defined?(mysql_bug)
+
     # each role must exist!
     ActiveRecord::Base.connection.execute(
       "SELECT * from roles_permissions;"

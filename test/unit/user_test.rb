@@ -25,6 +25,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_create
+    flunk mysql_bug if defined?(mysql_bug)
+
     firstname = 'Test'
     lastname  = 'User'
     email     = 'test@localhost'
@@ -212,6 +214,8 @@ class UserTest < ActiveSupport::TestCase
 
   # each user can belong to many organizations (they don't have to)
   def test_organizations
+    flunk mysql_bug if defined?(mysql_bug)
+
     @users.each do |x|
       x.organizations.each do |o|
         assert_not_nil o
@@ -241,6 +245,8 @@ class UserTest < ActiveSupport::TestCase
 
   # each user can have a personal group (hive)
   def test_hive
+    flunk mysql_bug if defined?(mysql_bug)
+
     @users.each do |user|
       group = user.hive
       if user.is_guest?
@@ -270,15 +276,19 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  def test_groups
+  def test_all_groups
+    flunk mysql_bug if defined?(mysql_bug)
+
     # each group must exist!
     groups = @users.map{|x| x.groups}.uniq
     groups.each do |group|
       assert_not_nil group
     end
   end
-  
-  def test_roles
+
+  def test_all_roles
+    flunk mysql_bug if defined?(mysql_bug)
+
     # each role must exist!
     roles = @users.map{|x| x.roles}.uniq
     roles.each do |role|
@@ -286,13 +296,25 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-#   def 
-#     # each permission must exist!
-#     perms = @users.map{|x| x.permissions}.uniq
-#     perms.each do |p|
-#       assert_not_nil p, "Reference to non-existing permission #{p.inspect}"
-#     end
-#   end
+  def test_all_permissions
+    flunk mysql_bug if defined?(mysql_bug)
+
+    # each group must exist!
+    permissions = @users.map{|x| x.permissions}.uniq
+    permissions.each do |permission|
+      assert_not_nil permission
+    end
+  end
+
+  def test_all_usergroups
+    flunk mysql_bug if defined?(mysql_bug)
+
+    # each group must exist!
+    usergroups = @users.map{|x| x.usergroups}.uniq
+    usergroups.each do |usergroup|
+      assert_not_nil usergroup
+    end
+  end
 
   def test_path
     @users.each do |u|

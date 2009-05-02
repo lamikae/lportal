@@ -157,10 +157,10 @@ module Web
     public
 
     belongs_to :group,
-      :foreign_key => 'groupid'
+      :foreign_key => Group.primary_key
 
     belongs_to :company,
-      :foreign_key => 'companyid'
+      :foreign_key => Company.primary_key
 
     has_many :resources,
       :foreign_key => 'primkey'

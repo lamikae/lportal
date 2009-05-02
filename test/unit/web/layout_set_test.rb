@@ -54,8 +54,9 @@ class Web::LayoutSetTest < ActiveSupport::TestCase
     end
   end
 
-  # FIXME: cannot test MySQL differences. does not give errors, while there is a bug!
   def test_layouts
+    flunk mysql_bug if defined?(mysql_bug)
+
     @sets.each do |x|
       next unless x.layouts.any?
       x.layouts.each do |l|

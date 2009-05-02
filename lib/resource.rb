@@ -6,7 +6,7 @@ class Resource < ActiveRecord::Base
   alias :code :resourcecode
 
   has_many :permissions,
-    :foreign_key => 'resourceid'
+    :foreign_key => self.primary_key
 
   belongs_to :articleresource,
     :class_name => 'Journal::ArticleResource',

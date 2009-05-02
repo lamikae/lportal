@@ -22,6 +22,9 @@ class RoleTest < ActiveSupport::TestCase
   end
 
   def test_create
+    flunk mysql_bug if defined?(mysql_bug)
+    # ^ bug goes down to Acts as Resourceful
+
     name = 'Regular role'
     description = 'test'
 

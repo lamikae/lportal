@@ -19,6 +19,8 @@ class Tag::AssetTest < ActiveSupport::TestCase
   ]
 
   def setup
+    flunk mysql_bug if defined?(mysql_bug)
+
     @assets = Tag::Asset.all
     # TODO: DRY up, the same creation code is in portlet test.
     unless Web::Portlet.find_by_name('asset_publisher')

@@ -25,6 +25,8 @@ class Web::LayoutTest < ActiveSupport::TestCase
   end
 
   def test_create
+    flunk mysql_bug if defined?(mysql_bug)
+
     group = Group.first
 
     # public
@@ -93,6 +95,8 @@ class Web::LayoutTest < ActiveSupport::TestCase
 
   # tests .<<()
   def test_append_to_self
+    flunk mysql_bug if defined?(mysql_bug)
+
     layout = @clean_layout
     portlet_name = 'tagged_content'
 
@@ -198,6 +202,8 @@ class Web::LayoutTest < ActiveSupport::TestCase
   end
 
   def test_append_portlets
+    flunk mysql_bug if defined?(mysql_bug)
+
     layout = @clean_layout
 
     login_portlet = Web::Portlet.find_by_name 'login'
@@ -276,6 +282,8 @@ class Web::LayoutTest < ActiveSupport::TestCase
   # each layout must have layoutid within the group,
   # there must be no duplicate layoutids
   def test_layoutid
+    flunk mysql_bug if defined?(mysql_bug)
+
     @layouts.each do |x|
       assert_not_nil x.layoutid, "#{x} has no local layout number"
     end
@@ -308,6 +316,8 @@ class Web::LayoutTest < ActiveSupport::TestCase
 
   # each layout must have a typesettings, and the defined portlets exist
   def test_portlets
+    flunk mysql_bug if defined?(mysql_bug)
+
     @layouts.each do |layout|
       assert_not_nil layout.typesettings, "#{layout} has no typesettings"
 

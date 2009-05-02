@@ -127,6 +127,8 @@ class GroupTest < ActiveSupport::TestCase
   end
 
   def test_organizations
+    flunk mysql_bug if defined?(mysql_bug)
+
     @groups.each do |x|
       x.organizations.each do |org|
         assert_not_nil org
@@ -135,6 +137,8 @@ class GroupTest < ActiveSupport::TestCase
   end
 
   def test_roles
+    flunk mysql_bug if defined?(mysql_bug)
+
     @groups.each do |x|
       x.roles.each do |role|
         assert_not_nil role
@@ -143,6 +147,8 @@ class GroupTest < ActiveSupport::TestCase
   end
 
   def test_permissions
+    flunk mysql_bug if defined?(mysql_bug)
+
     @groups.each do |x|
       x.permissions.each do |permission|
         assert_not_nil permission
@@ -151,6 +157,8 @@ class GroupTest < ActiveSupport::TestCase
   end
 
   def test_usergroups
+    flunk mysql_bug if defined?(mysql_bug)
+
     @groups.each do |x|
       x.usergroups.each do |usergroup|
         assert_not_nil usergroup

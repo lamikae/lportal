@@ -2,6 +2,9 @@
 # MySQL hacks.
 #
 # Methods that use method_missing to get the column value cannot be aliased.
+#
+# Awful lot of repetition here, TODO: DRY up with metaprogramming.
+#
 # ++
 
 class Company < ActiveRecord::Base
@@ -29,18 +32,6 @@ class Counter < ActiveRecord::Base
 end
 
 class Group < ActiveRecord::Base
-  def classnameid
-    self.classNameId
-  end
-  def classnameid=(val)
-    self.classNameId=val
-  end
-  def classpk
-    self.classPK
-  end
-  def classpk=(val)
-    self.classPK=val
-  end
   def creatoruserid=(val)
     self.creatorUserId=val
   end
@@ -76,9 +67,21 @@ class Release < ActiveRecord::Base
   end
 end
 
+class Resource < ActiveRecord::Base
+  def primkey
+    self.primKey
+  end
+  def primkey=(val)
+    self.primKey=val
+  end
+end
+
 class User < ActiveRecord::Base
   def screenname
     self.screenName
+  end
+  def screenname=(val)
+    self.screenName=val
   end
 end
 
@@ -87,16 +90,40 @@ module Web
     def virtualhost
       self.virtualHost
     end
+    def virtualhost=(val)
+      self.virtualHost=val
+    end
     def pagecount
       self.pageCount
     end
+    def pagecount=(val)
+      self.pageCount=val
+    end
     def privatelayout
       self.privateLayout
     end
+    def privatelayout=(val)
+      self.privateLayout=val
+    end
   end
   class Layout < ActiveRecord::Base
+    def friendlyurl
+      self.friendlyURL
+    end
+    def friendlyurl=(val)
+      self.friendlyURL=val
+    end
     def privatelayout
       self.privateLayout
+    end
+    def privatelayout=(val)
+      self.privateLayout=val
+    end
+    def typesettings
+      self.typeSettings
+    end
+    def typesettings=(val)
+      self.typeSettings=val
     end
   end
 end
@@ -109,10 +136,13 @@ end
 
 
 # define companyid
-[Company,User,Account,Group,Web::LayoutSet].each do |cl|
+[Company,User,Account,Group,Web::LayoutSet,Web::Layout,Role,ResourceCode].each do |cl|
   cl.class_eval {
     def companyid
       self.companyId
+    end
+    def companyid=(val)
+      self.companyId=val
     end
   }
 end
@@ -123,5 +153,38 @@ end
     def groupid
       self.groupId
     end
+    def groupid=(val)
+      self.groupId=val
+    end
   }
+end
+
+# define classnameid
+[Group,Role].each do |cl|
+  cl.class_eval {
+    def classnameid
+      self.classNameId
+    end
+    def classnameid=(val)
+      self.classNameId=val
+    end
+  }
+end
+
+# define classpk
+[Group,Role].each do |cl|
+  cl.class_eval {
+    def classpk
+      self.classPK
+    end
+    def classpk=(val)
+      self.classPK=val
+    end
+  }
+end
+
+
+# used to flunk tests
+def mysql_bug
+  'FIXME: this is a known to fail with MySQL'
 end

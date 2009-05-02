@@ -29,7 +29,7 @@ module Acts #:nodoc:
       # ResourceCode associated to this instance (and scope)
       def resource_code(scope)
         ResourceCode.get({
-          :companyid => self.companyid,
+          Company.primary_key => self.companyid,
           :name      => self.liferay_class,
           :scope     => scope
         })
@@ -69,7 +69,7 @@ module Acts #:nodoc:
         end
         logger.debug 'primkey: %s' % primkey
         Resource.get({
-          :codeid  => rc.codeid,
+          ResourceCode.primary_key => rc.id,
           :primkey => primkey
         })
       end
@@ -93,9 +93,9 @@ module Acts #:nodoc:
       def permission(actionid, scope)
         resource = get_resource(:scope => scope)
         Permission.get(
-          :companyid  => self.companyid,
+          Company.primary_key => self.companyid,
           :actionid   => actionid,
-          :resourceid => resource.id
+          Resource.primary_key => resource.id
         )
       end
 

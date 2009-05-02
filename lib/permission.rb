@@ -1,10 +1,10 @@
 class Permission < ActiveRecord::Base
 
   belongs_to :company,
-    :foreign_key => 'companyid'
+    :foreign_key => Company.primary_key
 
   belongs_to :resource,
-    :foreign_key => 'resourceid'
+    :foreign_key => Resource.primary_key
 
   # association to users
   has_and_belongs_to_many  :users,
