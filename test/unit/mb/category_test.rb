@@ -10,7 +10,7 @@ class MB::CategoryTest < ActiveSupport::TestCase
     :MBMessage,
     :MBThread,
     :Layout,
-    :PortletProperties
+    :portletproperties
   ]
 
   def setup

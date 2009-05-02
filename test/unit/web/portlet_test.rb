@@ -6,7 +6,7 @@ class Web::PortletTest < ActiveSupport::TestCase
 #     :User_,
     :Portlet,
     :PortletPreferences,
-    :PortletProperties,
+    :portletproperties,
     :Layout,
     :Group_,
     :TagsAsset

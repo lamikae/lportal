@@ -16,7 +16,7 @@ class GroupTest < ActiveSupport::TestCase
   ]
   # to test asset_viewer_portlet, these are required
   fixtures << [
-    :Portlet, :PortletProperties, :PortletPreferences,
+    :Portlet, :portletproperties, :PortletPreferences,
     :Layout, :LayoutSet,
     :TagsAsset,
     :IGImage,

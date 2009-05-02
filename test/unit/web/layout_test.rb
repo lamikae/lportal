@@ -9,7 +9,7 @@ class Web::LayoutTest < ActiveSupport::TestCase
     :LayoutSet,
     :Portlet,
     :PortletPreferences,
-    :PortletProperties,
+    :portletproperties,
     :ResourceCode
   ]
 

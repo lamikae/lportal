@@ -9,7 +9,7 @@ class Web::PortletPreferencesTest < ActiveSupport::TestCase
 #     :Group_,
     :Portlet,
     :PortletPreferences,
-    :PortletProperties,
+    :portletproperties,
     :Layout
   ]
 
