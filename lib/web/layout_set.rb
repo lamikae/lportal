@@ -20,10 +20,10 @@ module Web
     public
 
     belongs_to :group,
-      :foreign_key => 'groupid'
+      :foreign_key => Group.primary_key
 
     belongs_to :company,
-      :foreign_key => 'companyid'
+      :foreign_key => Company.primary_key
 
     def is_public?
       !self.privatelayout
@@ -37,9 +37,13 @@ module Web
       self.logo
     end
 
+    # FIXME: does not work on MySQL due to 'privatelayout' in SQL
     def layouts
       return 0 unless self.group
-      Web::Layout.find(:all, :conditions => "groupid=#{self.groupid} AND privatelayout=#{self.privatelayout}" )
+      Web::Layout.find(:all, :conditions => \
+        "#{Group.primary_key}=#{self.groupid}"+\
+        " AND "+\
+        "privatelayout=#{self.privatelayout}" )
     end
 
     # lookup the path prefix for this LayoutSet

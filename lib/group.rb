@@ -126,7 +126,7 @@ class Group < ActiveRecord::Base
   end
 
   belongs_to :company,
-    :foreign_key => 'companyid'
+    :foreign_key => Company.primary_key
 
   belongs_to :creator,
     :class_name  => 'User',
@@ -172,40 +172,40 @@ class Group < ActiveRecord::Base
   # association to assets
   has_many :assets,
     :class_name  => 'Tag::Asset',
-    :foreign_key => 'groupid'
+    :foreign_key => self.primary_key
 
   has_many :mbcategories,
     :class_name => 'MB::Category',
-    :foreign_key => 'groupid'
+    :foreign_key => self.primary_key
 
   # a group may have two layoutsets (public and private)
   has_many :layoutsets,
     :class_name  => 'Web::LayoutSet',
-    :foreign_key => 'groupid'
+    :foreign_key => self.primary_key
 
   has_one :public_layoutset,
     :class_name  => 'Web::LayoutSet',
-    :foreign_key => 'groupid',
+    :foreign_key => self.primary_key,
     :conditions  => 'privatelayout = false'
 
   has_one :private_layoutset,
     :class_name  => 'Web::LayoutSet',
-    :foreign_key => 'groupid',
+    :foreign_key => self.primary_key,
     :conditions  => 'privatelayout = true'
 
   # a group may have many layouts (public and private)
   has_many :layouts,
     :class_name  => 'Web::Layout',
-    :foreign_key => 'groupid'
+    :foreign_key => self.primary_key
 
   has_many :public_layouts,
     :class_name  => 'Web::Layout',
-    :foreign_key => 'groupid',
+    :foreign_key => self.primary_key,
     :conditions  => 'privatelayout = false'
 
   has_many :private_layouts,
     :class_name  => 'Web::Layout',
-    :foreign_key => 'groupid',
+    :foreign_key => self.primary_key,
     :conditions  => 'privatelayout = true'
 
 
@@ -276,11 +276,6 @@ class Group < ActiveRecord::Base
     # +10129	10155
     # 
   end
-
-
-  has_many :mbcategories,
-    :class_name  => 'MB::Category',
-    :foreign_key => 'groupid'
 
   def is_active?
     self.active_

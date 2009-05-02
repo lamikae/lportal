@@ -108,10 +108,21 @@ class GroupTest < ActiveSupport::TestCase
 
   end
 
-  # each group must belong to a company
   def test_company
     @groups.each do |x|
       assert_not_nil x.company
+    end
+  end
+
+  def test_creator
+    @groups.each do |x|
+      assert_not_nil x.creator
+    end
+  end
+
+  def test_parent
+    @groups.each do |x|
+      assert_not_nil x.parent
     end
   end
 

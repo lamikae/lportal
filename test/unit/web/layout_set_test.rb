@@ -54,6 +54,16 @@ class Web::LayoutSetTest < ActiveSupport::TestCase
     end
   end
 
+  # FIXME: cannot test MySQL differences. does not give errors, while there is a bug!
+  def test_layouts
+    @sets.each do |x|
+      next unless x.layouts.any?
+      x.layouts.each do |l|
+        assert_equal x, l.layoutset
+      end
+    end
+  end
+
   def test_rigidity
     @sets.each do |x|
       assert_not_nil x.is_public?
