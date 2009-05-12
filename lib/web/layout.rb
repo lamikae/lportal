@@ -162,8 +162,9 @@ module Web
     belongs_to :company,
       :foreign_key => Company.primary_key
 
-    has_many :resources,
-      :foreign_key => 'primkey'
+    def resources
+      Resource.find(:all, :conditions => "primkey like '#{self.plid}'")
+    end
 
     def layoutset
       Web::LayoutSet.find(:first, :conditions => "groupid=#{self.groupid} AND privatelayout=#{self.privatelayout}" )
