@@ -279,6 +279,10 @@ class Web::LayoutTest < ActiveSupport::TestCase
     end
   end
 
+  def test_resources
+    flunk 'todo'
+  end
+
   # each layout must have layoutid within the group,
   # there must be no duplicate layoutids
   def test_layoutid
