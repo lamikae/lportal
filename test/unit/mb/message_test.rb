@@ -92,7 +92,6 @@ class MB::MessageTest < ActiveSupport::TestCase
     assert_not_nil category
 
     user = User.first
-    subject = random_string
     body = random_string
 
     thread = parent.thread
@@ -105,11 +104,10 @@ class MB::MessageTest < ActiveSupport::TestCase
     msg = MB::Message.create(
       :parent => parent,
       :user => user,
-      :subject => subject,
       :body => body
     )
 
-    assert_equal subject, msg.subject
+    assert_equal 're: %s' % parent.subject, msg.subject
     assert_equal body, msg.body
     assert_equal parent, msg.parent
 

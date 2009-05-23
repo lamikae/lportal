@@ -53,10 +53,10 @@ module MB
 
       self.createdate      = Time.now
       self.modifieddate    = Time.now
-      self.subject         ||= ''
       self.username        ||= self.user ? self.user.fullname : ''
       self.parentmessageid ||= 0
       self.attachments     ||= false
+      self.subject         ||= (self.parent ? 're: %s' % self.parent.subject : '')
       self.save
 
 
