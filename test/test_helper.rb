@@ -1,4 +1,11 @@
-ENV["RAILS_ENV"] = "test"
+# Test suite env setup for lportal tests.
+# The tests need to talk to the lportal database.
+#
+### Configure test/database.yml for your setup!
+#
+
+require 'test/unit'
+require 'yaml'
 
 # Load Rails
 require 'rails_gem_chooser'
