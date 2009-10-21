@@ -2,13 +2,17 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
+# appends test_helper to path
+$: << File.dirname(__FILE__) unless $:.include? File.dirname(__FILE__)
+
 desc 'Default: run unit tests.'
 task :default => :test
 
-desc 'Test the liferay plugin.'
-Rake::TestTask.new(:test) do |t|
+desc 'Test the lportal gem.'
+Rake::TestTask.new(:test) => env do |t|
+  chdir 'test'
   t.libs << 'lib'
-  t.pattern = 'test/**/*_test.rb'
+  t.pattern = '**/*_test.rb'
   t.verbose = true
 end
 
