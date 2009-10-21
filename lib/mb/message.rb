@@ -210,24 +210,24 @@ module MB
     end
 
     belongs_to :company,
-      :foreign_key => 'companyid'
+      :foreign_key => Company.primary_key
 
     belongs_to :user,
-      :foreign_key => 'userid'
+      :foreign_key => User.primary_key
     alias :writer :user
     alias :owner  :user
 
     belongs_to :category,
       :class_name => 'MB::Category',
-      :foreign_key => 'categoryid'
+      :foreign_key => MB::Category.primary_key
 
     belongs_to :thread,
       :class_name => 'MB::Thread',
-      :foreign_key => 'threadid'
+      :foreign_key => MB::Thread.primary_key
 
     has_one :flag,
       :class_name => 'MB::MessageFlag',
-      :foreign_key => 'messageid'
+      :foreign_key => self.primary_key
 
 
     has_one :asset,

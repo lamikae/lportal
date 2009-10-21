@@ -3,15 +3,15 @@ module Tag
 
     # association to user
     belongs_to :user,
-      :foreign_key => 'userid'
+      :foreign_key => User.primary_key
     alias :owner :user
 
     belongs_to :company,
-      :foreign_key => 'companyid'
+      :foreign_key => Company.primary_key
 
     has_many :properties,
       :class_name => 'Tag::Property',
-      :foreign_key => 'entryid'
+      :foreign_key => self.primary_key
 
     # association to assets
     has_and_belongs_to_many  :assets,

@@ -9,12 +9,13 @@ class Tag::PropertyTest < ActiveSupport::TestCase
   ]
 
   def setup
-    @properties = Tag::Property.find :all
+    @properties = Tag::Property.all
+    flunk 'No properties to test' unless @properties.any?
   end
 
   def test_company
     @properties.each do |x|
-      assert_not_nil x.company, "#{x.id} belongs to no companies"
+      assert_not_nil x.company
     end
   end
 

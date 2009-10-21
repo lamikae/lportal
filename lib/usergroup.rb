@@ -1,7 +1,7 @@
 class Usergroup < ActiveRecord::Base
 
   belongs_to :company,
-    :foreign_key => 'companyid'
+    :foreign_key => Company.primary_key
 
   # association to direct groups
   has_and_belongs_to_many  :groups,

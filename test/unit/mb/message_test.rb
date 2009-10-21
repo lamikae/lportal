@@ -187,6 +187,14 @@ class MB::MessageTest < ActiveSupport::TestCase
     end
   end
 
+  def test_flag
+    @messages.each do |x|
+      if x.flag
+        assert_equal MB::MessageFlag, x.flag.class
+      end
+    end
+  end
+
   def test_parent
     @messages.each do |x|
       unless x.parentmessageid == 0 then

@@ -132,13 +132,13 @@ module MB
     end
 
     belongs_to :group,
-      :foreign_key => "groupid"
+      :foreign_key => Group.primary_key
 
     belongs_to :company,
-      :foreign_key => "companyid"
+      :foreign_key => Company.primary_key
 
     belongs_to :user,
-      :foreign_key => "userid"
+      :foreign_key => User.primary_key
     alias :owner :user
 
     has_one :asset,
@@ -159,12 +159,12 @@ module MB
 
     has_many :threads,
       :class_name  => 'MB::Thread',
-      :foreign_key => 'categoryid',
+      :foreign_key => self.primary_key,
       :order       => 'lastpostdate DESC'
 
     has_many :messages,
       :class_name => 'MB::Message',
-      :foreign_key => 'categoryid'
+      :foreign_key => self.primary_key
 
     # URL path to this Category. Works on Liferay 5.1.1.
     # Parameters:

@@ -26,16 +26,16 @@ module Tag
     end
 
     belongs_to :company,
-      :foreign_key => 'companyid'
+      :foreign_key => Company.primary_key
 
     # association to user
     belongs_to :user,
-      :foreign_key => 'userid'
+      :foreign_key => User.primary_key
     alias :owner :user
 
     # association to groups (communities)
     belongs_to :group,
-      :foreign_key => 'groupid'
+      :foreign_key => Group.primary_key
     alias :community :group
 
     # association to tags

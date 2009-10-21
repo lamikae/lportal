@@ -122,6 +122,7 @@ class GroupTest < ActiveSupport::TestCase
 
   def test_parent
     @groups.each do |x|
+      next if x.parentgroupid==0
       assert_not_nil x.parent
     end
   end

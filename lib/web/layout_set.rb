@@ -39,7 +39,7 @@ module Web
 
     # FIXME: does not work on MySQL due to 'privatelayout' in SQL
     def layouts
-      return 0 unless self.group
+      return [] unless self.group
       Web::Layout.find(:all, :conditions => \
         "#{Group.primary_key}=#{self.groupid}"+\
         " AND "+\
