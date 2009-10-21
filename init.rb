@@ -41,7 +41,7 @@ info 'version ' + Lportal::VERSION
   require File.join(this_dir,'mysql')
   else
     STDERR.puts 'You are using a database that is not supported by the lportal Ruby library.'
-    STDERR.puts 'Please join the mailing list.'
+    STDERR.puts 'Please join the mailing list at http://rubyforge.org/mail/?group_id=7349'
   end
 
   # PostgreSQL; load class definitions AFTER patching AR
