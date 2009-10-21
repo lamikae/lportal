@@ -9,7 +9,7 @@ desc 'Default: run unit tests.'
 task :default => :test
 
 desc 'Test the lportal gem.'
-Rake::TestTask.new(:test) => env do |t|
+Rake::TestTask.new(:test) do |t|
   chdir 'test'
   t.libs << 'lib'
   t.pattern = '**/*_test.rb'
