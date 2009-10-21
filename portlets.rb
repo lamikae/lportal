@@ -1,3 +1,5 @@
+require 'erb'
+
 module Lportal # :nodoc:
   # Liferay portlet functionalities.
   # These are accessable in Web::PortletPreferences.
