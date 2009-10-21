@@ -1,0 +1,8 @@
+test:
+  adapter: mysql
+  database: lportal_test
+  username: lportal_tester
+  password: lportal
+  host: 192.168.1.39
+  timeout: 5000
+
