@@ -1,7 +1,3 @@
-# gem_v = ENV['RAILS_GEM_VERSION']
-# p gem_v
-# RailsGemChooser.__load_gem('activesupport',ENV['RAILS_GEM_VERSION'])
-
 begin
   require 'active_support/testing/assertions'
 rescue
@@ -13,6 +9,12 @@ require 'active_support/test_case'
 
 require 'active_record/fixtures'
 require 'active_support/dependencies'
+
+# Fixtures patches
+case ActiveRecord::Base.connection.adapter_name
+when 'PostgreSQL'
+  require File.join(File.dirname(__FILE__),'..','active_record','fixtures')
+end
 
 # Include fixtures to TestCases
 class ActiveSupport::TestCase
