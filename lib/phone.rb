@@ -8,7 +8,7 @@ class Phone < ActiveRecord::Base
 
     self.createdate   ||= Time.now
     self.modifieddate = Time.now
-    self.companyid    = self.user.companyid
+    self.company      = self.user.company
     self.username     ||= self.user.fullname
     self.classnameid  = Classname.find_by_value(Contact.liferay_class).id
     self.classpk      = self.user.contact.id
