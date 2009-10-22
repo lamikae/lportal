@@ -36,7 +36,7 @@ info 'version ' + Lportal::VERSION
   when 'PostgreSQL'
     require File.join(this_dir,'active_record','connection_adapters','postgresql_adapter')
   when 'MySQL'
-  require File.join(this_dir,'hacks','mysql')
+    require File.join(this_dir,'hacks','mysql')
   else
     STDERR.puts 'You are using a database that is not supported by the lportal Ruby library.'
     STDERR.puts 'Please join the mailing list at http://rubyforge.org/mail/?group_id=7349'

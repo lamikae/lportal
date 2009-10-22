@@ -17,11 +17,6 @@ require File.join(File.dirname(__FILE__),'..','init')
 require 'test/test_case.rb'
 
 class Test::Unit::TestCase
-
   include ActiveSupport::Testing::SetupAndTeardown
   include ActiveRecord::TestFixtures
-
 end
-
-
-
