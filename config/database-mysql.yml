@@ -1,0 +1,16 @@
+production:
+  adapter: mysql
+  database: lportal
+  username: lportal_user
+  password: lportal
+  host: 127.0.0.1
+  timeout: 5000
+
+test:
+  adapter: mysql
+  database: lportal_test
+  username: lportal_tester
+  password: lportal
+  host: 127.0.0.1
+  timeout: 5000
+
