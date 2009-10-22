@@ -2,7 +2,7 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-load 'fixtures.rake'
+load 'tasks/fixtures.rake'
 
 desc 'Default: run unit tests.'
 task :default => :test

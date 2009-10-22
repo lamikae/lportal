@@ -15,10 +15,7 @@ task :fixtures do
     i = "000"
     File.open(
       File.join(
-        File.dirname(File.expand_path(__FILE__)),
-        'test',
-        'fixtures',
-        ActiveRecord::Base.connection.adapter_name,
+        ActiveSupport::TestCase.fixture_path,
         table+'.yml'),
       'w'
     ) do |file|
