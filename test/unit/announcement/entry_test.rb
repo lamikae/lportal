@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'test/test_helper'
 
 class Announcement::EntryTest < ActiveSupport::TestCase
   fixtures :Company, :User_, :AnnouncementsEntry

@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'test/test_helper'
 
 class IG::ImageTest < ActiveSupport::TestCase
   fixtures  :IGImage, :IGFolder, :Company, :User_, :TagsAsset

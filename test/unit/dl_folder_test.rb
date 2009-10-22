@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'test/test_helper'
 
 class DlFolderTest < ActiveSupport::TestCase
   fixtures [:DLFileEntry, :DLFolder, :Company, :User_, :Group_]

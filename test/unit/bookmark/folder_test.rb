@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'test/test_helper'
 
 class Bookmark::FolderTest < ActiveSupport::TestCase
   fixtures :Company, :Group_, :User_, :BookmarksEntry, :BookmarksFolder

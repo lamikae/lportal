@@ -1,8 +1,6 @@
 # Lportal bootstrap.
 # This prepares the environment by loading a set of active_record patches.
 
-require 'active_record'
-
 file = File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__
 this_dir = File.dirname(File.expand_path(file))
 
@@ -38,7 +36,7 @@ info 'version ' + Lportal::VERSION
   when 'PostgreSQL'
     require File.join(this_dir,'active_record','connection_adapters','postgresql_adapter')
   when 'MySQL'
-  require File.join(this_dir,'mysql')
+  require File.join(this_dir,'hacks','mysql')
   else
     STDERR.puts 'You are using a database that is not supported by the lportal Ruby library.'
     STDERR.puts 'Please join the mailing list at http://rubyforge.org/mail/?group_id=7349'

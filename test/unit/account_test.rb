@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'test/test_helper'
 
 class AccountTest < ActiveSupport::TestCase
   fixtures [:Account_, :Company, :User_]

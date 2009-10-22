@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'test/test_helper'
 
 # this test is SLOW
 class PermissionTest < ActiveSupport::TestCase
