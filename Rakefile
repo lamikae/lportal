@@ -5,6 +5,7 @@ require 'rake/rdoctask'
 ENV['RAILS_GEM_VERSION'] = '2.3.4' # FIXME: test suite does not work on older versions!
 
 load 'tasks/fixtures.rake'
+load 'tasks/database.rake'
 
 desc 'Default: run unit tests.'
 task :default => :test
