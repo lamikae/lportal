@@ -257,6 +257,7 @@ class Group < ActiveRecord::Base
   def owner
     return nil if self.classnameid==0
     _class = Classname.model(Classname.find(self.classnameid).value)
+    return nil unless _class
     _class.find self.classpk
   end
 
@@ -286,21 +287,23 @@ class Group < ActiveRecord::Base
     self.active_
   end
 
-  def is_personal?
-    self.type_ == 0
-  end
+  # column type_ changed in Liferay 5.2.x
 
-  def is_public?
-    self.type_ == 1
-  end
+#   def is_personal?
+#     self.type_ == 0
+#   end
 
-  def is_protected?
-    self.type_ == 2
-  end
+#   def is_public?
+#     self.type_ == 1
+#   end
 
-  def is_private?
-    self.type_ == 3
-  end
+#   def is_protected?
+#     self.type_ == 2
+#   end
+
+#   def is_private?
+#     self.type_ == 3
+#   end
 
   # URL path to this Group's public or private page
   def path(pl=:public)
