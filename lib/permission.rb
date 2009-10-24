@@ -8,19 +8,19 @@ class Permission < ActiveRecord::Base
 
   # association to users
   has_and_belongs_to_many  :users,
-                           :join_table              => 'users_permissions',
-                           :foreign_key             => 'permissionid',
-                           :association_foreign_key => 'userid'
+                           :join_table              => 'Users_Permissions',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => User.primary_key
 
   has_and_belongs_to_many :roles,
-    :join_table              => 'roles_permissions',
-    :foreign_key             => 'permissionid',
-    :association_foreign_key => 'roleid'
+    :join_table              => 'Roles_Permissions',
+    :foreign_key             => self.primary_key,
+    :association_foreign_key => Role.primary_key
 
   has_and_belongs_to_many :groups,
-    :join_table              => 'groups_permissions',
-    :foreign_key             => 'permissionid',
-    :association_foreign_key => 'groupid'
+    :join_table              => 'Groups_Permissions',
+    :foreign_key             => self.primary_key,
+    :association_foreign_key => Group.primary_key
 
   # finds or creates
   def self.get(args)
@@ -29,7 +29,7 @@ class Permission < ActiveRecord::Base
       conditions << (k==:actionid ?
         ("%s='%s'" % [k,v]) : ("%s=%s" % [k,v]))
     }
-    #puts conditions.inspect
+    #logger.debug conditions.inspect
     p = Permission.find(:first, :conditions => conditions.join(' AND '))
     unless p
       logger.debug 'creating new Permission'

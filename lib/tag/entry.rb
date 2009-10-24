@@ -16,9 +16,9 @@ module Tag
     # association to assets
     has_and_belongs_to_many  :assets,
       :class_name              => 'Tag::Asset',
-      :join_table              => 'tagsassets_tagsentries',
-      :foreign_key             => 'entryid',
-      :association_foreign_key => 'assetid'
+      :join_table              => 'TagsAssets_TagsEntries',
+      :foreign_key             => self.primary_key,
+      :association_foreign_key => Tag::Asset.primary_key
 
     def categories
       self.properties.map{|p| p.category}.compact.uniq

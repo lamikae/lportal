@@ -41,9 +41,9 @@ module Tag
     # association to tags
     has_and_belongs_to_many  :tags,
       :class_name              => 'Tag::Entry',
-      :join_table              => 'tagsassets_tagsentries',
-      :foreign_key             => 'assetid',
-      :association_foreign_key => 'entryid'
+      :join_table              => 'TagsAssets_TagsEntries',
+      :foreign_key             => self.primary_key,
+      :association_foreign_key => Tag::Entry.primary_key
 
     def self.resource_types
       [
