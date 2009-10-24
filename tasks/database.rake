@@ -8,10 +8,12 @@ namespace :db do
 		
 		desc 'creates DBs and DBUsers'
 		task :create, [:user, :pass] do |t, args|
-			if args.user.nil? || args.pass.nil?
+			if args.user.nil?
 				puts "aborted, requires mysql admin user+pass!"
 			else
 				require "mysql"
+                STDOUT.puts 'Connecting to MySQL with NO password' if args.pass.nil?
+
 				# for each environment defined in database.yml
 				loadDbconf.each do |e, confEnv|
 					mysql = Mysql::new(confEnv['host'], args.user, args.pass, "mysql")
