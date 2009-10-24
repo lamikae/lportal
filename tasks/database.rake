@@ -40,7 +40,7 @@ namespace :db do
 			end
 		end
 
-		task :import do |t, args|
+		task :import => :prepareimports do |t, args|
 
 			require "mysql"
 			# for each environment defined in database.yml
@@ -76,6 +76,7 @@ namespace :db do
 		rescue EOFError
 		    file.close
 		end
+        Dir.mkdir('tmp') unless File.exists?('tmp')
 		File.open('tmp/prepared_imports.sql', 'w') {|f| f.write(sql) }
 	end
 	
