@@ -2,6 +2,8 @@
 
 This is a collection of (some) Liferay models for developers that use the database with ActiveRecord. You may want to check out the Rails-portlet package if you're going to deploy Rails applications on Liferay.
 
+The development version in master contains partial MySQL solution, with model alterations that have broken PostgreSQL as well, so the absolute HEAD is not ready. Use the branch 1.0 (still hosted on Rubyforge git) until author imports the branch.
+
 
 == Follow these steps
 
