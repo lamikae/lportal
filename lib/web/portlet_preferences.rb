@@ -77,7 +77,6 @@ module Web
           logger.warn 'Requested portlet of portletpreferences -- yet no companyid could be fetched.'
           @portlet = nil
         else
-          logger.debug 'ok'
           logger.debug self.portlet_id
           @portlet = Web::Portlet.find(:first,
             :conditions => "companyid=#{self.companyid} AND portletid='#{self.portlet_id}'")
