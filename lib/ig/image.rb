@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module IG
   class Image < ActiveRecord::Base
 

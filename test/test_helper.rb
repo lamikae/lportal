@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # Test suite env setup for lportal tests.
 # The tests need to talk to the lportal database.
 #

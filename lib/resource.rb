@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Resource < ActiveRecord::Base
 
   belongs_to :resourcecode,

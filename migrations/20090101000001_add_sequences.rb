@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class AddSequences < ActiveRecord::Migration
   @@tables = [
     Account,

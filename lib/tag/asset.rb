@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Tag
   class Asset < ActiveRecord::Base
 

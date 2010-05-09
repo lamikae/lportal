@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # --
 # The classes have cross-references, so each has to be defined before the actual models are loaded.
 # Since adding support for different database schemas, the primary keys also need to be defined here.

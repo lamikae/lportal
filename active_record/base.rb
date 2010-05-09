@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module ActiveRecord #:nodoc:
   # Database-specific patches.
   class Base

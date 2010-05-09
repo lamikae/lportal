@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class PortletProperties < ActiveRecord::Migration
   def self.up
     # dealing with tables that have no id is a pain with ActiveRecord,

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module ActiveRecord
   # Alter fixture typecase.
   module TestFixtures

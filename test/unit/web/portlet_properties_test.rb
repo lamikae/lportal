@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'test/test_helper'
 
 # Beware, these tests are slow due to the amount of portletpreferences

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # This module is a home for various classes and methods that handle portal logic, that do not belong to the database models.
 module Lportal
   # Portal urls.

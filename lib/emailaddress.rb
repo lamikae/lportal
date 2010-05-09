@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Emailaddress < ActiveRecord::Base
 
   belongs_to :company,

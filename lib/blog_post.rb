@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 #--
 # TODO: rename to Blog::Entry
 #++

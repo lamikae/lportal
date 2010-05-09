@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Account < ActiveRecord::Base
 
   belongs_to :company, :foreign_key => Company.primary_key

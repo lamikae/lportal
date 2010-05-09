@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Acts #:nodoc:
 
   # This +acts_as+ extension provides the capabilities for creating +ResourceCode+s, +Resource+s

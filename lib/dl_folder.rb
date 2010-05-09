@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class DlFolder < ActiveRecord::Base
 
   has_many :files,

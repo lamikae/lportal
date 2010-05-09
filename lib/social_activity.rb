@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class SocialActivity < ActiveRecord::Base
 
   belongs_to :company,

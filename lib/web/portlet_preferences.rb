@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Web
   # While PortletPreferences acts_as_resourceful, it is a resource as the portlet it represents.
   # The ResourceCode has a 'name' value that is the Portlet's portletid.

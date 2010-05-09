@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # Message Board
 module MB
   class Category < ActiveRecord::Base

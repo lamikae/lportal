@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Counter < ActiveRecord::Base
 
   # Increments the counter +name+ by +value+.

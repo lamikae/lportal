@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Usergroup < ActiveRecord::Base
 
   belongs_to :company,

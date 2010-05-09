@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Release < ActiveRecord::Base
 
   def self.current

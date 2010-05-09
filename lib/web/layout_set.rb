@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Web
   # LayoutSets contain individual Layout s. They are either private or public.
   class LayoutSet < ActiveRecord::Base

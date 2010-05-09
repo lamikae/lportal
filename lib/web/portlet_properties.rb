@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Web # :nodoc:
   class PortletProperties < ActiveRecord::Base # :nodoc: see class definitions
 

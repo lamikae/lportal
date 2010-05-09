@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Web # :nodoc:
   # Portlets can be included onto a Layout. Portlets are not instantiated per se; when one is
   # inserted on a Layout, PortletPreferences is created. This instance (from ActiveRecord's point-of-view),

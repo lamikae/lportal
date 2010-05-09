@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Announcement
   class Entry < ActiveRecord::Base
 

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Classname < ActiveRecord::Base
 
   # Returns the Class of the model for a certain Java class

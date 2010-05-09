@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Web
   # Page layouts. These are individual layouts for items in the navigation bar.
   # Layouts have portlets, these are modeled by parsing (by regexp) the typesettings xml. Layouts belong to a certain LayoutSet.

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Lportal
   # The schema version of the Liferay database.
   # The +buildnumber+ class variable is set when lportal is loaded,

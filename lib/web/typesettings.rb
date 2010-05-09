@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Web
   # Typesettings for portlets. Used in Web::Layout.
   class Typesettings

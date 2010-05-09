@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # Database
 env = ENV['LPORTAL_ENV'] # 'test' or 'production' are valid
 rails_gem_version = ENV['RAILS_GEM_VERSION']

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Wiki
   class Node < ActiveRecord::Base
 

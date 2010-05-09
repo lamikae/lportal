@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module MB
   class MessageFlag < ActiveRecord::Base
 

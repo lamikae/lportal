@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # Lportal bootstrap.
 # This prepares the environment by loading a set of active_record patches.
 
