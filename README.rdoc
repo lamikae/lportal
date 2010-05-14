@@ -7,8 +7,8 @@ Current stable version only supports PostgreSQL, due to differences in the Lifer
 
 == Follow these steps
 
-1. Configure ActiveRecord as usual.
-2. require 'lportal'
+1. Configure ActiveRecord as usual. See example configurations[http://github.com/lamikae/lportal/tree/master/config/].
+2. <tt>require 'lportal'</tt>
 3. You're good to go.
 
 This gem quite effectively pollutes your namespace, and that is intentional. If you are working in the context of the portal, having your users modeled by User is more convenient rather than having to reference them as "Lportal::Users".
