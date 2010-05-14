@@ -6,13 +6,21 @@ Current stable version only supports PostgreSQL, due to differences in the Lifer
 
 == Follow these steps for PostgreSQL
 
-1. Setup Liferay database.
+1. Setup Liferay database
 2. <tt>gem install lportal</tt> # version 1.0.18
-3. Configure ActiveRecord to use the Liferay database. See example configurations[http://github.com/lamikae/lportal/tree/master/config/].
-4. <tt>require 'lportal'</tt>
-5. You're good to go.
+3. Configure ActiveRecord to use the Liferay database. See example configurations[http://github.com/lamikae/lportal/tree/master/config/]
+4. <tt>require 'lportal'</tt> in your Ruby code
 
-This gem quite effectively pollutes your namespace, which is intentional. If you are working in the context of the portal, having your users modeled by User is more convenient rather than having to reference them as "Lportal::Users".
+The models heavily pollutes the namespace, which is intentional. Follow the API RDoc[http://lportal.rubyforge.org/].
+If you are working in the context of the portal, having your users modeled by User is more convenient rather than having to reference them as "Lportal::Users".
+Try, for example:
+
+  User.all()
+
+If you want to create new rows to the database, 
+or have better portlet runtime analytics,
+run the included migrations[http://github.com/lamikae/lportal/tree/master/migrations/] at your own risk.
+
 
 == Other databases
 Github contains impartial import, which does not include branches that are stored at Rubyforge.
@@ -25,8 +33,10 @@ You need some knowledge of Ruby and databases in general for making it work. You
 
 
 == General notions and examples
-=== Caterpillar
-To create new instances you need Caterpillar. Liferay's ORM, Hibernate, does not seem to use database sequences, but ActiveRecord assumes they exist. Caterpillar's purpose is to lower the barriers to deploy Rails portlets and it contains various tasks that do not belong to this library. See the Caterpillar docs on installation; this document assumes your environment is set up. Do not forget to run the migrations!
+=== Migrations
+To create new instances you need to run the migrations. Liferay's ORM, Hibernate, does not seem to use database sequences, but ActiveRecord assumes they exist. So each table's PK needs to be modified to run as a sequence.
+
+The second migration stores data from Liferay's portlet XML to the database.
 
 
 === Layouts
