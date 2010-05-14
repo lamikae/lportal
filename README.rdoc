@@ -1,17 +1,28 @@
 == Liferay & ActiveRecord
-
 This is a collection of Liferay v5 models for ActiveRecord.
 
 Current stable version only supports PostgreSQL, due to differences in the Liferay schema between databases. The development version in master contains partial MySQL solution, with model alterations that have broken PostgreSQL as well, so the absolute HEAD is not ready. __Use the branch 1.0 (still hosted on Rubyforge git) until author imports the branch to Github.__
 
 
-== Follow these steps
+== Follow these steps for PostgreSQL
 
-1. Configure ActiveRecord as usual. See example configurations[http://github.com/lamikae/lportal/tree/master/config/].
-2. <tt>require 'lportal'</tt>
-3. You're good to go.
+# Setup Liferay database.
+# <tt>gem install lportal</tt> # version 1.0.18
+# Configure ActiveRecord to use the Liferay database. See example configurations[http://github.com/lamikae/lportal/tree/master/config/].
+# <tt>require 'lportal'</tt>
+# You're good to go.
 
-This gem quite effectively pollutes your namespace, and that is intentional. If you are working in the context of the portal, having your users modeled by User is more convenient rather than having to reference them as "Lportal::Users".
+This gem quite effectively pollutes your namespace, which is intentional. If you are working in the context of the portal, having your users modeled by User is more convenient rather than having to reference them as "Lportal::Users".
+
+== Other databases
+Github contains impartial import, which does not include branches that are stored at Rubyforge.
+
+  git clone git://rubyforge.org/lportal.git
+
+  $ cd lportal
+  $ git branch -a
+
+You need some knowledge of Ruby and databases in general for making it work. You may also contact the author.
 
 
 == General notions and examples
