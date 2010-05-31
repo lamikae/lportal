@@ -21,15 +21,20 @@ If you want to create new rows to the database,
 or have better portlet runtime analytics,
 run the included migrations[http://github.com/lamikae/lportal/tree/master/migrations/] at your own risk.
 
-
-== Other databases
-Github contains impartial import, which does not include branches that are stored at Rubyforge.
+NOTICE: Github contains impartial import, which does not include branches that are stored at Rubyforge.
+For running the stable 1.0 branch from git:
 
   $ git clone git://rubyforge.org/lportal.git
   $ cd lportal
-  $ git branch -a
+  $ git checkout 1.0
 
-You need some knowledge of Ruby and databases in general for making it work. You may also contact the author.
+== Other databases
+Run the code from the master branch:
+
+  $ git clone git://github.com/lamikae/lportal.git
+
+You need some knowledge of Ruby and the database you want to hack^H^Hve support for. Start by setting up the test suite.
+You may also contact the author.
 
 
 == General notions and examples
