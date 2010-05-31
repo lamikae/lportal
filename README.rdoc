@@ -28,13 +28,21 @@ For running the stable 1.0 branch from git:
   $ cd lportal
   $ git checkout 1.0
 
-== Other databases
-Run the code from the master branch:
+== Other databases (MySQL, Oracle, ...)
+You need some knowledge of Ruby and the database you want to hack^H^Hve support for. Start by setting up the test suite.
+You may also contact the author.
+
+NOTICE: do not use the gem.
+Run the code from the master branch and link the lportal directory to Rails' lib/.
 
   $ git clone git://github.com/lamikae/lportal.git
 
-You need some knowledge of Ruby and the database you want to hack^H^Hve support for. Start by setting up the test suite.
-You may also contact the author.
+Or build your own gem:
+
+  $ cd lportal
+  $ vim version.rb # fix version number to build the gem
+	$ gem build lportal.gemspec
+	$ gem install lportal-1.2.0.gem
 
 
 == General notions and examples
