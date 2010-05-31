@@ -41,8 +41,8 @@ Or build your own gem:
 
   $ cd lportal
   $ vim version.rb # fix version number to build the gem
-	$ gem build lportal.gemspec
-	$ gem install lportal-1.2.0.gem
+  $ gem build lportal.gemspec
+  $ gem install lportal-1.2.0.gem
 
 
 == General notions and examples
