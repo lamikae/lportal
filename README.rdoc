@@ -21,11 +21,8 @@ If you want to create new rows to the database,
 or have better portlet runtime analytics,
 run the included migrations[http://github.com/lamikae/lportal/tree/master/migrations/] at your own risk.
 
-NOTICE: Github contains impartial import, which does not include branches that are stored at Rubyforge.
-For running the stable 1.0 branch from git:
+For running the stable PostgreSQL-only 1.0 branch from git:
 
-  $ git clone git://rubyforge.org/lportal.git
-  $ cd lportal
   $ git checkout 1.0
 
 == Other databases (MySQL, Oracle, ...)
