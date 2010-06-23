@@ -2,14 +2,17 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-ENV['RAILS_GEM_VERSION'] = '2.3.4' # FIXME: test suite does not work on older versions!
+ENV['RAILS_GEM_VERSION'] ||= '2.3.8' # FIXME: test suite does not work on older versions!
 
 def info(msg)
   STDOUT.puts msg
 end
 
-require 'rubygems'
-require 'activerecord'
+# Load ActiveRecord
+require 'rails_gem_chooser'
+rails_gem_version = ENV['RAILS_GEM_VERSION']
+RailsGemChooser.__load_gem('activerecord',rails_gem_version)
+
 require 'erb'
 
 load 'tasks/env.rake'

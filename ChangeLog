@@ -1,3 +1,5 @@
+	- backports from master branch
+
 = 1.0.17
 	- introduced schema versions, automatic detection from the release_ table
 	- migrations imported from caterpillar trunk, define the migrations directory for caterpillar
