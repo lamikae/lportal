@@ -6,7 +6,7 @@ task :fixtures do
   require 'test/test_case'
 
   unless File.exists?(ActiveSupport::TestCase.fixture_path)
-    Dir.mkdir(ActiveSupport::TestCase.fixture_path)
+    FileUtils.mkdir_p(ActiveSupport::TestCase.fixture_path)
   end
 
   sql = "SELECT * from %s"

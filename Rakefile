@@ -8,6 +8,10 @@ def info(msg)
   STDOUT.puts msg
 end
 
+require 'rubygems'
+require 'activerecord'
+require 'erb'
+
 load 'tasks/env.rake'
 load 'tasks/fixtures.rake'
 load 'tasks/migrate.rake'
