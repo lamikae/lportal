@@ -209,20 +209,10 @@ class UserTest < ActiveSupport::TestCase
 
   # each user must belong to a company
   def test_company
+    companies = Company.all
     @users.each do |x|
-      assert_not_nil x.company
-    end
-  end
-
-  # each user can belong to many organizations (they don't have to)
-  def test_organizations
-    flunk mysql_bug if defined?(mysql_bug)
-
-    @users.each do |x|
-      x.organizations.each do |o|
-        assert_not_nil o
-      end
-        #assert !x.organizations.empty?, "#{x.screenname} belongs to no organizations"
+      assert_equal Company, x.company.class
+      assert companies.include?(x.company)
     end
   end
 
@@ -247,15 +237,14 @@ class UserTest < ActiveSupport::TestCase
 
   # each user can have a personal group (hive)
   def test_hive
-    flunk mysql_bug if defined?(mysql_bug)
-
     @users.each do |user|
       group = user.hive
-      if user.is_guest?
-        assert_nil group
-      else
-        assert_not_nil group
-      end
+      # since Liferay 5.2.3 guest has group
+      #if user.is_guest?
+      #  assert_nil group
+      #else
+      #  assert_not_nil group, 'User %i has no "home" group' % user.id
+      #end
       next unless group
       # the group must have a proper classnameid
       _class = Classname.find_by_value user.liferay_class
@@ -270,7 +259,7 @@ class UserTest < ActiveSupport::TestCase
         # there has to be layoutsets
         assert !group.layoutsets.empty?, "#{user.id}'s personal group does not have layoutsets"
 
-      # ..eusercept that Liferay-5.1.user doesn't seem to unactive the group
+      # ..except that Liferay-5.1 doesn't seem to unactivate the group
       else
         #assert !group.is_active?, "#{user.id}'s personal group is active, while the user is not"
 
@@ -278,43 +267,50 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  def test_all_groups
-    flunk mysql_bug if defined?(mysql_bug)
+  def test_organizations
+    orgs = @users.map{|x| x.orgs}.flatten.uniq
+    # Liferay 5.2.3
+    assert_equal 11, orgs.size
+    orgs.each do |org|
+      assert_equal Organization, org.class
+    end
+  end
 
+  def test_all_groups
     # each group must exist!
-    groups = @users.map{|x| x.groups}.uniq
+    groups = @users.map{|x| x.groups}.flatten.uniq
+    # Liferay 5.2.3
+    assert_equal 1, groups.size
     groups.each do |group|
-      assert_not_nil group
+      assert_equal Group, group.class
     end
   end
 
   def test_all_roles
-    flunk mysql_bug if defined?(mysql_bug)
-
     # each role must exist!
-    roles = @users.map{|x| x.roles}.uniq
+    roles = @users.map{|x| x.roles}.flatten.uniq
+    # Liferay 5.2.3
+    assert_equal 3, roles.size
     roles.each do |role|
-      assert_not_nil role
+      assert_equal Role, role.class
     end
   end
 
   def test_all_permissions
-    flunk mysql_bug if defined?(mysql_bug)
-
-    # each group must exist!
-    permissions = @users.map{|x| x.permissions}.uniq
+    permissions = @users.map{|x| x.permissions}.flatten.uniq
+    # Liferay 5.2.3
+    assert_equal 0, permissions.size
     permissions.each do |permission|
-      assert_not_nil permission
+      assert_equal Permission, permission.class
     end
   end
 
   def test_all_usergroups
-    flunk mysql_bug if defined?(mysql_bug)
-
-    # each group must exist!
-    usergroups = @users.map{|x| x.usergroups}.uniq
+    usergroups = @users.map{|x| x.usergroups}.flatten.uniq
+    # Liferay 5.2.3
+    assert_equal 0, usergroups.size
     usergroups.each do |usergroup|
-      assert_not_nil usergroup
+      assert_equal Usergroup, permission.class
     end
   end
 

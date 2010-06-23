@@ -7,9 +7,9 @@ class Organization < ActiveRecord::Base
 
   # association to users
   has_and_belongs_to_many  :users,
-                           :join_table              => 'users_orgs',
-                           :foreign_key             => 'organizationid',
-                           :association_foreign_key => 'userid'
+                           :join_table              => 'Users_Orgs',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => User.primary_key
   alias :members :users
 
   belongs_to :parent,

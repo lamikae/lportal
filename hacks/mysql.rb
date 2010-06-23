@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 # --
-# MySQL hacks.
+# MySQL hacks. Very dirty hacks indeed.
 #
 # Methods that use method_missing to get the column value cannot be aliased.
 #
@@ -63,6 +63,33 @@ class Group < ActiveRecord::Base
   end
 end
 
+class Phone < ActiveRecord::Base
+  def createdate
+    self.createDate
+  end
+  def createdate=(val)
+    self.createDate=val
+  end
+  def modifieddate
+    self.modifiedDate
+  end
+  def modifieddate=(val)
+    self.modifiedDate=val
+  end
+  def username
+    self.userName
+  end
+  def username=(val)
+    self.userName=val
+  end
+  def typeid
+    self.typeId
+  end
+  def typeid=(val)
+    self.typeId=val
+  end
+end
+
 class Release < ActiveRecord::Base
   def buildnumber
     self.buildNumber
@@ -79,6 +106,9 @@ class Resource < ActiveRecord::Base
 end
 
 class User < ActiveRecord::Base
+  def defaultuser
+    self.defaultUser
+  end
   def screenname
     self.screenName
   end
@@ -130,15 +160,12 @@ module Web
   end
 end
 
-class User < ActiveRecord::Base
-  def defaultuser
-    self.defaultUser
-  end
-end
-
 
 # define companyid
-[Company,User,Account,Group,Web::LayoutSet,Web::Layout,Role,ResourceCode].each do |cl|
+[
+  Company,User,Account,Group,Web::LayoutSet,Web::Layout,Role,ResourceCode,
+  Phone
+].each do |cl|
   cl.class_eval {
     def companyid
       self.companyId
@@ -162,7 +189,7 @@ end
 end
 
 # define classnameid
-[Group,Role].each do |cl|
+[Group,Role,Phone].each do |cl|
   cl.class_eval {
     def classnameid
       self.classNameId
@@ -174,7 +201,7 @@ end
 end
 
 # define classpk
-[Group,Role].each do |cl|
+[Group,Role,Phone].each do |cl|
   cl.class_eval {
     def classpk
       self.classPK

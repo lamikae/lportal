@@ -132,42 +132,42 @@ class Group < ActiveRecord::Base
 
   belongs_to :creator,
     :class_name  => 'User',
-    :foreign_key => 'creatoruserid'
+    :foreign_key => 'creatorUserId' # FIXME: breaks PostgreSQL
 
   belongs_to :parent,
     :class_name  => 'Group',
-    :foreign_key => 'parentgroupid'
+    :foreign_key => 'parentGroupId' # FIXME: breaks PostgreSQL
 
   # association to organizations
   has_and_belongs_to_many  :organizations,
-                           :join_table              => 'groups_orgs',
-                           :foreign_key             => 'groupid',
-                           :association_foreign_key => 'organizationid'
+                           :join_table              => 'Groups_Orgs',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => Organization.primary_key
   alias :orgs :organizations
 
   # association to users
   has_and_belongs_to_many  :users,
-                           :join_table              => 'users_groups',
-                           :foreign_key             => 'groupid',
-                           :association_foreign_key => 'userid'
+                           :join_table              => 'Users_Groups',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => User.primary_key
 
   # association to roles
   has_and_belongs_to_many  :roles,
-                           :join_table              => 'groups_roles',
-                           :foreign_key             => 'groupid',
-                           :association_foreign_key => 'roleid'
+                           :join_table              => 'Groups_Roles',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => Role.primary_key
 
   # association to group permissions.
   has_and_belongs_to_many  :permissions,
-                           :join_table              => 'groups_permissions',
-                           :foreign_key             => 'groupid',
-                           :association_foreign_key => 'permissionid'
+                           :join_table              => 'Groups_Permissions',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => Permission.primary_key
 
   # association to group usergroups.
   has_and_belongs_to_many  :usergroups,
-                           :join_table              => 'groups_usergroups',
-                           :foreign_key             => 'groupid',
-                           :association_foreign_key => 'usergroupid'
+                           :join_table              => 'Groups_UserGroups',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => Usergroup.primary_key
 
   ####
 
@@ -188,12 +188,12 @@ class Group < ActiveRecord::Base
   has_one :public_layoutset,
     :class_name  => 'Web::LayoutSet',
     :foreign_key => self.primary_key,
-    :conditions  => 'privatelayout = false'
+    :conditions  => 'privatelayout = false' # FIXME
 
   has_one :private_layoutset,
     :class_name  => 'Web::LayoutSet',
     :foreign_key => self.primary_key,
-    :conditions  => 'privatelayout = true'
+    :conditions  => 'privatelayout = true' # FIXME
 
   # a group may have many layouts (public and private)
   has_many :layouts,
@@ -203,38 +203,38 @@ class Group < ActiveRecord::Base
   has_many :public_layouts,
     :class_name  => 'Web::Layout',
     :foreign_key => self.primary_key,
-    :conditions  => 'privatelayout = false'
+    :conditions  => 'privatelayout = false' # FIXME
 
   has_many :private_layouts,
     :class_name  => 'Web::Layout',
     :foreign_key => self.primary_key,
-    :conditions  => 'privatelayout = true'
+    :conditions  => 'privatelayout = true' # FIXME
 
 
   # --
-  # Class methods, in functional paradigm
+  # Class methods
   # ++
 
   class << self
 
     # 0 = personal user groups
     def find_personal(companyid)
-      self.find(:all, :conditions => "companyid=#{companyid} AND type_=0")
+      self.find(:all, :conditions => "#{Company.primary_key}=#{companyid} AND type_=0")
     end
 
     # 1 = public, guest can see
     def find_public(companyid)
-      self.find(:all, :conditions => "companyid=#{companyid} AND type_=1")
+      self.find(:all, :conditions => "#{Company.primary_key}=#{companyid} AND type_=1")
     end
 
     # 2 = user-created open communities
     def find_open(companyid)
-      self.find(:all, :conditions => "companyid=#{companyid} AND type_=2")
+      self.find(:all, :conditions => "#{Company.primary_key}=#{companyid} AND type_=2")
     end
 
     # 3 = private, also contains admins
     def find_private(companyid)
-      self.find(:all, :conditions => "companyid=#{companyid} AND type_=3")
+      self.find(:all, :conditions => "#{Company.primary_key}=#{companyid} AND type_=3")
     end
   end
 
@@ -245,15 +245,21 @@ class Group < ActiveRecord::Base
 
   # Group's name. If classnameid==0 (Group is a basic group), use the name in the group_ column.
   # Otherwise use the owner's name.
+  #
+  # DEPRECATED.
+  # Liferay has a column "name" since 5.2.x?
   def name
-    self.classnameid != 0 ?
-      self.owner.name : super
+    # TODO: if-else Liferay version
+    super
+    #self.classnameid != 0 ?
+    #  self.owner.name : super
   end
 
   # find owner by classnameid + classpk
   def owner
     return nil if self.classnameid==0
     _class = Classname.model(Classname.find(self.classnameid).value)
+    return nil unless _class
     _class.find self.classpk
   end
 
@@ -283,21 +289,23 @@ class Group < ActiveRecord::Base
     self.active_
   end
 
-  def is_personal?
-    self.type_ == 0
-  end
+  # column type_ changed in Liferay 5.2.x
 
-  def is_public?
-    self.type_ == 1
-  end
+#   def is_personal?
+#     self.type_ == 0
+#   end
 
-  def is_protected?
-    self.type_ == 2
-  end
+#   def is_public?
+#     self.type_ == 1
+#   end
 
-  def is_private?
-    self.type_ == 3
-  end
+#   def is_protected?
+#     self.type_ == 2
+#   end
+
+#   def is_private?
+#     self.type_ == 3
+#   end
 
   # URL path to this Group's public or private page
   def path(pl=:public)

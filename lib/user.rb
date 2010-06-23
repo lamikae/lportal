@@ -204,37 +204,36 @@ class User < ActiveRecord::Base
 
   # association to organizations
   has_and_belongs_to_many  :organizations,
-                           :join_table              => 'users_orgs',
-                           :foreign_key             => 'userid',
-                           :association_foreign_key => 'organizationid'
+                           :join_table              => 'Users_Orgs',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => Organization.primary_key
   alias :orgs :organizations
 
   # association to groups
   has_and_belongs_to_many  :groups,
-                           :join_table              => 'users_groups',
-                           :foreign_key             => 'userid',
-                           :association_foreign_key => 'groupid'
+                           :join_table              => 'Users_Groups',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => Group.primary_key
   alias :communities :groups
 
   # association to roles
   has_and_belongs_to_many  :roles,
-                           :join_table              => 'users_roles',
-                           :foreign_key             => 'userid',
-                           :association_foreign_key => 'roleid'
-
+                           :join_table              => 'Users_Roles',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => Role.primary_key
+  
   # association to direct user permissions.
   has_and_belongs_to_many  :permissions,
-                           :class_name              => 'Permission',
-                           :join_table              => 'users_permissions',
-                           :foreign_key             => 'userid',
-                           :association_foreign_key => 'permissionid'
-
+                           :join_table              => 'Users_Permissions',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => Permission.primary_key
+  
   # association to usergroups
   has_and_belongs_to_many  :usergroups,
-                           :class_name              => 'Usergroup',
-                           :join_table              => 'users_usergroups',
-                           :foreign_key             => 'userid',
-                           :association_foreign_key => 'usergroupid'
+#                            :class_name              => 'Usergroup',
+                           :join_table              => 'Users_UserGroups',
+                           :foreign_key             => self.primary_key,
+                           :association_foreign_key => Usergroup.primary_key
 
   # User's own group
   has_one :hive,

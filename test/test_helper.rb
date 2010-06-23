@@ -12,6 +12,8 @@ require 'yaml'
 # Init database connection
 ENV['LPORTAL_ENV'] = 'test'
 require 'db_connection'
+ActiveRecord::Base.logger = Logger.new(STDOUT)
+ActiveRecord::Base.logger.level = Logger::FATAL
 
 # Load lportal
 require File.join(File.dirname(__FILE__),'..','init')

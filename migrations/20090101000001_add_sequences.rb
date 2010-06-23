@@ -35,8 +35,7 @@ class AddSequences < ActiveRecord::Migration
   def self.up
     STDOUT.puts 'This migration does not do anything.'
     STDOUT.puts 'The process is not refined properly yet, and could be quite disastrous if reverted unappropriately.'
-    STDOUT.puts 'If you are sure you need the sequences, copy this file to db/migrate and modify it.'
-    STDOUT.puts __FILE__
+    STDOUT.puts 'If you are sure you need the sequences, modify %s.' % __FILE__
 
     start = 8400000 # bigint = 8^8 bytes = 16 million bits, this is halfway up the possible range, rounded up
     sql = ""
