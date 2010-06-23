@@ -1,3 +1,4 @@
+# encoding: utf-8
 # This model represents the user groups (communities) in the lportal database.
 class Group < ActiveRecord::Base
   set_table_name       :group_
