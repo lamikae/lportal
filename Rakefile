@@ -8,13 +8,6 @@ def info(msg)
   STDOUT.puts msg
 end
 
-# Load ActiveRecord
-require 'rails_gem_chooser'
-rails_gem_version = ENV['RAILS_GEM_VERSION']
-RailsGemChooser.__load_gem('activerecord',rails_gem_version)
-
-require 'erb'
-
 load 'tasks/env.rake'
 load 'tasks/fixtures.rake'
 load 'tasks/migrate.rake'

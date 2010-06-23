@@ -9,6 +9,11 @@
 require 'test/unit'
 require 'yaml'
 
+# Load ActiveRecord
+require 'rails_gem_chooser'
+rails_gem_version = ENV['RAILS_GEM_VERSION']
+RailsGemChooser.__load(rails_gem_version)
+
 # Init database connection
 ENV['LPORTAL_ENV'] = 'test'
 require 'db_connection'
