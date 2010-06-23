@@ -1,26 +1,33 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class GroupTest < ActiveSupport::TestCase
   fixtures [
-    :organization_,
-    :groups_orgs,
-    :users_orgs,
-    :usergroup,
-    :role_,
-    :classname_
+    :Company,
+    :Group_,
+    :User_,
+    :Organization_,
+    :Groups_Orgs,
+    :Users_Groups,
+    :Users_Orgs,
+    :UserGroup,
+    :Role_,
+    :ClassName_,
+    :Release_
   ]
   # to test asset_viewer_portlet, these are required
   fixtures << [
-    :portlet, :portletproperties, :portletpreferences,
-    :layout,
-    :tagsasset,
-    :igimage,
-    :mbmessage,
-    :blogsentry,
-    :wikipage,
-    :bookmarksentry,
-    :journalarticle,
-    :dlfileentry
+    :Portlet, :portletproperties, :PortletPreferences,
+    :Layout, :LayoutSet,
+    :TagsAsset,
+    :IGImage,
+    :MBMessage,
+    :BlogsEntry,
+    :WikiPage,
+    :BookmarksEntry,
+    :JournalArticle,
+    :DLFileEntry
   ]
 
   def setup
@@ -103,14 +110,28 @@ class GroupTest < ActiveSupport::TestCase
 
   end
 
-  # each group must belong to a company
   def test_company
     @groups.each do |x|
       assert_not_nil x.company
     end
   end
 
+  def test_creator
+    @groups.each do |x|
+      assert_not_nil x.creator
+    end
+  end
+
+  def test_parent
+    @groups.each do |x|
+      next if x.parentgroupid==0
+      assert_not_nil x.parent
+    end
+  end
+
   def test_organizations
+    flunk mysql_bug if defined?(mysql_bug)
+
     @groups.each do |x|
       x.organizations.each do |org|
         assert_not_nil org
@@ -119,6 +140,8 @@ class GroupTest < ActiveSupport::TestCase
   end
 
   def test_roles
+    flunk mysql_bug if defined?(mysql_bug)
+
     @groups.each do |x|
       x.roles.each do |role|
         assert_not_nil role
@@ -127,6 +150,8 @@ class GroupTest < ActiveSupport::TestCase
   end
 
   def test_permissions
+    flunk mysql_bug if defined?(mysql_bug)
+
     @groups.each do |x|
       x.permissions.each do |permission|
         assert_not_nil permission
@@ -135,6 +160,8 @@ class GroupTest < ActiveSupport::TestCase
   end
 
   def test_usergroups
+    flunk mysql_bug if defined?(mysql_bug)
+
     @groups.each do |x|
       x.usergroups.each do |usergroup|
         assert_not_nil usergroup
@@ -220,23 +247,23 @@ class GroupTest < ActiveSupport::TestCase
 
       portletpreferences = group.asset_viewer_portlet
       assert_equal Web::PortletPreferences, portletpreferences.class
-      assert_not_nil portletpreferences.path(:asset => asset)
 
       assert_not_nil portletpreferences.layout
       assert_equal group, portletpreferences.layout.group
-      assert_equal group.companyid, portletpreferences.layout.companyid
+      assert_equal group.company, portletpreferences.layout.company
+
+      if Lportal::Schema.buildnumber < 5200
+        assert_equal 'tagged_content', portletpreferences.name
+      else
+        assert_equal 'asset_publisher', portletpreferences.name
+      end
+
+      assert_not_nil portletpreferences.path(:asset => asset)
 
       # 2nd time the portlet should be retrieved from DB
       group.reload
       assert_equal portletpreferences, group.asset_viewer_portlet
     end
   end
-
-#   def test_resource
-#     @groups.each do |x|
-# #       assert !x.resource.nil?, "#{x.id} has no resource"
-#     end
-#   end
-
 
 end

@@ -1,16 +1,19 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class MB::MessageTest < ActiveSupport::TestCase
   fixtures [
-    :mbcategory,
-    :mbdiscussion,
-    :mbmessage,
-    :mbthread,
-    :mbstatsuser,
-    :mbmessageflag,
-    :classname_,
-    :group_,
-    :user_
+    :Company,
+    :User_,
+    :Group_,
+    :MBCategory,
+    :MBDiscussion,
+    :MBMessage,
+    :MBThread,
+    :MBStatsUser,
+    :MBMessageFlag,
+    :ClassName_
   ]
 
   def setup
@@ -91,7 +94,6 @@ class MB::MessageTest < ActiveSupport::TestCase
     assert_not_nil category
 
     user = User.first
-    subject = random_string
     body = random_string
 
     thread = parent.thread
@@ -104,11 +106,10 @@ class MB::MessageTest < ActiveSupport::TestCase
     msg = MB::Message.create(
       :parent => parent,
       :user => user,
-      :subject => subject,
       :body => body
     )
 
-    assert_equal subject, msg.subject
+    assert_equal 're: %s' % parent.subject, msg.subject
     assert_equal body, msg.body
     assert_equal parent, msg.parent
 
@@ -184,6 +185,14 @@ class MB::MessageTest < ActiveSupport::TestCase
       assert_not_nil x.thread, "#{x.id} belongs to no thread"
       if x.parentmessageid == 0 then
         assert x.thread.rootmessageid == x.id, "Discrepancy between thread #{x.thread.id} rootmessageid #{x.thread.rootmessageid} and message #{x.id}"
+      end
+    end
+  end
+
+  def test_flag
+    @messages.each do |x|
+      if x.flag
+        assert_equal MB::MessageFlag, x.flag.class
       end
     end
   end

@@ -1,11 +1,16 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class MB::ThreadTest < ActiveSupport::TestCase
   fixtures [
-    :mbcategory,
-    :mbdiscussion,
-    :mbmessage,
-    :mbthread
+#     :Company,
+#     :User_,
+#     :Group_,
+    :MBCategory,
+    :MBDiscussion,
+    :MBMessage,
+    :MBThread
   ]
 
   def setup

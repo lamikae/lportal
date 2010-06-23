@@ -1,7 +1,9 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class Announcement::EntryTest < ActiveSupport::TestCase
-  fixtures :announcementsentry
+  fixtures :Company, :User_, :AnnouncementsEntry
 
   def setup
     @announcements = Announcement::Entry.all

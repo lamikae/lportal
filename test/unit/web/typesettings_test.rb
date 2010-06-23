@@ -1,9 +1,11 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class TypesettingsTest < ActiveSupport::TestCase
   fixtures [
-    :layout,
-    :portlet, :portletpreferences, :portletproperties
+    :Layout,
+    :Portlet, :PortletPreferences, :portletproperties
   ]
 
   def setup
@@ -26,6 +28,8 @@ class TypesettingsTest < ActiveSupport::TestCase
   end
 
   def test_include_noninstantiated
+    flunk mysql_bug if defined?(mysql_bug)
+
     ts = Web::Typesettings.new.message_boards(:column => 2)
     assert ts.include?(Web::Portlet.find_by_name('message_boards'))
     assert !ts.include?(Web::Portlet.find_by_name('translator'))

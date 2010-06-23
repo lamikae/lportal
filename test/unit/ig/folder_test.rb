@@ -1,7 +1,9 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class IG::FolderTest < ActiveSupport::TestCase
-  fixtures  :igimage, :igfolder
+  fixtures  :IGImage, :IGFolder, :Company, :User_, :Group_
 
   def setup
     @folders = IG::Folder.all

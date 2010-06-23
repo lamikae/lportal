@@ -1,14 +1,18 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class OrganizationTest < ActiveSupport::TestCase
   fixtures [
-    :company,
-    :organization_,
-    :user_,
-    :users_orgs,
-    :group_,
-    :groups_orgs,
-    :classname_
+    :Company,
+    :Group_,
+    :User_,
+    :Organization_,
+    :Groups_Orgs,
+    :Users_Groups,
+    :Users_Orgs,
+    :ClassName_,
+    :ListType
   ]
 
   def setup
@@ -23,7 +27,17 @@ class OrganizationTest < ActiveSupport::TestCase
     end
   end
 
+  def test_users
+    flunk mysql_bug if defined?(mysql_bug)
+
+    @orgs.each do |x|
+      assert_not_nil x.users
+    end
+  end
+
   def test_parent
+    flunk mysql_bug if defined?(mysql_bug)
+
     @orgs.each do |x|
       assert_not_nil x.parent unless x.parentorganizationid == 0
     end
@@ -34,6 +48,8 @@ class OrganizationTest < ActiveSupport::TestCase
   end
 
   def test_group
+    flunk mysql_bug if defined?(mysql_bug)
+
     @orgs.each do |x|
       group = x.hive
       assert_not_nil group, "#{x.id} does not have a personal group"
@@ -55,6 +71,14 @@ class OrganizationTest < ActiveSupport::TestCase
       org.members.each do |user|
         assert user.company == org.company, "Member #{user.id} of organization #{org.id} does not belong to company #{org.company.id}"
       end
+    end
+  end
+
+  def test_status
+    flunk mysql_bug if defined?(mysql_bug)
+
+    @orgs.each do |x|
+      assert_not_nil x.status
     end
   end
 

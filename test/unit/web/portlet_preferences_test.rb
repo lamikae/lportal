@@ -1,10 +1,18 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 # Beware, these tests are slow due to the amount of portletpreferences
 
 class Web::PortletPreferencesTest < ActiveSupport::TestCase
   fixtures [
-    :portletpreferences, :portlet, :layout, :portletproperties
+    :Company,
+#     :User_,
+#     :Group_,
+    :Portlet,
+    :PortletPreferences,
+    :portletproperties,
+    :Layout
   ]
 
   def setup

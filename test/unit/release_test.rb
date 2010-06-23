@@ -1,7 +1,9 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class ReleaseTest < ActiveSupport::TestCase
-  fixtures :release_
+  fixtures :Release_
 
   def test_releases
     releases = Release.all
@@ -19,7 +21,7 @@ class ReleaseTest < ActiveSupport::TestCase
 
     Lportal::Schema.buildnumber = 5100
     assert_equal 5100, Lportal::Schema.buildnumber
-    assert_equal '5.1', Lportal::Schema.version
+    assert_equal '5.1.0', Lportal::Schema.version
   end
 
 end

@@ -1,21 +1,29 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class Tag::PropertyTest < ActiveSupport::TestCase
-  fixtures :tagsentry, :tagsproperty
+  fixtures [
+    :Company,
+    :User_,
+    :TagsEntry,
+    :TagsProperty
+  ]
 
   def setup
-    @properties = Tag::Property.find :all
+    @properties = Tag::Property.all
+    flunk 'No properties to test' unless @properties.any?
   end
 
   def test_company
     @properties.each do |x|
-      assert_not_nil x.company, "#{x.id} belongs to no companies"
+      assert_not_nil x.company
     end
   end
 
-  def test_owner
+  def test_user
     @properties.each do |x|
-      assert_not_nil x.owner, "#{x.id} belongs to no user"
+      assert_not_nil x.user, "#{x.id} belongs to no user"
     end
   end
 

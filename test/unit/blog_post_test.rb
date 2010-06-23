@@ -1,14 +1,26 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class AssetTest < ActiveSupport::TestCase
   fixtures [
-    :tagsasset,
-    :resource_, :resourcecode,
-    :blogsentry
+    :Company,
+    :TagsAsset,
+    :Resource_, :ResourceCode,
+    :BlogsEntry,
+    :User_,
+    :Group_
   ]
 
   def setup
     @posts = BlogPost.all
+    flunk 'No posts to test' unless @posts.any?
+  end
+
+  def test_company
+    @posts.each do |p|
+      assert_not_nil p.company
+    end
   end
 
   def test_user

@@ -1,10 +1,18 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class DlFileTest < ActiveSupport::TestCase
-  fixtures [:dlfileentry, :company, :user_, :tagsasset]
+  fixtures [:DLFileEntry, :DLFolder, :Company, :User_, :TagsAsset]
 
   def setup
     @files = DlFile.all
+  end
+
+  def test_folder
+    @files.each do |dlf|
+      assert_not_nil dlf.folder
+    end
   end
 
   def test_company
@@ -28,10 +36,8 @@ class DlFileTest < ActiveSupport::TestCase
   def test_path
     @files.each do |dlf|
       assert_not_nil dlf.path
+      assert dlf.path[/#{dlf.folderid}/]
+      assert dlf.path[/#{dlf.name}/]
     end
   end
-
-
-
-
 end

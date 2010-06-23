@@ -1,17 +1,23 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class PhoneTest < ActiveSupport::TestCase
   fixtures [
-    :company,
-    :user_,
-    :phone,
-    :contact_,
-    :classname_,
-    :listtype
+    :Company,
+    :User_,
+    :Phone,
+    :Contact_,
+    :ClassName_,
+    :ListType
   ]
 
   def setup
     @phones = Phone.all
+  end
+  
+  def test_create
+    flunk 'todo'
   end
 
   def test_phones

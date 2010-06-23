@@ -1,12 +1,16 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class Web::LayoutSetTest < ActiveSupport::TestCase
   fixtures [
-    :company,
-    :group_,
-    :layout, :layoutset,
-    :portlet,
-    :classname_
+    :Company,
+#     :User_,
+    :Group_,
+    :Layout,
+    :LayoutSet,
+    :Portlet,
+    :ClassName_
   ]
 
   def setup
@@ -49,6 +53,17 @@ class Web::LayoutSetTest < ActiveSupport::TestCase
       group = x.group
       next unless group
       assert_not_nil group.private_layoutset, "Group #{group.id} does not have a private layoutset"
+    end
+  end
+
+  def test_layouts
+    flunk mysql_bug if defined?(mysql_bug)
+
+    @sets.each do |x|
+      next unless x.layouts.any?
+      x.layouts.each do |l|
+        assert_equal x, l.layoutset
+      end
     end
   end
 

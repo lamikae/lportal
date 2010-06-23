@@ -1,8 +1,11 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class ResourceCodeTest < ActiveSupport::TestCase
   fixtures [
-    :resource_, :resourcecode,
+    :Company,
+    :Resource_, :ResourceCode
   ]
 
   def setup

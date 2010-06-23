@@ -2,10 +2,21 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
+ENV['RAILS_GEM_VERSION'] = '2.3.4' # FIXME: test suite does not work on older versions!
+
+def info(msg)
+  STDOUT.puts msg
+end
+
+load 'tasks/env.rake'
+load 'tasks/fixtures.rake'
+load 'tasks/migrate.rake'
+load 'tasks/database.rake'
+
 desc 'Default: run unit tests.'
 task :default => :test
 
-desc 'Test the liferay plugin.'
+desc 'Test the lportal gem.'
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib'
   t.pattern = 'test/**/*_test.rb'

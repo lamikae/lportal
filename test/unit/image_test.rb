@@ -1,25 +1,33 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class ImageTest < ActiveSupport::TestCase
+  fixtures [
+    :Image,
+    :IGImage
+  ]
+
   def setup
     @images = Image.find :all
   end
 
   def test_type
     @images.each do |x|
-      assert !x.type_.nil?, "#{x.id} type is null"
+      assert_not_nil x.type_, "#{x.id} type is null"
     end
   end
 
   def test_dimensions
     @images.each do |x|
-      assert !x.width.nil? && !x.height.nil?, "#{x.id} has no width && height"
+      assert_not_nil x.width
+      assert_not_nil x.height
     end
   end
 
   def test_size
     @images.each do |x|
-      assert !x.size_.nil?, "#{x.id} size is null"
+      assert_not_nil x.size_, "#{x.id} size is null"
       assert x.size_ > 0, "#{x.id} size is not positive"
     end
   end

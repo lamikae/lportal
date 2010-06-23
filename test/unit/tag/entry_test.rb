@@ -1,7 +1,17 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class Tag::EntryTest < ActiveSupport::TestCase
-  fixtures :tagsentry, :tagsproperty, :tagsasset, :tagsassets_tagsentries, :classname_
+  fixtures [
+    :Company,
+    :User_,
+    :TagsAsset,
+    :TagsEntry,
+    :TagsAssets_TagsEntries,
+    :TagsProperty,
+    :ClassName_
+  ]
 
   def setup
     @tags = Tag::Entry.find :all
@@ -20,9 +30,9 @@ class Tag::EntryTest < ActiveSupport::TestCase
     end
   end
 
-  def test_owner
+  def test_user
     @tags.each do |x|
-      assert_not_nil x.owner, "#{x.id} (#{x.name}) belongs to no user"
+      assert_not_nil x.user, "#{x.id} (#{x.name}) belongs to no user"
     end
   end
 

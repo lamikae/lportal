@@ -1,8 +1,17 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class Web::PortletTest < ActiveSupport::TestCase
   fixtures [
-    :portletpreferences, :portlet, :layout, :portletproperties
+    :Company,
+#     :User_,
+    :Portlet,
+    :PortletPreferences,
+    :portletproperties,
+    :Layout,
+    :Group_,
+    :TagsAsset
   ]
 
   def setup
@@ -78,7 +87,7 @@ class Web::PortletTest < ActiveSupport::TestCase
       next unless p.name
       portlet_by_name = Web::Portlet.find_by_name(p.name)
       assert_not_nil portlet_by_name
-      assert_equal portlet, portlet_by_name
+      assert_equal p, portlet_by_name
     end
   end
 

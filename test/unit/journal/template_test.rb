@@ -1,8 +1,35 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class Journal::TemplateTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+  fixtures [
+    :Company,
+    :User_,
+    :Group_,
+    :JournalTemplate
+  ]
+
+  def setup
+    @templates = Journal::Template.all
   end
+
+  def test_company
+    @templates.each do |x|
+      assert_not_nil x.company
+    end
+  end
+
+  def test_group
+    @templates.each do |x|
+      assert_not_nil x.group
+    end
+  end
+
+  def test_user
+    @templates.each do |x|
+      assert_not_nil x.user
+    end
+  end
+
 end

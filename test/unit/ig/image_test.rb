@@ -1,7 +1,9 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class IG::ImageTest < ActiveSupport::TestCase
-  fixtures  :igimage, :igfolder
+  fixtures  :IGImage, :IGFolder, :Company, :User_, :TagsAsset
 
   def setup
     @igimages = IG::Image.all
@@ -22,6 +24,12 @@ class IG::ImageTest < ActiveSupport::TestCase
   def test_folder
     @igimages.each do |x|
       assert_not_nil x.folder
+    end
+  end
+
+  def test_asset
+    @igimages.each do |x|
+      assert_not_nil x.asset
     end
   end
 

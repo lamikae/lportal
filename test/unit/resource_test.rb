@@ -1,31 +1,52 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class ResourceTest < ActiveSupport::TestCase
   fixtures [
-    :resource_, :resourcecode,
-    :igimage,
-    :portletpreferences,
-    :mbmessage,
-    :layout,
-    :journalarticle,
-    :bookmarksfolder,
-    :wikinode, :wikipage, :wikipageresource,
-    :announcementsentry,
-    :calevent,
-    :dlfolder, :dlfileentry
+    :Company,
+    :Resource_, :ResourceCode,
+    :Permission_,
+    :IGImage,
+    :PortletPreferences,
+    :MBMessage,
+    :Layout,
+    :JournalArticle,
+    :BookmarksFolder,
+    :WikiNode, :WikiPage, :WikiPageResource,
+    :AnnouncementsEntry,
+    :CalEvent,
+    :DLFolder, :DLFileEntry
   ]
 
   def setup
     @resources = Resource.all
   end
 
-#   # each resource must have a resourcecode
-#   def test_codes
-#     @resources.each do |x|
-#       assert_not_nil x.code, "#{x.id} has no resourcecode"
-#     end
-#   end
-# 
+  # each resource must have a resourcecode
+  def test_codes
+    @resources.each do |x|
+      assert_not_nil x.resourcecode, "#{x.id} has no resourcecode"
+    end
+  end
+
+  def test_permissions
+    @resources.each do |x|
+      x.permissions.each do |p|
+        assert_equal Permission, p.class
+        assert_equal x, p.resource
+      end
+    end
+  end
+
+  def test_layout
+    @resources.each do |x|
+      if x.layout
+        assert_equal Web::Layout, x.layout.class
+      end
+    end
+  end
+  
 #   def test_permissions
 #     @resources.each do |x|
 #       permissions = x.permissions

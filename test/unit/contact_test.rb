@@ -1,23 +1,30 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class ContactTest < ActiveSupport::TestCase
-  fixtures :contact_, :account_
+  fixtures :Contact_, :Account_, :Company, :User_
 
   def setup
     @contacts = Contact.all
     assert !@contacts.empty?, "No contacts found"
   end
 
-  # each company must have an account
   def test_account
     @contacts.each do |c|
-      assert_not_nil c.account, "#{c} has no account"
+      assert_not_nil c.account, "#{c.inspect} has no account"
+    end
+  end
+
+  def test_company
+    @contacts.each do |c|
+      assert_not_nil c.company
     end
   end
 
   def test_user
     @contacts.each do |c|
-      assert_not_nil c.user, "#{c} has no user"
+      assert_not_nil c.user, "#{c.inspect} has no user"
     end
   end
 

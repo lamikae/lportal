@@ -1,15 +1,20 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class RoleTest < ActiveSupport::TestCase
   fixtures [
-    :role_,
-    :users_roles,
-    :groups_roles,
-#     :permission_,
-#     :users_permissions,
-#     :groups_permissions,
-#     :resource_,
-#     :resourcecode
+    :Company,
+    :Role_,
+    :Users_Roles,
+    :Group_,
+    :Groups_Roles,
+
+#     :Permission_,
+#     :Roles_Permissions,
+#     :Users_Permissions,
+#     :Groups_Permissions,
+#     :Resource_, :ResourceCode
   ]
 
   def setup
@@ -19,6 +24,9 @@ class RoleTest < ActiveSupport::TestCase
   end
 
   def test_create
+    flunk mysql_bug if defined?(mysql_bug)
+    # ^ bug goes down to Acts as Resourceful
+
     name = 'Regular role'
     description = 'test'
 

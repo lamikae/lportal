@@ -1,20 +1,25 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class MB::CategoryTest < ActiveSupport::TestCase
   fixtures [
-    :mbcategory,
-    :mbdiscussion,
-    :mbmessage,
-    :mbthread,
-    :group_,
-    :layout,
+    :Company,
+    :User_,
+    :Group_,
+    :MBCategory,
+    :MBDiscussion,
+    :MBMessage,
+    :MBThread,
+    :Layout,
+    :TagsAsset,
     :portletproperties
   ]
-
 
   def setup
     @categories = MB::Category.all
     flunk 'No categories to test' unless @categories.any?
+    @categories.delete(MB::Category.find(0))
   end
 
   def test_create
@@ -85,10 +90,41 @@ class MB::CategoryTest < ActiveSupport::TestCase
     end
   end
 
+  def test_messages
+    @categories.each do |x|
+      assert_not_nil x.messages
+      x.messages.each do |msg|
+        assert_equal x, msg.category
+      end
+    end
+  end
+
   def test_parent
     @categories.each do |x|
       unless x.parentcategoryid == 0 then
         assert_not_nil x.parent, "Category #{x.id} refers to parent category #{x.parentcategoryid} which does not exist"
+      end
+    end
+  end
+
+  def test_asset
+    @categories.each do |x|
+      assert_not_nil x.asset
+    end
+  end
+
+  def test_subcategories
+    @categories.each do |x|
+      next if x.parentcategoryid==0
+      assert_not_nil x.subcategories
+    end
+  end
+
+  def test_threads
+    @categories.each do |x|
+      assert_not_nil x.threads
+      x.threads.each do |thrd|
+        assert_equal x, thrd.category
       end
     end
   end

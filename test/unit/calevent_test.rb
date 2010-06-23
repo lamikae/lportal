@@ -1,7 +1,14 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class CaleventTest < ActiveSupport::TestCase
-  fixtures  :calevent
+  fixtures  [
+    :Company,
+    :User_,
+    :Group_,
+    :CalEvent
+  ]
 
   def setup
     @events = Calevent.all

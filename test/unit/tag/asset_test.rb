@@ -1,21 +1,28 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class Tag::AssetTest < ActiveSupport::TestCase
   fixtures [
-    :tagsasset, :tagsassets_tagsentries,
-#     :resource_, :resourcecode,
-    :classname_,
-    :igimage,
-    :mbmessage,
-    :blogsentry,
-    :wikipage,
-    :bookmarksentry,
-    :journalarticle,
-    :dlfileentry,
-    :layout
+    :Company,
+    :User_,
+    :Group_,
+    :TagsAsset, :TagsAssets_TagsEntries,
+#     :Resource_, :ResourceCode,
+    :ClassName_,
+    :IGImage,
+    :MBMessage,
+    :BlogsEntry,
+    :WikiPage,
+    :BookmarksEntry,
+    :JournalArticle,
+    :DLFileEntry,
+    :Layout
   ]
 
   def setup
+    flunk mysql_bug if defined?(mysql_bug)
+
     @assets = Tag::Asset.all
     # TODO: DRY up, the same creation code is in portlet test.
     unless Web::Portlet.find_by_name('asset_publisher')
@@ -55,6 +62,7 @@ class Tag::AssetTest < ActiveSupport::TestCase
 
         path = asset.path
         assert_not_nil path
+        assert !path.empty?
         if build==5100
           assert path[/#{asset.id}/], 'Path ”%s” does not contain asset id (%i)' % [path, asset.id]
           assert path[/tagged_content/]
@@ -93,10 +101,16 @@ class Tag::AssetTest < ActiveSupport::TestCase
     end
   end
 
-  def test_owner
+  def test_company
     @assets.each do |asset|
-      assert_not_nil asset.owner
-      assert_equal User, asset.owner.class
+      assert_not_nil asset.company
+    end
+  end
+
+  def test_user
+    @assets.each do |asset|
+      assert_not_nil asset.user, 'Asset %i has no user' % asset.id
+      assert_equal User, asset.user.class
     end
   end
 

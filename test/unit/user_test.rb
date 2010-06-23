@@ -1,16 +1,23 @@
-require 'test_helper'
+# encoding: utf-8
+
+require 'test/test_helper'
 
 class UserTest < ActiveSupport::TestCase
   fixtures [
-    :organization_,
-    :address,
-    :phone,
-    :contact_,
-    :classname_,
-    :listtype,
-    :layoutset,
-    :counter,
-    :resourcecode
+    :Address,
+    :Company,
+    :Phone,
+    :Contact_,
+    :ClassName_,
+    :ListType,
+    :LayoutSet,
+    :Counter,
+    :Role_,
+    :ResourceCode,
+    :Organization_,
+    :Users_Orgs,
+    :Group_,
+    :Users_Groups
   ]
 
   def setup
@@ -20,6 +27,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_create
+    flunk mysql_bug if defined?(mysql_bug)
+
     firstname = 'Test'
     lastname  = 'User'
     email     = 'test@localhost'
@@ -200,25 +209,17 @@ class UserTest < ActiveSupport::TestCase
 
   # each user must belong to a company
   def test_company
+    companies = Company.all
     @users.each do |x|
-      assert_not_nil x.company
-    end
-  end
-
-  # each user can belong to many organizations (they don't have to)
-  def test_organization
-    @users.each do |x|
-      x.organizations.each do |o|
-        assert_not_nil o
-      end
-        #assert !x.organizations.empty?, "#{x.screenname} belongs to no organizations"
+      assert_equal Company, x.company.class
+      assert companies.include?(x.company)
     end
   end
 
   # each user must have a contact
   def test_contact
     @users.each do |x|
-      assert_not_nil x.contact
+      assert_not_nil x.contact, x.inspect unless x.is_default?
     end
   end
 
@@ -230,7 +231,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_sex
     @users.each do |x|
-      assert_not_nil x.sex
+      assert_not_nil x.sex unless x.is_default?
     end
   end
 
@@ -238,11 +239,12 @@ class UserTest < ActiveSupport::TestCase
   def test_hive
     @users.each do |user|
       group = user.hive
-      if user.is_guest?
-        assert_nil group
-      else
-        assert_not_nil group
-      end
+      # since Liferay 5.2.3 guest has group
+      #if user.is_guest?
+      #  assert_nil group
+      #else
+      #  assert_not_nil group, 'User %i has no "home" group' % user.id
+      #end
       next unless group
       # the group must have a proper classnameid
       _class = Classname.find_by_value user.liferay_class
@@ -257,7 +259,7 @@ class UserTest < ActiveSupport::TestCase
         # there has to be layoutsets
         assert !group.layoutsets.empty?, "#{user.id}'s personal group does not have layoutsets"
 
-      # ..eusercept that Liferay-5.1.user doesn't seem to unactive the group
+      # ..except that Liferay-5.1 doesn't seem to unactivate the group
       else
         #assert !group.is_active?, "#{user.id}'s personal group is active, while the user is not"
 
@@ -265,33 +267,60 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-#   def test_rigidity
-#     # each group must exist!
-#     groups = @users.map{|x| x.groups}.uniq
-#     groups.each do |group|
-#       assert_not_nil group, "Reference to non-existing group  #{group.inspect}"
-#     end
-# 
-#     # each role must exist!
-#     roles = @users.map{|x| x.roles}.uniq
-#     roles.each do |role|
-#       assert_not_nil role, "Reference to non-existing role #{role.inspect}"
-#     end
-# 
-#     # each permission must exist!
-#     perms = @users.map{|x| x.permissions}.uniq
-#     perms.each do |p|
-#       assert_not_nil p, "Reference to non-existing permission #{p.inspect}"
-#     end
-#   end
-# 
-#   def test_path
-#     @users.each do |u|
-#       unless u.hive.nil?
-#         assert_not_nil u.path(:public), u.id if u.hive.public_layoutset
-#         assert_not_nil u.path(:private), u.id if u.hive.private_layoutset
-#       end
-#     end
-#   end
+  def test_organizations
+    orgs = @users.map{|x| x.orgs}.flatten.uniq
+    # Liferay 5.2.3
+    assert_equal 11, orgs.size
+    orgs.each do |org|
+      assert_equal Organization, org.class
+    end
+  end
+
+  def test_all_groups
+    # each group must exist!
+    groups = @users.map{|x| x.groups}.flatten.uniq
+    # Liferay 5.2.3
+    assert_equal 1, groups.size
+    groups.each do |group|
+      assert_equal Group, group.class
+    end
+  end
+
+  def test_all_roles
+    # each role must exist!
+    roles = @users.map{|x| x.roles}.flatten.uniq
+    # Liferay 5.2.3
+    assert_equal 3, roles.size
+    roles.each do |role|
+      assert_equal Role, role.class
+    end
+  end
+
+  def test_all_permissions
+    permissions = @users.map{|x| x.permissions}.flatten.uniq
+    # Liferay 5.2.3
+    assert_equal 0, permissions.size
+    permissions.each do |permission|
+      assert_equal Permission, permission.class
+    end
+  end
+
+  def test_all_usergroups
+    usergroups = @users.map{|x| x.usergroups}.flatten.uniq
+    # Liferay 5.2.3
+    assert_equal 0, usergroups.size
+    usergroups.each do |usergroup|
+      assert_equal Usergroup, permission.class
+    end
+  end
+
+  def test_path
+    @users.each do |u|
+      unless u.hive.nil?
+        assert_not_nil u.path(:public), u.id if u.hive.public_layoutset
+        assert_not_nil u.path(:private), u.id if u.hive.private_layoutset
+      end
+    end
+  end
 
 end
