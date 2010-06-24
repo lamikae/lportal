@@ -9,6 +9,8 @@
 require 'test/unit'
 require 'yaml'
 
+require 'test/test_case.rb'
+
 # Load ActiveRecord
 require 'rails_gem_chooser'
 rails_gem_version = ENV['RAILS_GEM_VERSION']
@@ -20,10 +22,18 @@ require 'db_connection'
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.logger.level = Logger::FATAL
 
+# Load fixtures -- is done automatically
+# XXX: Database tables must exist!
+=begin
+require 'active_record/fixtures'
+fixtures_dir = ActiveSupport::TestCase.fixture_path
+Dir.glob(File.join(fixtures_dir, '*.{yml,csv}')).each do |fixture_file|
+  Fixtures.create_fixtures(File.dirname(fixture_file), File.basename(fixture_file, '.*'))
+end
+=end
+
 # Load lportal
 require File.join(File.dirname(__FILE__),'..','init')
-
-require 'test/test_case.rb'
 
 class Test::Unit::TestCase
   include ActiveSupport::Testing::SetupAndTeardown
