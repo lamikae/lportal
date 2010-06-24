@@ -1,6 +1,6 @@
-drop database lportal;
-create database lportal encoding = 'UNICODE';
-\c lportal;
+drop database lportal_test;
+create database lportal_test encoding = 'UNICODE';
+\c lportal_test;
 
 create table Account_ (
 	accountId bigint not null primary key,
