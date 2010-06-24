@@ -1,3 +1,8 @@
+= 1.0.19
+	- Contry model
+	- backports from master branch
+
+= 1.0.18
 	- backports from master branch
 
 = 1.0.17
