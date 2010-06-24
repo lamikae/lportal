@@ -34,15 +34,14 @@ end
 
 # define this database's schema version
 require File.join(this_dir,'schema')
-Lportal::Schema.buildnumber = 
   begin
-    Release.current.buildnumber
+    Lportal::Schema.buildnumber = Release.current.buildnumber
+    msg = 'Using Liferay schema build %i, version %s' % [
+      Lportal::Schema.buildnumber, Lportal::Schema.version]
   rescue
-    nil
+    msg = 'Error while detecting Liferay schema version'
   end
 
-msg = 'Using Liferay schema build %i, version %s' % [
-  Lportal::Schema.buildnumber, Lportal::Schema.version]
 
 defined?(RAILS_DEFAULT_LOGGER) ?
   RAILS_DEFAULT_LOGGER.info(msg) : STDOUT.puts(msg)
