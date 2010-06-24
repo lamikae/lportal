@@ -1,6 +1,11 @@
 desc 'Creates YAML fixtures from live data.'
 task :fixtures do
   ENV['LPORTAL_ENV'] = 'production'
+
+  # Load ActiveRecord
+  require 'rails_gem_chooser'
+  RailsGemChooser.__load
+
   require 'db_connection'
   require 'init'
   require 'test/test_case'
