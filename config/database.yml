@@ -1,16 +1,16 @@
 production:
-  adapter: mysql
+  adapter: postgresql
   database: lportal
   username: lportal_user
   password: lportal
-  host: 192.168.1.39
+  host: 127.0.0.1
   timeout: 5000
 
 test:
-  adapter: mysql
+  adapter: postgresql
   database: lportal_test
-  username: lportal_tester
-  password: lportal
-  host: 192.168.1.39
+  username: rails_tester
+  password: rails
+  host: 127.0.0.1
   timeout: 5000
 

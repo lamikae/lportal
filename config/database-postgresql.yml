@@ -9,8 +9,8 @@ production:
 test:
   adapter: postgresql
   database: lportal_test
-  username: lportal_tester
-  password: lportal
+  username: rails_tester
+  password: rails
   host: 127.0.0.1
   timeout: 5000
 
