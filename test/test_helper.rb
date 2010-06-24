@@ -9,8 +9,6 @@
 require 'test/unit'
 require 'yaml'
 
-require 'test/test_case.rb'
-
 # Load ActiveRecord
 require 'rails_gem_chooser'
 rails_gem_version = ENV['RAILS_GEM_VERSION']
@@ -21,6 +19,8 @@ ENV['LPORTAL_ENV'] = 'test'
 require 'db_connection'
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.logger.level = Logger::FATAL
+
+require 'test/test_case.rb'
 
 # Load fixtures -- is done automatically
 # XXX: Database tables must exist!
