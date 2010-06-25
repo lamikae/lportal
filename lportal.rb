@@ -32,18 +32,15 @@ Find.find(File.join(this_dir,'lib')) do |file|
   end
 end
 
+STDOUT.puts 'Lportal v.%s using ActiveRecord v.%s' % [Lportal::VERSION, ActiveRecord::VERSION::STRING]
+
 # define this database's schema version
 require File.join(this_dir,'schema')
-  begin
-    Lportal::Schema.buildnumber = Release.current.buildnumber
-    msg = 'Using Liferay schema build %i, version %s' % [
-      Lportal::Schema.buildnumber, Lportal::Schema.version]
-  rescue
-    msg = 'Error while detecting Liferay schema version'
-  end
+begin
+  Lportal::Schema.buildnumber = Release.current.buildnumber
+  STDOUT.puts 'Using Liferay schema build %i, version %s' % [
+    Lportal::Schema.buildnumber, Lportal::Schema.version]
+rescue
+  STDERR.puts 'Error while detecting Liferay schema version'
+end
 
-
-defined?(RAILS_DEFAULT_LOGGER) ?
-  RAILS_DEFAULT_LOGGER.info(msg) : STDOUT.puts(msg)
-
-puts 'ActiveRecord v.%s' % ActiveRecord::VERSION::STRING
